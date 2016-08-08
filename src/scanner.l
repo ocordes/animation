@@ -16,7 +16,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -24,7 +24,7 @@
 /* scanner.l
 
    written by: Oliver Cordes 2010-06-20
-   changed by: Oliver Cordes 2014-09-03
+   changed by: Oliver Cordes 2016-08-08
 
    $Id: scanner.l 677 2014-09-03 17:42:40Z ocordes $
 
@@ -58,7 +58,11 @@ digit                  [0-9]
 letter                 [a-zA-Z]
 
 %x comment
-%x include 
+%x include
+
+
+%option nounput
+%option noinput
 
 
 %%

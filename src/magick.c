@@ -15,14 +15,14 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* magick.c
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2014-09-14
+   changed by: Oliver Cordes 2016-08-08
 
    $Id: magick.c 687 2014-09-14 17:53:49Z ocordes $
 
@@ -52,8 +52,6 @@
 
 magick_image *current_image = NULL;
 
-
-
 /* internal variables */
 
 
@@ -62,7 +60,8 @@ magick_image *current_image = NULL;
 
 void magick_init( void )
 {
-  MagickWandGenesis();
+  /* MagickWandGenesis(); */
+  InitializeMagick( NULL );
 }
 
 
@@ -71,14 +70,15 @@ void magick_done( void )
   if ( current_image != NULL )
     {
       if ( current_image->im != NULL )
-	{
-	  DestroyMagickWand( current_image->im );
-	}
+	      {
+	         DestroyMagickWand( current_image->im );
+	      }
 
       free( current_image );
-    } 
-  
-  MagickWandTerminus();
+    }
+
+  /* MagickWandTerminus(); */
+  DestroyMagick();
 }
 
 
@@ -88,13 +88,13 @@ magick_image *magick_image_new( void )
 
   im = (magick_image*) malloc( sizeof( magick_image ) );
   im->im = NULL;
-  
+
   return im;
 }
 
 
 
-void magick_image_info( void ) 
+void magick_image_info( void )
 {
   magick_check_current_image();
 
@@ -153,7 +153,7 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
   DrawingWand   *dwand = NULL;
 
   double        *fm = NULL;
-  
+
   int            width  = 0;
   int            height = 0;
   int            asc_height = 0;
@@ -169,8 +169,8 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
     {
       /* set standard font */
       DrawSetFont( dwand, font->font_name ) ;
-      
-      fm = MagickQueryFontMetrics( current_image->im, dwand, "Wym"); 
+
+      fm = MagickQueryFontMetrics( current_image->im, dwand, "Wym");
       height = fm[5];
     }
   else
@@ -205,19 +205,19 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
 		 DrawSetFont( dwand, font->font_name ) ;
 	      break;
 	    }
-	  fm = MagickQueryFontMetrics( current_image->im, 
-				       dwand, 
-				       textline->fragments[i]->words ); 
+	  fm = MagickQueryFontMetrics( current_image->im,
+				       dwand,
+				       textline->fragments[i]->words );
 	  textline->fragments[i]->fm_width = fm[4];
-	  output( 2, ">%s< w=%f h=%f\n", 
+	  output( 2, ">%s< w=%f h=%f\n",
 		  textline->fragments[i]->words, fm[4], fm[5] );
 	  width += fm[4];
 	  if ( fm[5] > height )
 	    height = fm[5];
 	  if ( fm[2] > asc_height )
 	    asc_height = fm[2];
-	  if ( abs( fm[5] ) > sep )
-	    sep = abs( fm[5] );
+	  if ( fabs( fm[5] ) > sep )
+	    sep = fabs( fm[5] );
 	}
     }
 
@@ -252,7 +252,7 @@ void magick_textfile_metrics( textfiledef *textfile, font_descr *font )
       for (i=0;i<textfile->nrlines;i++)
 	{
 	  magick_textline_metrics( textfile->lines[i], font );
-	  
+
 	  height += textfile->lines[i]->fm_height;
 	  if ( textfile->lines[i]->fm_width > width )
 	    width = textfile->lines[i]->fm_width;
@@ -283,7 +283,7 @@ void magic_textfile_drawline( int posx, int posy, double alpha, font_descr *font
   dwand = NewDrawingWand();
   pwand = NewPixelWand();
 
-  
+
   DrawSetFontSize( dwand, font->font_size );
   PixelSetColor( pwand, font->font_color );
 
@@ -291,7 +291,7 @@ void magic_textfile_drawline( int posx, int posy, double alpha, font_descr *font
   DrawSetTextAntialias( dwand, MagickTrue );
 
   /*posy += line->fm_height;  */
-  posy += line->fm_asc_height; 
+  posy += line->fm_asc_height;
   x = posx;
   for (i=0;i<line->nrfragments;i++)
     {
@@ -324,9 +324,9 @@ void magic_textfile_drawline( int posx, int posy, double alpha, font_descr *font
 	  break;
 	}
 
-      PixelSetAlpha( pwand, alpha );
+      PixelSetOpacity( pwand, alpha );
       // DrawSetStrokeColor( dwand, pwand );
-      DrawSetFillColor( dwand, pwand ); 
+      DrawSetFillColor( dwand, pwand );
 
       // Now draw the text
       DrawAnnotation(dwand, x, posy, (unsigned char*) line->fragments[i]->words );
@@ -347,12 +347,12 @@ void magick_draw_rectangle( int x1, int y1, int x2, int y2, int width, int fille
   DrawingWand   *dwand = NULL;
   PixelWand     *pwand = NULL;
 
-  
+
   /* setup the font and image*/
   dwand = NewDrawingWand();
   pwand = NewPixelWand();
 
-  
+
   PixelSetColor( pwand, color );
 
   if ( filled == 1 )
@@ -378,7 +378,7 @@ void magick_draw_rectangle( int x1, int y1, int x2, int y2, int width, int fille
 
 void magick_load_imagedef( imagedef_descr *imagedef )
 {
-  MagickBooleanType result;
+  unsigned int result;
 
   if ( imagedef->file_name == NULL )
     {
@@ -391,8 +391,8 @@ void magick_load_imagedef( imagedef_descr *imagedef )
 
   /* Read the input image */
   result = MagickReadImage( imagedef->im, imagedef->file_name );
-      
-  if ( result == MagickFalse )
+
+  if ( result != 0 )
     {
       output( 1, "Warning: Can't read image '%s'! Skip Image!\n", imagedef->file_name );
       DestroyMagickWand( imagedef->im );
@@ -422,9 +422,9 @@ void magick_load_imagedef( imagedef_descr *imagedef )
   // I haven't figured out how you would change the blur parameter of MagickResizeImage
   // on the command line so I have set it to its default of one.
   if ( imagedef->need_resize > resize_none )
-    MagickResizeImage( imagedef->im, 
-		       imagedef->width, 
-		       imagedef->height, 
+    MagickResizeImage( imagedef->im,
+		       imagedef->width,
+		       imagedef->height,
 		       LanczosFilter, 1 );
 
   output( 1, "Done.\n" );
@@ -461,13 +461,13 @@ void magick_image_window( parsenode *varx1, parsenode *vary1, parsenode *varx2, 
   clone = CloneMagickWand( current_image->im );
 
   MagickCropImage( clone, width, height, x1, y1 );
-  
+
   /* delete old offsets ... */
-  MagickResetImagePage( clone, "" );
+  /*MagickResetImagePage( clone, "" ); */
 
   magick_push_image( clone, x1, y1, width, height );
 
-  
+
   current_image->width  = MagickGetImageWidth( current_image->im);
   current_image->height = MagickGetImageHeight( current_image->im );
 
@@ -479,15 +479,15 @@ void magick_image_window( parsenode *varx1, parsenode *vary1, parsenode *varx2, 
 void magick_image_endwindow( void )
 {
   MagickWand *w;
-  
+
   int x, y, width, height;
-  
+
   w = magick_pop_image( &x, &y, &width, &height );
 
   // MagickCompositeImage( current_image->im, w, BlurCompositeOp, 0, 0 );
   MagickCompositeImage( current_image->im, w, ReplaceCompositeOp, x, y );
 
-  DestroyMagickWand( w ); 
+  DestroyMagickWand( w );
 
   current_image->width  = MagickGetImageWidth( current_image->im);
   current_image->height = MagickGetImageHeight( current_image->im );
@@ -500,9 +500,9 @@ void magick_image_endwindow( void )
 void magick_image_load( filedef *file )
 {
   int size;
-  char *pixels;
+  unsigned char *pixels;
 
-  MagickBooleanType result;
+  MagickPassFail result;
 
   if ( current_image == NULL )
     {
@@ -520,28 +520,30 @@ void magick_image_load( filedef *file )
     {
     case file_type_empty:
       size = file->dimx * file->dimy * 3;  /* RGB simple 8bit */
-      if ( ( pixels = (char*) calloc( size, 1 ) ) != NULL )
-	{
-	  current_image->im = NewMagickWand();
-	  result = MagickConstituteImage( current_image->im,
-					  file->dimx,
-					  file->dimy,
-					  "RGB",
-					  CharPixel,
-					  pixels );
-	  free( pixels );
-	  current_image->width  = file->dimx;
-	  current_image->height = file->dimy;
+      if ( ( pixels = (unsigned char*) calloc( size, 1 ) ) != NULL )
+	      {
+	        current_image->im = NewMagickWand();
+          result = MagickSetImagePixels( current_image->im,
+              0,
+              0,
+					    file->dimx,
+					    file->dimy,
+					    "RGB",
+					    CharPixel,
+					    pixels );
+	        free( pixels );
+	        current_image->width  = file->dimx;
+	        current_image->height = file->dimy;
 
-	  magick_draw_rectangle( 0, 0, current_image->width-1, current_image->height-1,
-				 1,    /* rectangle width */
-				 1,    /* filled */
-				 main_project->background  );
-	}
+	        magick_draw_rectangle( 0, 0, current_image->width-1, current_image->height-1,
+				      1,    /* rectangle width */
+				      1,    /* filled */
+				      main_project->background  );
+	      }
       else
-	{
-	  output( 1, "Can't allocate memory for empty image! Skip Image!\n" );
-	}
+      	{
+	        output( 1, "Can't allocate memory for empty image! Skip Image!\n" );
+	      }
       break;
     case file_type_file:
       output( 10, "Loading %s ...\n" , file->name );
@@ -549,18 +551,18 @@ void magick_image_load( filedef *file )
 
       /* Read the input image */
       result = MagickReadImage( current_image->im, file->name );
-      
-      if ( result == MagickFalse )
-	{
-	  output( 1, "Warning: Can't read image '%s'! Skip Image!\n", file->name );
-	  DestroyMagickWand( current_image->im );
-	  current_image->im = NULL;
-	}
+
+      if ( result   == MagickFail )
+	      {
+	        output( 1, "Warning: Can't read image '%s'! Skip Image!\n", file->name );
+	        DestroyMagickWand( current_image->im );
+	        current_image->im = NULL;
+	      }
       else
-	{
-	  current_image->width  = MagickGetImageWidth( current_image->im);
-	  current_image->height = MagickGetImageHeight( current_image->im );
-	}
+	      {
+	        current_image->width  = MagickGetImageWidth( current_image->im);
+	        current_image->height = MagickGetImageHeight( current_image->im );
+	      }
       output( 10, "Done.\n" );
       break;
     }
@@ -574,7 +576,7 @@ int magick_image_out( void )
 {
   char *filename;
 
-  MagickBooleanType result;
+  MagickPassFail result;
 
   magick_check_current_image( 1 );
 
@@ -588,10 +590,10 @@ int magick_image_out( void )
 
   output( 10, "Saving %s ...\n", filename );
 
-  MagickSetImageCompressionQuality( current_image->im, 95 );
+  /* MagickSetImageCompressionQuality( current_image->im, 95 ); */
   result = MagickWriteImage( current_image->im, filename );
 
-  if ( result == MagickFalse )
+  if ( result == MagickFail )
     {
       output( 1, "Warning: Image '%s' can't be written!\n", filename );
     }
@@ -600,16 +602,16 @@ int magick_image_out( void )
 
   free( filename );
 
-  if ( result == MagickFalse )
-    return 1;
-  else
+  if ( result == MagickPass )
     return 0;
+  else
+    return 1;
 }
 
 
-void magick_text( parsenode *nposx, 
-		  parsenode *nposy, 
-		  parsenode *ntext, 
+void magick_text( parsenode *nposx,
+		  parsenode *nposy,
+		  parsenode *ntext,
 		  parsenode *nfont,
 		  parsenode *nalpha )
 {
@@ -622,15 +624,15 @@ void magick_text( parsenode *nposx,
 
   int              posx, posy;
 
-  
+
   magick_check_current_image();
 
   sfont = get_string_from_node( nfont );
   font = font_get_font( sfont );
-      
+
   if ( font == NULL )
     {
-      output( 1, "Warning: Couldn't find font '%s' in font list!Skip text command!\n", 
+      output( 1, "Warning: Couldn't find font '%s' in font list!Skip text command!\n",
 	      sfont );
       return;
     }
@@ -639,14 +641,14 @@ void magick_text( parsenode *nposx,
     alpha = math_execute_node_double( nalpha );
   else
     alpha = 1.0;
-  
+
   /* extract text */
   stext = math_execute_node_string( ntext );
-  
+
   textline = textfile_get_textline( stext );
   magick_textline_metrics( textline, font );
-  
-      
+
+
   /* calculate the positions */
   posx = image_position_x( nposx, current_image->width, textline->fm_width );
   posy = image_position_y( nposy, current_image->height, textline->fm_height );
@@ -683,10 +685,10 @@ void magick_textfile( parsenode *nposx, parsenode *nposy, parsenode *nfont, pars
 
   sfont = get_string_from_node( nfont );
   font = font_get_font( sfont );
-      
+
   if ( font == NULL )
     {
-      output( 1, "Warning: Couldn't find font '%s' in font list!Skip textfile command!\n", 
+      output( 1, "Warning: Couldn't find font '%s' in font list!Skip textfile command!\n",
 	      sfont );
       return;
     }
@@ -695,14 +697,14 @@ void magick_textfile( parsenode *nposx, parsenode *nposy, parsenode *nfont, pars
     alpha = math_execute_node_double( nalpha );
   else
     alpha = 1.0;
-      
 
-  textfile = textfile_get_textfile( nfilename ); 
+
+  textfile = textfile_get_textfile( nfilename );
   if ( textfile != NULL )
     {
       /* calculate text metrics */
-      magick_textfile_metrics( textfile, font );  
-      
+      magick_textfile_metrics( textfile, font );
+
       /* y coordinates has to be calculated first */
       starty = image_position_y( nposy, current_image->height, textfile->fm_height );
 
@@ -716,7 +718,7 @@ void magick_textfile( parsenode *nposx, parsenode *nposy, parsenode *nfont, pars
   else
     {
       output( 1, "Warning: textfile block invalid!Skip textfile command!\n" );
-    } 
+    }
 }
 
 
@@ -732,7 +734,7 @@ void magick_basic_resize( int keep_aspect )
       /* Get the image's width and height */
       width = current_image->width;
       height = current_image->height;
-	
+
       ratio = (double) width / (double) height;
 
       if ( height > main_project->geometry[1] )
@@ -752,7 +754,7 @@ void magick_basic_resize( int keep_aspect )
       width  = main_project->geometry[0];
       height = main_project->geometry[1];
     }
-	
+
   // Resize the image using the Lanczos filter
   // The blur factor is a "double", where > 1 is blurry, < 1 is sharp
   // I haven't figured out how you would change the blur parameter of MagickResizeImage
@@ -793,17 +795,17 @@ void magick_resize_extent( void )
   MagickSetImageBackgroundColor( current_image->im, p_wand );
 
   /* This centres the original image on the new canvas.
-     Note that the extent's offset is relative to the 
+     Note that the extent's offset is relative to the
      top left corner of the *original* image, so adding an extent
      around it means that the offset will be positive (in
      older versions of ImageMagick it was negative!)
      since 6.7.9.10-4 it is negative again!
   */
-  MagickExtentImage( current_image->im, sx, sy, 
+  MagickExtentImage( current_image->im, sx, sy,
   		     (width-sx)/2, (height-sy)/2 );
 
   /* cleanup the wands */
-  p_wand = DestroyPixelWand(p_wand);
+  DestroyPixelWand( p_wand );
 
 
   current_image->width = sx;
@@ -821,8 +823,8 @@ void magick_resize( int keep_aspect )
 }
 
 
-void magick_drawimage( parsenode *nposx, 
-		       parsenode *nposy, 
+void magick_drawimage( parsenode *nposx,
+		       parsenode *nposy,
 		       parsenode *nimagename )
 {
   char           *imagename;
@@ -841,7 +843,7 @@ void magick_drawimage( parsenode *nposx,
       output( 1, "Error: Can't find imagedef! Drawimage aborted!\n" );
       return;
     }
-  
+
   if ( imagedef->im == NULL )
     {
       magick_load_imagedef( imagedef );
@@ -850,14 +852,14 @@ void magick_drawimage( parsenode *nposx,
     {
       output( 1, "Reusing image '%s'!\n", imagedef->file_name );
     }
-  
+
   /* calculate the positions */
   posx = image_position_x( nposx, current_image->width, imagedef->width );
   posy = image_position_y( nposy, current_image->height, imagedef->height );
-  
-  MagickCompositeImage( current_image->im, 
-			imagedef->im, 
-			imagedef->composite_operator, 
+
+  MagickCompositeImage( current_image->im,
+			imagedef->im,
+			imagedef->composite_operator,
 			posx, posy );
 }
 

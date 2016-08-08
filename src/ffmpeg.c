@@ -15,14 +15,14 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* ffmpeg.c
 
    written by: Oliver Cordes 2013-01-11
-   changed by: Oliver Cordes 2013-04-28
+   changed by: Oliver Cordes 2016-08-08
 
    $Id: ffmpeg.c 432 2013-04-28 18:04:53Z ocordes $
 
@@ -52,7 +52,7 @@ char *tempfile = NULL;
 
 
 /* ffmpeg stream */
-FILE *ffmpeg = NULL;  
+FILE *ffmpeg = NULL;
 
 /* start a new ffmpeg stream */
 
@@ -77,13 +77,13 @@ int ffmpeg_open( char *fname )
   erg = unlink( filename );
   if ( ( erg != 0 ) && ( errno != ENOENT ) )
     {
-      output( 1, "Can't remove output file '%s' (%s)\n", 
+      output( 1, "Can't remove output file '%s' (%s)\n",
 	      filename, strerror( errno ) );
       return 1;
     }
 
-  
-  snprintf( cmdline, 1000, "ffmpeg -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i %s 2> ffmpeg.log &", 
+
+  snprintf( cmdline, 1000, "ffmpeg -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i %s 2> ffmpeg.log &",
 	    main_project->geometry[0],
 	    main_project->geometry[1],
 	    tempfile,
@@ -94,7 +94,7 @@ int ffmpeg_open( char *fname )
   free( filename );
 
   output( 1, "ffmpeg cmd: %s\n", cmdline );
-  
+
   erg = system( cmdline );
   if ( erg != 0 )
     {
@@ -114,9 +114,9 @@ int ffmpeg_start( int blockmovies )
 {
   char *filename;
   char  cmdline[1000];
-  
+
   int   erg;
-  
+
   filename = malloc( strlen( main_project->outputdir ) + strlen( main_project->output_filename ) + 2 );
   sprintf( filename, "%s/%s", main_project->outputdir, main_project->output_filename );
 
@@ -129,7 +129,7 @@ int ffmpeg_start( int blockmovies )
 
   if ( mkdtemp( tempdir ) == NULL )
     {
-      output( 1, "Error creating a temporary directory '%s'  (%i: %s)!\n", 
+      output( 1, "Error creating a temporary directory '%s'  (%i: %s)!\n",
 	      tempdir,
 	      errno,
 	      strerror( errno ) );
@@ -140,7 +140,7 @@ int ffmpeg_start( int blockmovies )
   erg = unlink( filename );
   if ( ( erg != 0 ) && ( errno != ENOENT ) )
     {
-      output( 1, "Can't remove output file '%s' (%s)\n", 
+      output( 1, "Can't remove output file '%s' (%s)\n",
 	      filename, strerror( errno ) );
       return 1;
     }
@@ -151,12 +151,12 @@ int ffmpeg_start( int blockmovies )
   erg = mkfifo( tempfile, 0600 );
   if ( erg != 0 )
     {
-      output( 1, "Can't create ffmpeg pipe '%s' (%s)\n", 
+      output( 1, "Can't create ffmpeg pipe '%s' (%s)\n",
 	      tempfile, strerror( errno ) );
       return 1;
     }
 
-  snprintf( cmdline, 1000, "ffmpeg -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i %s 2> ffmpeg.log &", 
+  snprintf( cmdline, 1000, "ffmpeg -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i %s 2> ffmpeg.log &",
 	    main_project->geometry[0],
 	    main_project->geometry[1],
 	    tempfile,
@@ -167,7 +167,7 @@ int ffmpeg_start( int blockmovies )
   free( filename );
 
   output( 1, "ffmpeg cmd: %s\n", cmdline );
-  
+
   erg = system( cmdline );
   if ( erg != 0 )
     {
@@ -193,21 +193,21 @@ void ffmpeg_convert_rgb_yuv420p_orig( char *rgb, char *yuv420p, int width, int h
   unsigned int s = 0;
 
   int j, k;
- 
+
 #define sR (char)(rgb[s+0])
 #define sG (char)(rgb[s+1])
 #define sB (char)(rgb[s+2])
- 
+
   numpixels = width * height;
   ui = numpixels;
   vi = ui + numpixels / 4;
 
- 
+
   for (j = 0; j < height; j++)
     for (k = 0; k < width; k++)
       {
 	yuv420p[i] = (char)( (66*sR + 129*sG + 25*sB + 128) >> 8) + 16;
- 
+
 	if (0 == j%2 && 0 == k%2)
 	  {
 	    yuv420p[ui++] = (char)( (-38*sR - 74*sG + 112*sB + 128) >> 8) + 128;
@@ -245,7 +245,7 @@ void compress_rgb( unsigned char *rgb, int width, int x, int y, int *r, int *g, 
   (*b) += rgb[pos+2];
   (*r) = (*r) >> 2;
   (*g) = (*g) >> 2;
-  (*b) = (*b) >> 2; 
+  (*b) = (*b) >> 2;
 }
 
 
@@ -256,7 +256,7 @@ void ffmpeg_convert_rgb_yuv420p( unsigned char *rgb, unsigned char *yuv420p, int
 
  unsigned  char *Y, *Cb, *Cr;
  int  r, g, b;
- 
+
  int  w;
 
  i = width*height;
@@ -279,7 +279,7 @@ void ffmpeg_convert_rgb_yuv420p( unsigned char *rgb, unsigned char *yuv420p, int
        g = rgb[i+1];
        b = rgb[i+2];
 
-       
+
 
        w = 128;
        w += 66 * r;
@@ -287,15 +287,15 @@ void ffmpeg_convert_rgb_yuv420p( unsigned char *rgb, unsigned char *yuv420p, int
        w += 25 * b;
        w = w >> 8;
        /*Y[y*width+x] =  (char)( (66*(int)rgb[i] + 129*(int)rgb[i+1] + 25*(int)rgb[i+2] + 128) >> 8) + 16; */
-       Y[y*width+x] = (char)(w + 16);       
+       Y[y*width+x] = (char)(w + 16);
 
        /*if ( ( y == 300 ) )
 	 printf( "%i %i %i %i\n", rgb[i], rgb[i+1], rgb[i+2], w ); */
-		       
+
      }
 
- for(y=0;y<height/2;y++) 
-   for(x=0;x<width/2;x++) 
+ for(y=0;y<height/2;y++)
+   for(x=0;x<width/2;x++)
      {
        /*i = ( y*2*width+(x*2))*3;
 
@@ -311,7 +311,7 @@ void ffmpeg_convert_rgb_yuv420p( unsigned char *rgb, unsigned char *yuv420p, int
        w += 112*b;
        w = w >> 8;
        Cb[y*width/2+x] = (unsigned char) (w + 128 );
-       
+
        w = 128;
        w += 112*r;
        w -= 94*g;
@@ -320,7 +320,7 @@ void ffmpeg_convert_rgb_yuv420p( unsigned char *rgb, unsigned char *yuv420p, int
        Cr[y*width/2+x] = (unsigned char) (w + 128 );
        /*Cb[y*width+x] =  (unsigned char)( (-38*rgb[i] - 74*rgb[i+1] + 112*rgb[i+2] + 128) >> 8) + 128;
 	 Cr[y*width+x] = (unsigned char)( (112*rgb[i] - 94*rgb[i+1] - 18*rgb[i+2] + 128) >> 8) + 128; */
-       /*Cb[y*width+x] = 128; 
+       /*Cb[y*width+x] = 128;
 	 Cr[y*width/2+x] = 128; */
      }
 }
@@ -333,7 +333,7 @@ void ffmpeg_create_yuv( unsigned char **yuv_pixels, int *yuv_size)
 
   int                i;
 
-  MagickBooleanType  result;
+  MagickPassFail    result;
 
 
   magick_check_current_image();
@@ -345,15 +345,15 @@ void ffmpeg_create_yuv( unsigned char **yuv_pixels, int *yuv_size)
   (*yuv_size) = i + i / 2;
   (*yuv_pixels) = malloc( (*yuv_size) );
 
-  
-  result = MagickExportImagePixels( current_image->im,
-				    0, 0, 
-				    current_image->width, current_image->height, 
+
+  result = MagickGetImagePixels( current_image->im,
+				    0, 0,
+				    current_image->width, current_image->height,
 				    "RGB",
 				    CharPixel,
 				    rgb_pixels );
 
-  if ( result == MagickFalse )
+  if ( result == MagickFail )
     {
       output( 1, "Pixel extraction failed!\n" );
       free( (*yuv_pixels) );
@@ -361,9 +361,9 @@ void ffmpeg_create_yuv( unsigned char **yuv_pixels, int *yuv_size)
     }
   else
     {
-      ffmpeg_convert_rgb_yuv420p( rgb_pixels, 
+      ffmpeg_convert_rgb_yuv420p( rgb_pixels,
 				  (*yuv_pixels),
-				  current_image->width, 
+				  current_image->width,
 				  current_image->height );
 
     }
@@ -434,7 +434,7 @@ void ffmpeg_done( void )
       /*pclose( ffmpeg ); */
       fclose( ffmpeg );
     }
-   
+
   /* remove ffmpeg pipe */
   if ( tempfile != NULL )
     {
@@ -447,7 +447,7 @@ void ffmpeg_done( void )
   /* removing temp directory */
   erg = rmdir( tempdir );
   /*if ( erg != 0 )
-    output( 1, "Can't delete tempory directory '%s' (%s)!\n", 
+    output( 1, "Can't delete tempory directory '%s' (%s)!\n",
     tempdir, strerror( errno ) ); */
 
 }

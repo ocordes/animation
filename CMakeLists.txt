@@ -29,7 +29,7 @@ FIND_PACKAGE(FLEX REQUIRED)
 FIND_PACKAGE(BISON REQUIRED)
 
 BISON_TARGET( parser src/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.c )
-FLEX_TARGET( scanner src/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.c )
+FLEX_TARGET( scanner src/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.c COMPILE_FLAGS "--yylineno --header-file=${CMAKE_CURRENT_BINARY_DIR}/scanner.h" )
 ADD_FLEX_BISON_DEPENDENCY( scanner parser )
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
@@ -50,7 +50,7 @@ target_include_directories( animation PUBLIC src )
 # add libraries
 find_package(PkgConfig)
 pkg_check_modules(PC_MagickWand REQUIRED GraphicsMagickWand)
-target_link_libraries( animation  ${PC_MagickWand_LIBRARIES})
+target_link_libraries( animation  ${PC_MagickWand_LDFLAGS})
 target_include_directories( animation PUBLIC ${PC_MagickWand_INCLUDE_DIRS})
 target_compile_options( animation PUBLIC ${PC_MagickWand_FLAGS_OTHER})
 

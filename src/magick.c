@@ -519,6 +519,7 @@ void magick_image_load( filedef *file )
   switch( file->type )
     {
     case file_type_empty:
+      output( 10, "Creating blank image ...\n" );
       size = file->dimx * file->dimy * 3;  /* RGB simple 8bit */
       if ( ( pixels = (unsigned char*) calloc( size, 1 ) ) != NULL )
 	      {
@@ -539,6 +540,7 @@ void magick_image_load( filedef *file )
 				      1,    /* rectangle width */
 				      1,    /* filled */
 				      main_project->background  );
+          output( 10, "Done.\n" );
 	      }
       else
       	{

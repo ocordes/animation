@@ -22,7 +22,7 @@
 /* ffmpeg.c
 
    written by: Oliver Cordes 2013-01-11
-   changed by: Oliver Cordes 2016-08-08
+   changed by: Oliver Cordes 2016-08-09
 
    $Id: ffmpeg.c 432 2013-04-28 18:04:53Z ocordes $
 
@@ -353,7 +353,8 @@ void ffmpeg_create_yuv( unsigned char **yuv_pixels, int *yuv_size)
 				    CharPixel,
 				    rgb_pixels );
 
-  if ( result == MagickFail )
+  /* crazy the return value is MagickFail on success ! */
+  if ( result == MagickPass )
     {
       output( 1, "Pixel extraction failed!\n" );
       free( (*yuv_pixels) );

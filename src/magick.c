@@ -165,6 +165,7 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
   dwand = NewDrawingWand();
 
   DrawSetFontSize( dwand, font->font_size );
+
   if ( textline->nrfragments == 0 )
     {
       /* set standard font */
@@ -176,49 +177,56 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
   else
     {
       for (i=0;i<textline->nrfragments;i++)
-	{
-	  if ( textline->fragments[i]->size_override== -1 )
-	    DrawSetFontSize( dwand, font->font_size );
-	  else
-	    DrawSetFontSize( dwand, textline->fragments[i]->size_override );
-	  switch( textline->fragments[i]->fontnr )
-	    {
-	    case 0:   /* regular */
-	      DrawSetFont( dwand, font->font_name ) ;
-	      break;
-	    case 1:   /* bold */
-	      if ( font->bold_name != NULL )
-		DrawSetFont( dwand, font->bold_name ) ;
-	      else
-		DrawSetFont( dwand, font->font_name ) ;
-	      break;
-	    case 2:   /* italics */
-	      if ( font->italic_name != NULL )
-		DrawSetFont( dwand, font->italic_name ) ;
-	      else
-		 DrawSetFont( dwand, font->font_name ) ;
-	      break;
-	    case 3:   /* bolditalics */
-	      if ( font->bolditalic_name != NULL )
-		DrawSetFont( dwand, font->bolditalic_name ) ;
-	      else
-		 DrawSetFont( dwand, font->font_name ) ;
-	      break;
-	    }
-	  fm = MagickQueryFontMetrics( current_image->im,
-				       dwand,
-				       textline->fragments[i]->words );
-	  textline->fragments[i]->fm_width = fm[4];
-	  output( 2, ">%s< w=%f h=%f\n",
-		  textline->fragments[i]->words, fm[4], fm[5] );
-	  width += fm[4];
-	  if ( fm[5] > height )
-	    height = fm[5];
-	  if ( fm[2] > asc_height )
-	    asc_height = fm[2];
-	  if ( fabs( fm[5] ) > sep )
-	    sep = fabs( fm[5] );
-	}
+	      {
+	        if ( textline->fragments[i]->size_override == -1 )
+	          DrawSetFontSize( dwand, font->font_size );
+	        else
+	          DrawSetFontSize( dwand, textline->fragments[i]->size_override );
+	        switch( textline->fragments[i]->fontnr )
+	          {
+	            case 0:   /* regular */
+	              DrawSetFont( dwand, font->font_name ) ;
+	              break;
+	            case 1:   /* bold */
+	              if ( font->bold_name != NULL )
+		              DrawSetFont( dwand, font->bold_name ) ;
+	              else
+		              DrawSetFont( dwand, font->font_name ) ;
+	              break;
+	            case 2:   /* italics */
+	              if ( font->italic_name != NULL )
+		              DrawSetFont( dwand, font->italic_name ) ;
+	              else
+		              DrawSetFont( dwand, font->font_name ) ;
+	              break;
+	            case 3:   /* bolditalics */
+	              if ( font->bolditalic_name != NULL )
+		              DrawSetFont( dwand, font->bolditalic_name ) ;
+	              else
+		              DrawSetFont( dwand, font->font_name ) ;
+	              break;
+	          }
+	        fm = MagickQueryFontMetrics( current_image->im,
+				          dwand,
+				          textline->fragments[i]->words );
+          if ( fm == NULL )
+          {
+            output( 2, "MagickQueryFontMetrics failed!\n");
+            output( 2, "Words: %s\n", textline->fragments[i]->words );
+          }
+          else
+          {
+	          textline->fragments[i]->fm_width = fm[4];
+	          output( 2, ">%s< w=%f h=%f\n", textline->fragments[i]->words, fm[4], fm[5] );
+  	        width += fm[4];
+	          if ( fm[5] > height )
+	            height = fm[5];
+	          if ( fm[2] > asc_height )
+	            asc_height = fm[2];
+	          if ( fabs( fm[5] ) > sep )
+	            sep = fabs( fm[5] );
+          }
+	      }
     }
 
   if ( fm != NULL )

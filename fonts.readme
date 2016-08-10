@@ -1,0 +1,8 @@
+Animation is using the image library of
+ImageMagick. Therefore, fonts are used which are
+only available by ImageMagick istself. To get a full list
+of all installed and recognized fonts use:
+
+convert -list font | grep "Font:" | cut -d":" -f2 | sort
+
+on Linux/MacOS systems.

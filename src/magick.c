@@ -185,7 +185,22 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
 	        switch( textline->fragments[i]->fontnr )
 	          {
 	            case 0:   /* regular */
+                output( 2, "set font: %s\n", font->font_name );
 	              DrawSetFont( dwand, font->font_name ) ;
+
+                {
+                  char **fl;
+                  unsigned long number_fonts, i;
+
+                  fl = MagickQueryFonts( font->font_name, &number_fonts );
+
+                  for (i=0;i<number_fonts;i++)
+                    output( 2, "font (#%i): %s\n", i, fl[i]);
+
+                }
+                fm = MagickQueryFontMetrics( current_image->im, dwand, "Wym");
+                if ( fm == NULL )
+                  output( 2, "MagickQueryFontMetrics failed\n");
 	              break;
 	            case 1:   /* bold */
 	              if ( font->bold_name != NULL )
@@ -212,7 +227,6 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
           if ( fm == NULL )
           {
             output( 2, "MagickQueryFontMetrics failed!\n");
-            output( 2, "Words: %s\n", textline->fragments[i]->words );
           }
           else
           {

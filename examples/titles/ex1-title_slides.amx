@@ -48,12 +48,14 @@ endfontdef
 global DEBUG = 1
 
 block "intro"
-      loop empty 250 1024 768 # 10 seconds black
+      #loop empty 250 1024 768 # 10 seconds black
+      loop empty 1 1024 768 # 10 seconds black
       print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
 
       load $FILE
 
       text "right" "top" "Copyright_font" "i=%i" % ( $FRAMENR )
+      #text "right" "top" "Test" "i=%i" % ( $FRAMENR )
 endblock
 
 

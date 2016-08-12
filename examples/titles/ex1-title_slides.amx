@@ -3,7 +3,7 @@
 # create a title movies with slides
 #
 # written by: Oliver Cordes 2016-08-08
-# changed by: Oliver Cordes 2016-08-08
+# changed by: Oliver Cordes 2016-08-12
 #
 
 project 'ex1-title_slides'
@@ -48,14 +48,13 @@ endfontdef
 global DEBUG = 1
 
 block "intro"
-      #loop empty 250 1024 768 # 10 seconds black
-      loop empty 1 1024 768 # 10 seconds black
+      loop empty 250 1024 576 # 10 seconds black
+      #loop empty 1 1024 576 # 10 seconds black
       print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
 
       load $FILE
 
-      text "right" "top" "Copyright_font" "i=%i" % ( $FRAMENR )
-      #text "right" "top" "Test" "i=%i" % ( $FRAMENR )
+      text "left" "top" "Copyright_font" "i=%i" % ( $FRAMENR )
 endblock
 
 
@@ -65,10 +64,10 @@ postproc
   ALPHA = 0.0
  endif
  #print "Postproc"
- ###text "left" 100 "Copyright_font" "(C) 2012 by <b>Rinaldo Lonley</b>"
+ text "left" 100 "Copyright_font" "(C) 2012 by <b>Rinaldo Lonley</b>"
  ####textalpha $ALPHA  "right" "bottom" "Copyright_font" "(C) by Rinaldo Lonley Animation V%s" % $AVERSION
  #if ( $FRAMENR > 2000 ) & ( $FRAMENR < 1000 )
- #  text 0 -100 Copyright_font "%i %02i:%02i:%02i.%02i" $FRAMENR $MTIME.HOUR $MTIME.MIN $MTIME.SEC $MTIME.FRAME
+ text "right" "bottom" "Copyright_font" "%i %02i:%02i:%02i.%02i" % ($FRAMENR, $MTIME.HOUR, $MTIME.MIN, $MTIME.SEC, $MTIME.FRAME )
  #endif
 endpostproc
 

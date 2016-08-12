@@ -22,7 +22,7 @@
 /* magick.c
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2016-08-08
+   changed by: Oliver Cordes 2016-08-12
 
    $Id: magick.c 687 2014-09-14 17:53:49Z ocordes $
 
@@ -39,6 +39,7 @@
 
 #include "amath.h"
 #include "font.h"
+#include "gmagick_ext.h"
 #include "image.h"
 #include "imagedef.h"
 #include "magick.h"
@@ -148,6 +149,22 @@ MagickWand *magick_pop_image( int *x, int *y, int *width, int *height )
 
 /* text rendering routines */
 
+
+void magick_fonts_verify( void )
+{
+  // {
+  //   char **fl;
+  //   unsigned long number_fonts, i;
+  //
+  //   fl = MagickQueryFonts( font->font_name, &number_fonts );
+  //
+  //   for (i=0;i<number_fonts;i++)
+  //     output( 2, "font (#%i): %s\n", i, fl[i]);
+  //
+  // }
+}
+
+
 void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
 {
   DrawingWand   *dwand = NULL;
@@ -187,20 +204,6 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
 	            case 0:   /* regular */
                 output( 2, "set font: %s\n", font->font_name );
 	              DrawSetFont( dwand, font->font_name ) ;
-
-                {
-                  char **fl;
-                  unsigned long number_fonts, i;
-
-                  fl = MagickQueryFonts( font->font_name, &number_fonts );
-
-                  for (i=0;i<number_fonts;i++)
-                    output( 2, "font (#%i): %s\n", i, fl[i]);
-
-                }
-                fm = MagickQueryFontMetrics( current_image->im, dwand, "Wym");
-                if ( fm == NULL )
-                  output( 2, "MagickQueryFontMetrics failed\n");
 	              break;
 	            case 1:   /* bold */
 	              if ( font->bold_name != NULL )
@@ -301,6 +304,7 @@ void magic_textfile_drawline( int posx, int posy, double alpha, font_descr *font
   if ( line->nrfragments == 0 )
     return;
 
+
   /* setup the font and image*/
   dwand = NewDrawingWand();
   pwand = NewPixelWand();
@@ -346,11 +350,17 @@ void magic_textfile_drawline( int posx, int posy, double alpha, font_descr *font
 	  break;
 	}
 
-      PixelSetOpacity( pwand, alpha );
+
+      /* Pixel setalpha is not workgin on graphicsmagick */
+      //PixelSetAlpha( pwand, alpha );
+      //PixelSetOpacity( pwand, 1-alpha );
+      //PixelSetOpacity( pwand, 0.9 );
       // DrawSetStrokeColor( dwand, pwand );
       DrawSetFillColor( dwand, pwand );
 
       // Now draw the text
+      output( 1, "x=%i y=%i\n", x, posy );
+      output( 1, "words=%s\n", line->fragments[i]->words );
       DrawAnnotation(dwand, x, posy, (unsigned char*) line->fragments[i]->words );
       x += line->fragments[i]->fm_width;
     }
@@ -546,10 +556,8 @@ void magick_image_load( filedef *file )
       if ( ( pixels = (unsigned char*) calloc( size, 1 ) ) != NULL )
 	      {
 	        current_image->im = NewMagickWand();
-          result = MagickSetImagePixels( current_image->im,
-              0,
-              0,
-					    file->dimx,
+          result = MagickConstituteImage( current_image->im,
+              file->dimx,
 					    file->dimy,
 					    "RGB",
 					    CharPixel,

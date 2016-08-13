@@ -358,9 +358,6 @@ void magic_textfile_drawline( int posx, int posy, double alpha, font_descr *font
       // DrawSetStrokeColor( dwand, pwand );
       DrawSetFillColor( dwand, pwand );
 
-      // Now draw the text
-      output( 1, "x=%i y=%i\n", x, posy );
-      output( 1, "words=%s\n", line->fragments[i]->words );
       DrawAnnotation(dwand, x, posy, (unsigned char*) line->fragments[i]->words );
       x += line->fragments[i]->fm_width;
     }

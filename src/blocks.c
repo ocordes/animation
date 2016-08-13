@@ -15,7 +15,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -57,9 +57,9 @@ int file_create_empty_files( blockdef *block, int nrfiles, int dimx, int dimy )
   int      nroff;
   int      i;
   char     dummy[100];
-  
+
   assert( block != NULL );
-	
+
   nroff = block->nrfiles;
 
   files = (filedef*) malloc( sizeof( blockdef ) * ( nrfiles + nroff ) );
@@ -101,15 +101,15 @@ int file_create_dir_files( blockdef *block, char *filedescr )
   filedef *files;
   filedef *temp;
   int      nrfiles = 0;
-  
+
   FILE    *pipe;
   int      len;
   char    *cmd;
   char    *line;
-  
+
   int      nroff;
   int      i;
-  
+
 
   assert( block != NULL );
 
@@ -118,7 +118,7 @@ int file_create_dir_files( blockdef *block, char *filedescr )
   cmd = (char*) malloc( len );
   line = (char*) malloc( len );
   sprintf( cmd, "ls %s | sort -n", filedescr );
-  
+
   /* copy all files into a temporary array */
   temp = (filedef*) malloc( sizeof( filedef) * max_files_per_loop );
 
@@ -132,7 +132,7 @@ int file_create_dir_files( blockdef *block, char *filedescr )
       line[strlen(line)-1] = '\0';
       temp[nrfiles].type = file_type_file;
       temp[nrfiles].name = strdup( line );
-      
+
       nrfiles++;
     }
   fclose( pipe );
@@ -146,7 +146,7 @@ int file_create_dir_files( blockdef *block, char *filedescr )
   nroff = block->nrfiles;
 
   files = (filedef*) malloc( sizeof( blockdef ) * ( nrfiles + nroff ) );
-  
+
   if ( files == NULL ) aabort( abort_msg_malloc, "file definitions" );
 
 
@@ -251,7 +251,7 @@ void block_new_block_name( char *name )
 
   current_block->name = strdup( name );
   output( 1,"Creating a new block '%s'!\n", current_block->name );
-  
+
   push_parser_status( parser_status_block );
 
   current_block->nrfiles  = 0;
@@ -279,14 +279,14 @@ void block_free_block( blockdef *block )
 
   /* release memory */
   for (i=0;i<block->nrfiles;i++)
-    nfree( block->files[i].name ); 
+    nfree( block->files[i].name );
   nfree( block->files );
 
   free_variables( block->vars );
-  free_node( block->commands ); 
+  free_node( block->commands );
   nfree( block->name );
 
-  nfree( block ); 
+  nfree( block );
 }
 
 
@@ -297,19 +297,19 @@ void project_update_variables( void )
   int hours;
   int frames;
 
-  seconds = main_project->framenr / main_project->fps; 
+  seconds = main_project->framenr / main_project->fps;
    frames = main_project->framenr % main_project->fps;
 
   minutes = seconds / 60;
   seconds = seconds % 60;
 
-  hours = minutes % 60;
-  minutes = minutes % 60; 
- 
-  set_int_variable( main_project->vars, "MTIME.FRAME", frames ); 
+  hours = minutes / 60;
+  minutes = minutes % 60;
+
+  set_int_variable( main_project->vars, "MTIME.FRAME", frames );
   set_int_variable( main_project->vars, "MTIME.SEC", seconds );
   set_int_variable( main_project->vars, "MTIME.MIN", minutes );
-  set_int_variable( main_project->vars, "MTIME.HOUR", hours ); 
+  set_int_variable( main_project->vars, "MTIME.HOUR", hours );
 }
 
 

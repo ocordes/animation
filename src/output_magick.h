@@ -31,4 +31,8 @@
 #define __output_magick_h 1
 
 
+int output_magick_jpeg( void );
+int output_magick_png( void );
+
+
 #endif

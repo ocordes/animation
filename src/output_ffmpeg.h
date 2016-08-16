@@ -15,24 +15,24 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-/* ffmpeg.h
+/* output_ffmpeg.h
 
    written by: Oliver Cordes 2013-01-11
-   changed by: Oliver Cordes 2013-01-11
+   changed by: Oliver Cordes 2016-08-14
 
    $Id: ffmpeg.h 352 2013-01-11 20:19:33Z ocordes $
 
 */
 
-#ifndef __ffmpeg_h 
+#ifndef __output_ffmpeg_h
 
-#define __ffmpeg_h 1
+#define __output_ffmpeg_h 1
 
-int  ffmpeg_start( void );
+int  ffmpeg_start( int );
 
 int  ffmpeg_out_func( void );
 

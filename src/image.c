@@ -15,14 +15,14 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* image.c
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2013-04-28
+   changed by: Oliver Cordes 2016-08-14
 
    $Id: image.c 687 2014-09-14 17:53:49Z ocordes $
 
@@ -39,7 +39,7 @@
 
 
 #include "amath.h"
-#include "ffmpeg.h"
+#include "output_ffmpeg.h"
 #include "image.h"
 #include "magick.h"
 #include "output.h"
@@ -116,7 +116,7 @@ int image_position_x( parsenode *nposx, int width, int offset )
     default:
       posx = 0;
     }
-  
+
   free_constant( con );
 
   return posx;
@@ -169,7 +169,7 @@ int image_position_y( parsenode *nposy, int height, int offset )
     default:
       posy = 0;
     }
-  
+
   free_constant( con );
 
   return posy;
@@ -180,9 +180,9 @@ char *image_out_raw_filename( char *ending )
 {
   char dummy[2000];
 
-  snprintf( dummy, 2000, "%s/rawfile%05i.%s", 
+  snprintf( dummy, 2000, "%s/rawfile%05i.%s",
 	    main_project->outputdir,
-	    main_project->framenr, 
+	    main_project->framenr,
 	    ending );
 
   return strdup( dummy );
@@ -282,7 +282,7 @@ int image_out_block_start( char *blockname )
       if ( output_func->block_start_func != NULL )
 	erg = output_func->block_start_func( blockname );
     }
-  
+
   return erg;
 }
 
@@ -296,6 +296,6 @@ int image_out_block_end( void )
       if ( output_func->block_end_func != NULL )
 	erg = output_func->block_end_func( );
     }
-  
+
   return erg;
 }

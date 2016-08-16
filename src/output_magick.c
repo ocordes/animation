@@ -25,3 +25,56 @@
    changed by: Oliver Cordes 2016-08-14
 
 */
+
+#include "image.h"
+#include "magick.h"
+#include "output.h"
+
+
+
+int output_magick( void )
+{
+  char *filename;
+
+  MagickPassFail result;
+
+  magick_check_current_image( 1 );
+
+  filename = image_out_raw_filename( "jpg" );
+
+  if ( image_out_access( filename ) == 0 )
+    {
+      output( 1, "%s exists! File will not be saved!\n", filename );
+      return 0;
+    }
+
+  output( 10, "Saving %s ...\n", filename );
+
+  result = MagickWriteImage( current_image->im, filename );
+
+  if ( result == MagickFail )
+    {
+      output( 1, "Warning: Image '%s' can't be written!\n", filename );
+    }
+
+  output( 10, "Done.\n" );
+
+  free( filename );
+
+  if ( result == MagickPass )
+    return 0;
+  else
+    return 1;
+}
+
+
+int output_magick_jpeg( void )
+{
+
+}
+
+
+int output_magick_png( void )
+{
+
+}

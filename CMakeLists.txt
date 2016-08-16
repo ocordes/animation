@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 2.6)
 project( animation )
 
+# written by: Oliver Cordes 2016-08-09
+# changed by: Oliver Cordes 2016-08-16
+
 set(VERSION 0.5.0)
 
 # get current date
@@ -70,6 +73,41 @@ configure_file ("${PROJECT_SOURCE_DIR}/src/config.h.in"
                 "${PROJECT_BINARY_DIR}/config.h" )
 # Now make sure that you the the build directory on your "Include" path when compiling
 include_directories(${PROJECT_BINARY_DIR})
+
+
+# sphinx part
+find_package(Sphinx REQUIRED)
+
+if(NOT DEFINED SPHINX_THEME)
+    set(SPHINX_THEME default)
+endif()
+
+if(NOT DEFINED SPHINX_THEME_DIR)
+    set(SPHINX_THEME_DIR)
+endif()
+
+# configured documentation tools and intermediate build results
+set(BINARY_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/_build")
+
+# Sphinx cache with pickled ReST documents
+set(SPHINX_CACHE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_doctrees")
+
+# HTML output directory
+set(SPHINX_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/html")
+
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/doc/source/conf.py.in"
+    "${BINARY_BUILD_DIR}/conf.py"
+    @ONLY)
+
+add_custom_target(animation_docs ALL
+    ${SPHINX_EXECUTABLE}
+        -q -b html
+        -c "${BINARY_BUILD_DIR}"
+        -d "${SPHINX_CACHE_DIR}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/doc/source"
+        "${SPHINX_HTML_DIR}"
+    COMMENT "Building HTML documentation with Sphinx")
 
 
 # install part

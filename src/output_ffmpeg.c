@@ -19,10 +19,10 @@
 
 */
 
-/* ffmpeg.c
+/* output_ffmpeg.c
 
    written by: Oliver Cordes 2013-01-11
-   changed by: Oliver Cordes 2016-08-12
+   changed by: Oliver Cordes 2016-08-14
 
    $Id: ffmpeg.c 432 2013-04-28 18:04:53Z ocordes $
 
@@ -43,6 +43,7 @@
 #include "image.h"
 #include "magick.h"
 #include "output.h"
+#include "output_ffmpeg.h"
 
 
 /* temporary files */

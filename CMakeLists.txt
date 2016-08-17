@@ -92,6 +92,8 @@ set(BINARY_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/_build")
 # Sphinx cache with pickled ReST documents
 set(SPHINX_CACHE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_doctrees")
 
+file(GLOB_RECURSE DOC_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/doc/source/* )
+
 # HTML output directory
 set(SPHINX_HTML_DIR "${CMAKE_CURRENT_BINARY_DIR}/html")
 
@@ -100,14 +102,20 @@ configure_file(
     "${BINARY_BUILD_DIR}/conf.py"
     @ONLY)
 
-add_custom_target(animation_docs ALL
-    ${SPHINX_EXECUTABLE}
+add_custom_command(
+    OUTPUT ${SPHINX_HTML_DIR}/index.html
+    DEPENDS ${DOC_SOURCES}
+    COMMAND ${SPHINX_EXECUTABLE}
         -q -b html
         -c "${BINARY_BUILD_DIR}"
         -d "${SPHINX_CACHE_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/doc/source"
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx")
+
+add_custom_target(docs_html ALL
+    DEPENDS ${SPHINX_HTML_DIR}/index.html
+    )
 
 
 # install part

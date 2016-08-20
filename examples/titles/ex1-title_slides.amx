@@ -8,8 +8,8 @@
 
 project 'ex1-title_slides'
 
-output     "ffmpeg"
-#output     "jpeg"
+#output     "ffmpeg"
+output     "png"
 outputfile "example1.avi"
 outputdir "~/test_animation"
 

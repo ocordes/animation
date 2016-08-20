@@ -22,7 +22,7 @@
 /* output_magick.c
 
    writtem by: Oliver Cordes 2016-08-14
-   changed by: Oliver Cordes 2016-08-14
+   changed by: Oliver Cordes 2016-08-20
 
 */
 
@@ -32,15 +32,11 @@
 
 
 
-int output_magick( void )
+int output_magick( char *filename )
 {
-  char *filename;
-
   MagickPassFail result;
 
   magick_check_current_image( 1 );
-
-  filename = image_out_raw_filename( "jpg" );
 
   if ( image_out_access( filename ) == 0 )
     {
@@ -59,8 +55,6 @@ int output_magick( void )
 
   output( 10, "Done.\n" );
 
-  free( filename );
-
   if ( result == MagickPass )
     return 0;
   else
@@ -70,11 +64,29 @@ int output_magick( void )
 
 int output_magick_jpeg( void )
 {
+  char *filename;
+  int   result;
 
+  filename = image_out_raw_filename( "jpg" );
+
+  result = output_magick( filename );
+
+  free( filename );
+
+  return result;
 }
 
 
 int output_magick_png( void )
 {
+  char *filename;
+  int   result;
 
+  filename = image_out_raw_filename( "png" );
+
+  result = output_magick( filename );
+
+  free( filename );
+
+  return result;
 }

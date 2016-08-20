@@ -22,7 +22,7 @@
 /* image.c
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2016-08-14
+   changed by: Oliver Cordes 2016-08-30
 
    $Id: image.c 687 2014-09-14 17:53:49Z ocordes $
 
@@ -40,6 +40,7 @@
 
 #include "amath.h"
 #include "output_ffmpeg.h"
+#include "output_magick.h"
 #include "image.h"
 #include "magick.h"
 #include "output.h"
@@ -58,6 +59,7 @@ typedef struct{
 
 _output_func output_funcs[] = {
   { "jpeg", NULL, magick_image_out, NULL, NULL, NULL, },
+  { "png", NULL, output_magick_png, NULL, NULL, NULL, },
   { "ffmpeg", ffmpeg_start, ffmpeg_out_func, NULL, NULL, ffmpeg_done },
   { NULL, NULL }
 };

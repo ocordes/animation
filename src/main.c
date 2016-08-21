@@ -15,7 +15,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2013-01-02
+   changed by: Oliver Cordes 2016-08-21
 
 
    $Id: main.c 343 2013-01-02 19:02:00Z ocordes $
@@ -34,7 +34,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h> 
+#include <string.h>
 
 #include <unistd.h>
 #include <getopt.h>
@@ -53,11 +53,12 @@
 
 
 static struct option longopts[] = {
-  { "outfile",    required_argument, NULL, 'o' },
-  { "infile",     required_argument, NULL, 'i' },
-  { "debug",      required_argument, NULL, 'd' },
-  { "dry-run",    0,                 NULL, 'n' },
-  { NULL,         0,                 NULL, 0   }
+  { "outfile",        required_argument, NULL, 'o' },
+  { "infile",         required_argument, NULL, 'i' },
+  { "debug",          required_argument, NULL, 'd' },
+  { "dry-run",        0,                 NULL, 'n' },
+  { "output-formats", 0,                 NULL, 'l' },
+  { NULL,             0,                 NULL, 0   }
 };
 #define options "o:d:n"
 
@@ -78,8 +79,8 @@ void parse_options( int argc, char *argv[] )
   int ch;
 
   int dl;
-  
-  while ( ( ch =getopt_long( argc, argv, 
+
+  while ( ( ch =getopt_long( argc, argv,
 			     options,  longopts, NULL  ) ) != -1 )
     {
       switch( ch )
@@ -103,6 +104,9 @@ void parse_options( int argc, char *argv[] )
 	case 'n':
 	  dry_run = 1;
 	  break;
+  case 'l':
+    image_list_output_formats();
+    exit( 0 );
 	case '?':
 	default:
 	  printf( "unknown option\n" );
@@ -135,7 +139,7 @@ int main( int argc, char* argv[] )
 {
   int erg;
 
-  printf( "ANIMATION v%s (build %s) (C) 2010-2013 Oliver Cordes\n",
+  printf( "ANIMATION v%s (build %s) (C) 2010-2016 Oliver Cordes\n",
 	  VERSION, BUILD );
 
   image_init( argv[0] );
@@ -149,14 +153,14 @@ int main( int argc, char* argv[] )
   open_parser_source( srcfile );
 
   printf( "Parsing file ...\n" );
-  erg = yyparse(); 
+  erg = yyparse();
   fclose( yyin );
   printf( "Done.\n" );
-  free( srcfile ); 
+  free( srcfile );
 
   if ( erg != 0 )
     {
-      fprintf( stderr, 
+      fprintf( stderr,
 	       "Parsing not successful! Abort Program!\n" );
       return 1;
     }
@@ -172,7 +176,7 @@ int main( int argc, char* argv[] )
       fprintf( stderr, "Abort program due to configuration errors!\n" );
       return 2;
     }
-  
+
   if ( dry_run == 0 )
     erg = execute_execute();
   else

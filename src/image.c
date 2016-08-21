@@ -54,13 +54,15 @@ typedef struct{
   int  (*block_start_func)( char *);
   int  (*block_end_func)(void);
   void (*end_func)(void);
+  char *comment;
 } _output_func;
 
 
 _output_func output_funcs[] = {
-  { "jpeg", NULL, magick_image_out, NULL, NULL, NULL, },
-  { "png", NULL, output_magick_png, NULL, NULL, NULL, },
-  { "ffmpeg", ffmpeg_start, ffmpeg_out_func, NULL, NULL, ffmpeg_done },
+  /*{ "jpeg", NULL, magick_image_out, NULL, NULL, NULL, "jpeg output image format" }, */
+  { "jpeg", NULL, output_magick_jpeg, NULL, NULL, NULL, "jpeg output image format" },
+  { "png", NULL, output_magick_png, NULL, NULL, NULL, "png output image format"},
+  { "ffmpeg", ffmpeg_start, ffmpeg_out_func, NULL, NULL, ffmpeg_done, "avi output via ffmpeg library" },
   { NULL, NULL }
 };
 
@@ -232,15 +234,15 @@ void image_out_find( char *type )
   for( i=0;;i++)
     {
       if ( output_funcs[i].name == NULL )
-	{
-	  output_func = NULL;
-	  break;
-	}
+	      {
+	        output_func = NULL;
+	        break;
+	      }
       if ( strcmp( output_funcs[i].name, type ) == 0 )
-	{
-	  output_func = &output_funcs[i];
-	  break;
-	}
+	      {
+	        output_func = &output_funcs[i];
+	        break;
+	      }
     }
 }
 
@@ -248,10 +250,14 @@ void image_out_init( char *type )
 {
   image_out_find( type );
   if ( output_func != NULL )
-    {
-      if ( output_func->start_func != NULL )
-	output_func->start_func( main_project->blockmovies );
-    }
+  {
+    if ( output_func->start_func != NULL )
+  	  output_func->start_func( main_project->blockmovies );
+  }
+  else
+  {
+    output( 1, "Warning: %s is not a valid output format! Running in dry-mode!\n", type );
+  }
 }
 
 
@@ -294,10 +300,31 @@ int image_out_block_end( void )
   int erg = 1;
 
   if ( output_func != NULL )
-    {
-      if ( output_func->block_end_func != NULL )
-	erg = output_func->block_end_func( );
-    }
+  {
+    if ( output_func->block_end_func != NULL )
+	    erg = output_func->block_end_func( );
+  }
 
   return erg;
+}
+
+
+/* image_list_output_formats
+
+   list all defined output formats for animation
+   */
+
+void image_list_output_formats( void )
+{
+  int i;
+
+  output( 1, "\nSupported output formats:\n" );
+  for (i=0;;++i)
+  {
+    if ( output_funcs[i].name != NULL )
+      output( 1, " %-10s %s\n", output_funcs[i].name, output_funcs[i].comment );
+    else
+      break;
+  }
+  output( 1, "\n" );
 }

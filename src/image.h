@@ -15,14 +15,14 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* image.h
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2013-04-28
+   changed by: Oliver Cordes 2016-08-21
 
    $Id: image.h 687 2014-09-14 17:53:49Z ocordes $
 
@@ -45,6 +45,8 @@ void image_done( void );
 void image_out_init( char * );
 void image_out_write( void );
 void image_out_done( void );
+
+void image_list_output_formats( void );
 
 
 char *image_out_raw_filename( char *ending );

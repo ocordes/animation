@@ -22,7 +22,7 @@
 /* macro.h
 
    written by: Oliver Cordes 2014-08-31
-   changed by: Oliver Cordes 2014-09-06
+   changed by: Oliver Cordes 2016-08-24
 
 
 */

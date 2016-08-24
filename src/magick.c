@@ -22,7 +22,7 @@
 /* magick.c
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2016-08-12
+   changed by: Oliver Cordes 2016-08-24
 
    $Id: magick.c 687 2014-09-14 17:53:49Z ocordes $
 
@@ -600,42 +600,6 @@ void magick_image_load( filedef *file )
   magick_image_info();
 }
 
-
-int magick_image_out( void )
-{
-  char *filename;
-
-  MagickPassFail result;
-
-  magick_check_current_image( 1 );
-
-  filename = image_out_raw_filename( "jpg" );
-
-  if ( image_out_access( filename ) == 0 )
-    {
-      output( 1, "%s exists! File will not be saved!\n", filename );
-      return 0;
-    }
-
-  output( 10, "Saving %s ...\n", filename );
-
-  /* MagickSetImageCompressionQuality( current_image->im, 95 ); */
-  result = MagickWriteImage( current_image->im, filename );
-
-  if ( result == MagickFail )
-    {
-      output( 1, "Warning: Image '%s' can't be written!\n", filename );
-    }
-
-  output( 10, "Done.\n" );
-
-  free( filename );
-
-  if ( result == MagickPass )
-    return 0;
-  else
-    return 1;
-}
 
 
 void magick_text( parsenode *nposx,

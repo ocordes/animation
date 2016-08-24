@@ -15,14 +15,14 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* magick.h
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2014-09-14
+   changed by: Oliver Cordes 2016-08-24
 
    $Id: magick.h 687 2014-09-14 17:53:49Z ocordes $
 
@@ -75,7 +75,6 @@ void magick_image_window( parsenode*, parsenode*, parsenode *, parsenode* );
 void magick_image_endwindow( void );
 
 void magick_image_load( filedef *file );
-int  magick_image_out( void );
 
 void magick_text( parsenode*, parsenode*, parsenode*, parsenode*, parsenode* );
 void magick_textfile( parsenode*, parsenode*, parsenode*, parsenode*, parsenode* );

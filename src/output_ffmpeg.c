@@ -75,16 +75,17 @@ int ffmpeg_open( char *fname )
       return 1;
     }
 
+  /*
   erg = unlink( filename );
   if ( ( erg != 0 ) && ( errno != ENOENT ) )
     {
       output( 1, "Can't remove output file '%s' (%s)\n",
 	      filename, strerror( errno ) );
       return 1;
-    }
+    } */
 
 
-  snprintf( cmdline, 1000, "ffmpeg -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i %s 2> ffmpeg.log &",
+  snprintf( cmdline, 1000, "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i %s 2> ffmpeg.log &",
 	    main_project->geometry[0],
 	    main_project->geometry[1],
 	    tempfile,

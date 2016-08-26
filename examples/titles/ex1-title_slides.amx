@@ -8,8 +8,8 @@
 
 project 'ex1-title_slides'
 
-#output     "ffmpeg"
-output     "png"
+output     "ffmpeg"
+#output     "png"
 outputfile "example1.avi"
 outputdir "~/test_animation"
 
@@ -64,7 +64,7 @@ postproc
   ALPHA = 0.0
  endif
  #print "Postproc"
- text "left" 100 "Copyright_font" "(C) 2012 by <b>Rinaldo Lonley</b>"
+ text "left" 100 "Copyright_font" "(C) 2016 by <b>Rinaldo Lonley</b>"
  ####textalpha $ALPHA  "right" "bottom" "Copyright_font" "(C) by Rinaldo Lonley Animation V%s" % $AVERSION
  #if ( $FRAMENR > 2000 ) & ( $FRAMENR < 1000 )
  text "right" "bottom" "Copyright_font" "%i %02i:%02i:%02i.%02i" % ($FRAMENR, $MTIME.HOUR, $MTIME.MIN, $MTIME.SEC, $MTIME.FRAME )

@@ -15,14 +15,14 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* blocks.h
 
    written by: Oliver Cordes 2013-03-29
-   changed by: Oliver Cordes 2014-09-07
+   changed by: Oliver Cordes 2016-ß8-28
 
    $Id: blocks.h 679 2014-09-07 17:32:05Z ocordes $
 
@@ -66,19 +66,19 @@ extern blockdef    *current_block;
 
 /* file creation reoutines */
 
-int file_create_empty_files( blockdef *block, int nrfiles, int dimx, int dimy );
-int file_create_dir_files( blockdef *block, char *filedescr );
+int file_create_empty_files( blockdef *block, int nrfiles, int dimx, int dimy, int fps );
+int file_create_dir_files( blockdef *block, char *filedescr, int fps );
 int file_create_static_files( blockdef *block, char *filename, int nrfiles );
 
 
 /* block setting routines */
 
 void       block_new_block( parsenode  *name );
-void       block_new_block_name( char *name );
+void       block_new_block_name( char *name );   
 void       block_free_block( blockdef *block );
 void       block_add_commands( parsenode *commands );
-parsenode* block_add_files_empty( parsenode *nrfiles, parsenode *ndimx, parsenode *ndimy );
-parsenode* block_add_files_string( parsenode *s );
+parsenode* block_add_files_empty( parsenode *nrfiles, parsenode *ndimx, parsenode *ndimy, parsenode *nfps );
+parsenode* block_add_files_string( parsenode *s, parsenode *nfps );
 parsenode* block_add_files_static( parsenode *s, parsenode *nrfiles );
 
 

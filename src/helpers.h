@@ -15,7 +15,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -24,7 +24,7 @@
 
 
    written by: Oliver Cordes 2010-06-29
-   changed by: Oliver Cordes 2013-01-01
+   changed by: Oliver Cordes 2016-08-28
 
    $Id: helpers.h 343 2013-01-02 19:02:00Z ocordes $
 
@@ -64,5 +64,6 @@ void open_parser_source( char * );
 
 void yyerror(const char *str);
 
-#endif
+char *get_amx_lang_version( void );
 
+#endif

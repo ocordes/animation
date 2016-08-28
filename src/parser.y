@@ -16,7 +16,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2014-09-07
+   changed by: Oliver Cordes 2016-08-28
 
    $Id: parser.y 679 2014-09-07 17:32:05Z ocordes $
 
@@ -45,16 +45,22 @@
 #include "parsetree.h"
 #include "project.h"
 #include "scanner.h"
- 
+
 int yywrap()
 {
         return 1;
-} 
-  
+}
 
+#define amx_lang_version "0.9"
+
+
+char *get_amx_lang_version( void )
+{
+  return strdup( amx_lang_version );
+}
 
 %}
- 
+
 
 %token TCONSTANT
 %token TVARIABLE
@@ -70,7 +76,7 @@ int yywrap()
 %token TEQ TNEQ TGREATER TLOWER TGREQ TLOEQ TAND TOR TNOT
 %token TPLUS TMINUS TMULTIPLY TDIVIDE TMOD TSTRING_FMT
 %token TSIN TCOS TTAN TASIN TACOS TATAN TLOG10 TLN TEXP
-%token TBLOCK TENDBLOCK 
+%token TBLOCK TENDBLOCK
 %token TCONTROL TENDCONTROL
 %token TPOSTPROC TENDPOSTPROC
 %token TWINDOW TENDWINDOW
@@ -141,9 +147,11 @@ command_eol      : command TRETURN              { $$ = $1; }
                  ;
 
 command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); }
-                 | TLOOP TEMPTY TCONSTANT       { $$ = block_add_files_empty( $3, NULL, NULL ); }
-                 | TLOOP TEMPTY TCONSTANT TCONSTANT TCONSTANT { $$ = block_add_files_empty( $3, $4, $5 ); }
-                 | TLOOP TFILES TSTRING         { $$ = block_add_files_string( $3 ); }
+                 | TLOOP TEMPTY TCONSTANT       { $$ = block_add_files_empty( $3, NULL, NULL, NULL ); }
+                 | TLOOP TEMPTY TCONSTANT TCONSTANT TCONSTANT { $$ = block_add_files_empty( $3, $4, $5, NULL ); }
+                 | TLOOP TEMPTY TCONSTANT TCONSTANT TCONSTANT TCONSTANT { $$ = block_add_files_empty( $3, $4, $5, $6 ); }
+                 | TLOOP TFILES TSTRING         { $$ = block_add_files_string( $3, NULL ); }
+                 | TLOOP TFILES TSTRING TCONSTANT { $$ = block_add_files_string( $3, $4 ); }
                  | TLOOP TSTATIC TSTRING factor { $$ = block_add_files_static( $3, $4 ); }
                  | TLVARIABLE TASSIGN r_value   { $$ = add_node_cmd_assign( $1, $3 ); }
                  | TTEXTFILE factor factor fontname stringf { $$ = add_node_cmd_textfile( $2, $3, $4, $5, NULL ); }
@@ -181,8 +189,8 @@ window_header    : TWINDOW factor factor factor factor TRETURN { $$ = add_node_w
 fontdef          : fontdef_header font_commands TENDFONTDEF { font_end(); }
                  ;
 
-font_commands    : font_commands font_command_eol 
-                 | font_command_eol              
+font_commands    : font_commands font_command_eol
+                 | font_command_eol
                  ;
 
 font_command_eol : font_command TRETURN
@@ -203,14 +211,14 @@ fontdef_header   : TFONTDEF TSTRING TRETURN   { font_start( $2 );}
                  ;
 
 fontname         : TSTRING                    { $$ = $1; }
-                 ;         
+                 ;
 
 
 imagedef         : imagedef_header imagedef_commands TENDIMAGEDEF { imagedef_end(); }
                  ;
 
-imagedef_commands: imagedef_commands imagedef_command_eol 
-                 | imagedef_command_eol              
+imagedef_commands: imagedef_commands imagedef_command_eol
+                 | imagedef_command_eol
                  ;
 
 imagedef_command_eol : imagedef_command TRETURN
@@ -246,7 +254,7 @@ control_command  : TBLOCK TSTRING               { controls_add_control( $2); }
 control_header   : TCONTROL TRETURN
                  ;
 
-                                 
+
 macrodef         : macro_header commands TENDMACRO      { output( 1, "finishing macro\n" ); macro_add_commands( $2); project_add_macro( current_macro ); }
                  ;
 
@@ -276,7 +284,7 @@ if_command       : TIF if_cond commands TENDIF          { $$ = add_node_if( $2, 
 
 if_cond          : bool_expr TRETURN
                  ;
-                 
+
 bool_expr        : bool_term TAND bool_term             { $$ = add_node_math( $1, $3, node_math_and ); }
                  | bool_term TOR bool_term              { $$ = add_node_math( $1, $3, node_math_or ); }
                  | TNOT bool_term	                { $$ = add_node_not( $2 ); }
@@ -309,16 +317,16 @@ term              : term TMULTIPLY factor               { $$ = add_node_math( $1
                   | term TMOD factor                    { $$ = add_node_math( $1, $3, node_math_mod ); }
                   | factor	                        { $$ = $1; }
                   ;
-                  
+
 factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
 		  | function TL_BRACKET expr TR_BRACKET { $$ = add_node_math_func( $3, $1 ); }
                   | TVARIABLE                           { $$ = $1; }
-                  | TCONSTANT                           { $$ = $1; }   
+                  | TCONSTANT                           { $$ = $1; }
                   | stringf                             { $$ = $1; }
                   | macro_func                          { $$ = $1; }
                   ;
 
- 
+
 function          : TSIN                                { $$ = add_node_math_op( node_math_sin ); }
                   | TCOS                                { $$ = add_node_math_op( node_math_cos ); }
                   | TTAN			        { $$ = add_node_math_op( node_math_tan ); }
@@ -347,5 +355,4 @@ simple_args       : TVARIABLE                          { $$ = add_node_arglist( 
 
 arg_list          : r_value TCOMMA arg_list            { $$ = add_node_arglist( $3, $1 ); }
                   | r_value                            { $$ = add_node_arglist( NULL, $1 ); }
-                  ; 
-
+                  ;

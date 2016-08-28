@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2016-08-21
+   changed by: Oliver Cordes 2016-08-29
 
 
    $Id: main.c 343 2013-01-02 19:02:00Z ocordes $
@@ -137,10 +137,15 @@ void parse_options( int argc, char *argv[] )
 
 int main( int argc, char* argv[] )
 {
-  int erg;
+  int    erg;
+  char  *s;
 
   printf( "ANIMATION v%s (build %s) (C) 2010-2016 Oliver Cordes\n",
 	  VERSION, BUILD );
+
+  s = get_amx_lang_version();
+  printf( " amx_lang_version=%s\n", s);
+  free( s );
 
   image_init( argv[0] );
   project_init();

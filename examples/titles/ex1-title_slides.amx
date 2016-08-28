@@ -15,8 +15,7 @@ outputdir "~/test_animation"
 
 geometry "1024x576"
 
-#fps 25
-fps 3
+fps 25  # default for ffmpeg
 
 bitrate 2000  # in whatever units
 
@@ -48,7 +47,7 @@ endfontdef
 global DEBUG = 1
 
 block "intro"
-      loop empty 250 1024 576 # 10 seconds black
+      loop empty 250 1024 576 3 # 10 seconds black
       #loop empty 1 1024 576 # 10 seconds black
       print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
 

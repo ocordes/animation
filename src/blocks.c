@@ -22,7 +22,7 @@
 /* blocks.c
 
    written by: Oliver Cordes 2013-03-29
-   changed by: Oliver Cordes 2013-03-30
+   changed by: Oliver Cordes 2016-08-28
 
    $Id: blocks.c 420 2013-03-30 17:58:04Z ocordes $
 
@@ -51,7 +51,11 @@ blockdef    *current_block;
 
 /* file structure functions */
 
-int file_create_empty_files( blockdef *block, int nrfiles, int dimx, int dimy )
+int file_create_empty_files( blockdef *block,
+                            int nrfiles,
+                            int dimx,
+                            int dimy,
+                            int fps  )
 {
   filedef *files;
   int      nroff;
@@ -96,7 +100,7 @@ int file_create_empty_files( blockdef *block, int nrfiles, int dimx, int dimy )
 }
 
 
-int file_create_dir_files( blockdef *block, char *filedescr )
+int file_create_dir_files( blockdef *block, char *filedescr, int fps )
 {
   filedef *files;
   filedef *temp;
@@ -320,11 +324,15 @@ void block_add_commands( parsenode *commands )
 }
 
 
-parsenode*  block_add_files_empty( parsenode *nrfiles, parsenode *ndimx, parsenode *ndimy )
+parsenode*  block_add_files_empty( parsenode *nrfiles,
+                                  parsenode *ndimx,
+                                  parsenode *ndimy,
+                                  parsenode *nfps )
 {
   int nr;
   int dimx;
   int dimy;
+  int fps;
 
   assert( current_block != NULL );
   assert( nrfiles != NULL );
@@ -352,24 +360,45 @@ parsenode*  block_add_files_empty( parsenode *nrfiles, parsenode *ndimx, parseno
       dimy = main_project->geometry[1];
     }
 
+  if ( nfps != NULL )
+    {
+      fps = get_int_from_node( nfps );
+      free_node( nfps );
+    }
+  else
+    {
+      fps = main_project->fps;
+    }
 
-  file_create_empty_files( current_block, nr, dimx, dimy );
+  file_create_empty_files( current_block, nr, dimx, dimy, fps );
 
   return NULL;
 }
 
 
-parsenode *block_add_files_string( parsenode *s )
+parsenode *block_add_files_string( parsenode *s,
+                                   parsenode *nfps )
 {
   char *str;
+  int   fps;
 
   assert( current_block != NULL );
   assert( s != NULL );
 
   str = get_string_from_node( s );
-
-  file_create_dir_files( current_block, str );
   free_node( s );
+
+  if ( nfps != NULL )
+  {
+    fps = get_int_from_node( nfps );
+    free_node( nfps );
+  }
+  else
+  {
+    fps = main_project->fps;
+  }
+
+  file_create_dir_files( current_block, str, fps );
 
   nfree( str );
 

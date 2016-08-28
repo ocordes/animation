@@ -58,60 +58,6 @@ FILE *ffmpeg = NULL;
 /* start a new ffmpeg stream */
 
 
-int ffmpeg_open( char *fname )
-{
-  char *filename;
-  char  cmdline[1000];
-
-  int   erg;
-
-
-  filename = malloc( strlen( main_project->outputdir ) + strlen( fname ) + 2 );
-  sprintf( filename, "%s/%s", main_project->outputdir, fname );
-
-  if ( image_out_access( filename ) == 0 )
-    {
-      output( 1, "%s exists! File will not be saved!\n", filename );
-      return 1;
-    }
-
-  /*
-  erg = unlink( filename );
-  if ( ( erg != 0 ) && ( errno != ENOENT ) )
-    {
-      output( 1, "Can't remove output file '%s' (%s)\n",
-	      filename, strerror( errno ) );
-      return 1;
-    } */
-
-
-  snprintf( cmdline, 1000, "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i %s 2> ffmpeg.log &",
-	    main_project->geometry[0],
-	    main_project->geometry[1],
-	    tempfile,
-	    main_project->fps,
-	    filename
-	    );
-
-  free( filename );
-
-  output( 1, "ffmpeg cmd: %s\n", cmdline );
-
-  erg = system( cmdline );
-  if ( erg != 0 )
-    {
-      output( 1, "Can't start ffmpeg sub process (err=%i)!\n",
-	      erg );
-      return 1;
-    }
-
-  ffmpeg = fopen( tempfile, "w" );
-
-  return ffmpeg == NULL;
-}
-
-
-
 int ffmpeg_start( int blockmovies )
 {
   char *filename;
@@ -139,6 +85,7 @@ int ffmpeg_start( int blockmovies )
     }
 
 
+  /*
   erg = unlink( filename );
   if ( ( erg != 0 ) && ( errno != ENOENT ) )
     {
@@ -146,6 +93,7 @@ int ffmpeg_start( int blockmovies )
 	      filename, strerror( errno ) );
       return 1;
     }
+    */
 
   tempfile = malloc( strlen( tempdir ) + strlen( "pipe.ffmpeg" ) + 2 );
   sprintf( tempfile, "%s/%s", tempdir, "pipe.ffmpeg" );
@@ -158,11 +106,12 @@ int ffmpeg_start( int blockmovies )
       return 1;
     }
 
-  snprintf( cmdline, 1000, "ffmpeg -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i %s 2> ffmpeg.log &",
+  snprintf( cmdline, 1000, "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i %s 2> ffmpeg.log &",
 	    main_project->geometry[0],
 	    main_project->geometry[1],
 	    tempfile,
 	    main_project->fps,
+      main_project->fps,
 	    filename
 	    );
 

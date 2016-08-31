@@ -11,7 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   variables.rst
+   language.rst
 
 Indices and tables
 ==================

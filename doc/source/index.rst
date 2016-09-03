@@ -11,7 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   installation.rst
+   projects.rst
    language.rst
+   examples.rst
 
 Indices and tables
 ==================

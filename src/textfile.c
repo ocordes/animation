@@ -23,8 +23,8 @@
   textfile.c
 
   written by: Oliver Cordes 2012-11-18
-  changed by: Oliver Cordes 2014-09-13
-        
+  changed by: Oliver Cordes 2016-09-04
+
   $Id: textfile.c 687 2014-09-14 17:53:49Z ocordes $
 
  */
@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <errno.h>
 
 #include <assert.h>
 
@@ -148,7 +149,7 @@ textfiledef *textfile_cache_get_textfile( char *filename )
 
 /* helper functions for splitting the text */
 
-int   status2fontnr( int bold, int italics )
+int status2fontnr( int bold, int italics )
 {
   if ( bold == 1 )
     {
@@ -167,12 +168,12 @@ int   status2fontnr( int bold, int italics )
 }
 
 
-int   str2tag( char *p, int *tagval )
+int str2tag( char *p, int *tagval )
 {
   int tag;
 
   char *p2, *brk, *val;
-  
+
 
   tag = tag_unknown;
 
@@ -238,7 +239,7 @@ char *next_tag( char *line, char **s, int *tag, int *tagval )
   char *brk;
 
   char *p;
-  
+
   (*tag) = tag_unknown;
   if ( line[0] == '<' )
     {
@@ -273,7 +274,7 @@ textfilefragmentdef *textfile_new_fragment( char *words, int fontnr, int size_ov
   textfilefragmentdef *fragment;
 
   fragment = malloc( sizeof( textfilefragmentdef ) );
-  
+
   assert( fragment != NULL );
 
   fragment->words         = strdup( words );
@@ -325,7 +326,7 @@ textfiledef *textfile_new_textfile( char *fname )
   assert( textfile != NULL );
 
   textfile->lines     = malloc( sizeof( textfilelinedef* ) * increment_lines ) ;
-  
+
   assert( textfile->lines != NULL );
 
   textfile->nrlines   = 0;
@@ -381,13 +382,13 @@ void textfile_add_linefragment( textfilelinedef *textline, textfilefragmentdef *
       newfragments = malloc( sizeof( textfilefragmentdef *) * textline->maxfragments );
 
       assert( newfragments != NULL );
-      
+
       for (i=0;i<textline->nrfragments;i++)
 	newfragments[i] = textline->fragments[i];
       free( textline->fragments );
       textline->fragments = newfragments;
     }
-  
+
   textline->fragments[textline->nrfragments] = newfragment;
   textline->nrfragments++;
 }
@@ -408,13 +409,13 @@ void textfile_add_line( textfiledef *textfile, textfilelinedef *newline )
       newlines = malloc( sizeof( textfilelinedef *) * textfile->maxlines );
 
       assert( newlines != NULL );
-      
+
       for (i=0;i<textfile->nrlines;i++)
 	newlines[i] = textfile->lines[i];
       free( textfile->lines );
       textfile->lines = newlines;
     }
-  
+
   textfile->lines[textfile->nrlines] = newline;
   textfile->nrlines++;
 }
@@ -437,9 +438,9 @@ textfilelinedef *create_textfile_line( char *line )
   int                  italics = 0;
 
   textfilefragmentdef *fragment;
-  
 
-  newline = textfile_new_line(); 
+
+  newline = textfile_new_line();
 
   p = line;
   do{
@@ -463,12 +464,12 @@ textfilelinedef *create_textfile_line( char *line )
     if ( words != NULL )
       {
 	/* add text fragment with the current flags */
-	fragment = textfile_new_fragment( words, 
+	fragment = textfile_new_fragment( words,
 					  status2fontnr( bold, italics ),
 					  get_font_size_tag() );
 	free( words );
 	words = NULL;
-	textfile_add_linefragment( newline, fragment ); 
+	textfile_add_linefragment( newline, fragment );
       }
 
     switch( tag )
@@ -524,18 +525,26 @@ textfiledef *create_textfile_data( char *filename )
   textfile = textfile_new_textfile( filename );
 
   file = fopen( filename, "r" );
-  while( fgets( line, sizeof( line )-2, file ) != NULL )
+
+  if ( file != NULL )
+  {
+    while( fgets( line, sizeof( line )-2, file ) != NULL )
     {
       line[strlen(line)-1] = '\0';
-      textline = create_textfile_line( line ); 
-      textfile_add_line( textfile, textline );  
+      textline = create_textfile_line( line );
+      textfile_add_line( textfile, textline );
     }
 
-  fclose( file );
+    fclose( file );
 
-   textfile_cache_add_textfile( filename, textfile ); 
+    textfile_cache_add_textfile( filename, textfile );
 
-  output( 1, "Done.\n" );
+    output( 1, "Done.\n" );
+  }
+  else
+  {
+    output( 1, "Can't load textfile '%s' (%s)!\n", filename, strerror( errno ));
+  }
 
   return textfile;
 }
@@ -563,9 +572,9 @@ textfiledef *textfile_get_textfile( parsenode *filename )
   textfiledef *textfile;
 
   s = math_execute_node_string( filename );
-  
-  textfile = create_textfile_data_cached( s ); 
-  
+
+  textfile = create_textfile_data_cached( s );
+
 
   /* free variables */
   free( s );

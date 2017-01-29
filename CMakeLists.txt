@@ -115,7 +115,7 @@ add_custom_command(
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx")
 
-add_custom_target(docs_html ALL
+add_custom_target(docs_html 
     DEPENDS ${SPHINX_HTML_DIR}/index.html
     )
 

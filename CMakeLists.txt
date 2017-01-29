@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.6)
 project( animation )
 
 # written by: Oliver Cordes 2016-08-09
-# changed by: Oliver Cordes 2016-08-16
+# changed by: Oliver Cordes 2017-01-29
 
 set(VERSION 0.5.0)
 
@@ -52,7 +52,7 @@ target_include_directories( animation PUBLIC src )
 
 # add libraries
 find_package(PkgConfig)
-pkg_check_modules(PC_MagickWand REQUIRED GraphicsMagickWand)
+pkg_check_modules(PC_MagickWand REQUIRED MagickWand)
 target_link_libraries( animation  ${PC_MagickWand_LDFLAGS})
 target_include_directories( animation PUBLIC ${PC_MagickWand_INCLUDE_DIRS})
 target_compile_options( animation PUBLIC ${PC_MagickWand_FLAGS_OTHER})
@@ -76,7 +76,9 @@ include_directories(${PROJECT_BINARY_DIR})
 
 
 # sphinx part
-find_package(Sphinx REQUIRED)
+find_package( Sphinx )
+
+if ( Sphinx_FOUND )
 
 if(NOT DEFINED SPHINX_THEME)
     set(SPHINX_THEME default)
@@ -116,6 +118,24 @@ add_custom_command(
 add_custom_target(docs_html ALL
     DEPENDS ${SPHINX_HTML_DIR}/index.html
     )
+
+add_custom_command(
+    OUTPUT ${SPHINX_PDF_DIR}/animation.pdf
+    DEPENDS ${DOC_SOURCES}
+    COMMAND ${SPHINX_EXECUTABLE}
+            -q -b latex
+            -c "${BINARY_BUILD_DIR}"
+            -d "${SPHINX_CACHE_DIR}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/doc/source"
+            "${SPHINX_PDF_DIR}"
+    COMMAND make -C ${SPHINX_PDF_DIR} all-pdf
+    COMMENT "Building PDF documentation with Sphinx")
+
+add_custom_target(docs_pdf
+    DEPENDS ${SPHINX_PDF_DIR}/animation.pdf
+    )
+
+endif()
 
 
 # install part

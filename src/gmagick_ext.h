@@ -35,13 +35,13 @@
 
 
 
-
-#include <wand/magick_wand.h>
-
-WandExport unsigned int MagickConstituteImage(MagickWand *wand,
-  const unsigned long columns,
-  const unsigned long rows,const char *map,const StorageType storage,
-  unsigned char *pixels);
+//
+// #include <wand/magick_wand.h>
+//
+// WandExport unsigned int MagickConstituteImage(MagickWand *wand,
+//   const unsigned long columns,
+//   const unsigned long rows,const char *map,const StorageType storage,
+//   unsigned char *pixels);
 
 
 #endif

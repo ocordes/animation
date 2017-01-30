@@ -57,6 +57,9 @@ target_link_libraries( animation  ${PC_MagickWand_LDFLAGS})
 target_include_directories( animation PUBLIC ${PC_MagickWand_INCLUDE_DIRS})
 target_compile_options( animation PUBLIC ${PC_MagickWand_FLAGS_OTHER})
 
+string( FIND ${PC_MagickWand_VERSION} "." POSITION)
+string( SUBSTRING ${PC_MagickWand_VERSION} 0 ${POSITION} MAGICK_VERSION)
+
 
 #find_package(CCFITS REQUIRED)
 #include_directories(${CCFITS_INCLUDE_DIR})
@@ -115,7 +118,7 @@ add_custom_command(
         "${SPHINX_HTML_DIR}"
     COMMENT "Building HTML documentation with Sphinx")
 
-add_custom_target(docs_html 
+add_custom_target(docs_html
     DEPENDS ${SPHINX_HTML_DIR}/index.html
     )
 

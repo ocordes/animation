@@ -22,7 +22,7 @@
 /* magick.h
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2016-08-24
+   changed by: Oliver Cordes 2017-01-30
 
    $Id: magick.h 687 2014-09-14 17:53:49Z ocordes $
 
@@ -39,7 +39,11 @@
 #include "project.h"
 
 
+#if MAGICK_VERSION >= 7
+#include <MagickWand/MagickWand.h>
+#else
 #include <wand/magick_wand.h>
+#endif
 
 
 #define max_window_level 10

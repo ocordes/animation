@@ -15,14 +15,14 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* imagedef.h
 
    written by: Oliver Cordes 2012-12-12
-   changed by: Oliver Cordes 2012-12-30
+   changed by: Oliver Cordes 2017-01-30
 
    $Id: imagedef.h 687 2014-09-14 17:53:49Z ocordes $
 
@@ -33,9 +33,14 @@
 #define __imagedef_h 1
 
 
-#include <wand/magick_wand.h>
 
 #include "config.h"
+
+#if MAGICK_VERSION >= 7
+#include <MagickWand/MagickWand.h>
+#else
+#include <wand/magick_wand.h>
+#endif
 
 #include "parsetree.h"
 
@@ -55,7 +60,7 @@ typedef struct{
   int         height;
   int         composite_operator;
 } imagedef_descr;
-  
+
 
 
 void imagedef_init( void );

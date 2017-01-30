@@ -6,3 +6,7 @@
 /* Version number of package */
 #define VERSION "@VERSION@"
 
+
+/* Imagemagick Version */
+
+#define MAGICK_VERSION @MAGICK_VERSION@

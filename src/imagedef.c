@@ -15,14 +15,14 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* imagedef.c
 
    written by: Oliver Cordes 2012-12-12
-   changed by: Oliver Cordes 2013-01-02
+   changed by: Oliver Cordes 2017-01-30
 
    $Id: imagedef.c 687 2014-09-14 17:53:49Z ocordes $
 
@@ -36,7 +36,11 @@
 
 #include "config.h"
 
+#if MAGICK_VERSION >= 7
+#include <MagickWand/MagickWand.h>
+#else
 #include <wand/magick_wand.h>
+#endif
 
 #include "abort.h"
 #include "helpers.h"
@@ -64,13 +68,13 @@ static _overlay_mode_option overlay_mode_options[] = {
   { "AtopCompositeOp", AtopCompositeOp },
   { "XorCompositeOp",  XorCompositeOp },
   { "PlusCompositeOp", PlusCompositeOp },
-  { "MinusCompositeOp", MinusCompositeOp },
-  { "AddCompositeOp",   AddCompositeOp },
-  { "SubtractCompositeOp", SubtractCompositeOp },
+//  { "MinusCompositeOp", MinusCompositeOp },
+//  { "AddCompositeOp",   AddCompositeOp },
+//  { "SubtractCompositeOp", SubtractCompositeOp },
   { "DifferenceCompositeOp", DifferenceCompositeOp },
   { "MultiplyCompositeOp", MultiplyCompositeOp },
   { "BumpmapCompositeOp", BumpmapCompositeOp },
-  { "CopyCompositeOp", CopyCompositeOp },   
+  { "CopyCompositeOp", CopyCompositeOp },
   { "CopyRedCompositeOp", CopyRedCompositeOp },
   { "CopyGreenCompositeOp", CopyGreenCompositeOp },
   { "CopyBlueCompositeOp", CopyBlueCompositeOp },
@@ -98,7 +102,7 @@ static _overlay_mode_option overlay_mode_options[] = {
 int  imagedef_operator_from_name( char *smode )
 {
   int i;
-  
+
   for (i=0;;i++)
     {
       if ( overlay_mode_options[i].name == NULL )
@@ -137,7 +141,7 @@ imagedef_descr *imagedef_new_imagedef( void )
       max_imagedefs += new_increment_imagedefs;
       new_imagedefs =  malloc( sizeof( imagedef_descr* ) * max_imagedefs );
       if ( new_imagedefs == NULL ) aabort( abort_msg_malloc, "imagedef_new_imagedef(new_imagedefs_array)" );
-      
+
       for (i=0;i<nr_imagedefs;i++)
 	new_imagedefs[i] = imagedefs[i];
 
@@ -328,11 +332,9 @@ void imagedef_done( void )
       if ( imagedefs[i]->name != NULL ) free( imagedefs[i]->name );
       if ( imagedefs[i]->file_name != NULL ) free( imagedefs[i]->file_name );
       if ( imagedefs[i]->im != NULL )
-	DestroyMagickWand( imagedefs[i]->im ); 
+	DestroyMagickWand( imagedefs[i]->im );
       free( imagedefs[i] );
     }
   free( imagedefs );
   imagedefs = NULL;
 }
-
-

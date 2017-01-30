@@ -65,8 +65,7 @@ magick_image *current_image = NULL;
 
 void magick_init( void )
 {
-  /* MagickWandGenesis(); */
-  InitializeMagick( NULL );
+  MagickWandGenesis();
 }
 
 
@@ -82,8 +81,7 @@ void magick_done( void )
       free( current_image );
     }
 
-  /* MagickWandTerminus(); */
-  DestroyMagick();
+  MagickWandTerminus();
 }
 
 

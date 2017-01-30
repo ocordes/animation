@@ -56,6 +56,7 @@ pkg_check_modules(PC_MagickWand REQUIRED MagickWand)
 target_link_libraries( animation  ${PC_MagickWand_LDFLAGS})
 target_include_directories( animation PUBLIC ${PC_MagickWand_INCLUDE_DIRS})
 target_compile_options( animation PUBLIC ${PC_MagickWand_FLAGS_OTHER})
+target_compile_options( animation PUBLIC ${PC_MagickWand_FLAGS})
 
 string( FIND ${PC_MagickWand_VERSION} "." POSITION)
 string( SUBSTRING ${PC_MagickWand_VERSION} 0 ${POSITION} MAGICK_VERSION)

@@ -22,7 +22,7 @@
 /* output_magick.c
 
    writtem by: Oliver Cordes 2016-08-14
-   changed by: Oliver Cordes 2016-08-20
+   changed by: Oliver Cordes 2017-01-31
 
 */
 
@@ -30,11 +30,18 @@
 #include "magick.h"
 #include "output.h"
 
+#include "config.h"
+
+#if MAGICK_VERSION >= 7
+#include <MagickWand/MagickWand.h>
+#else
+#include <wand/magick_wand.h>
+#endif
 
 
 int output_magick( char *filename )
 {
-  MagickPassFail result;
+  MagickBooleanType result;
 
   magick_check_current_image( 1 );
 
@@ -48,14 +55,14 @@ int output_magick( char *filename )
 
   result = MagickWriteImage( current_image->im, filename );
 
-  if ( result == MagickFail )
+  if ( result == MagickFalse )
     {
       output( 1, "Warning: Image '%s' can't be written!\n", filename );
     }
 
   output( 10, "Done.\n" );
 
-  if ( result == MagickPass )
+  if ( result == MagickTrue )
     return 0;
   else
     return 1;

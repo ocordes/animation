@@ -22,7 +22,7 @@
 /* magick.c
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2017-01-30
+   changed by: Oliver Cordes 2017-01-31
 
    $Id: magick.c 687 2014-09-14 17:53:49Z ocordes $
 
@@ -294,7 +294,11 @@ void magick_textfile_metrics( textfiledef *textfile, font_descr *font )
 
 
 
-void magic_textfile_drawline( int posx, int posy, double alpha, font_descr *font, textfilelinedef *line )
+void magic_textfile_drawline( int posx,
+                              int posy,
+                              double alpha,
+                              font_descr *font,
+                              textfilelinedef *line )
 {
   DrawingWand   *dwand = NULL;
   PixelWand     *pwand = NULL;
@@ -322,47 +326,46 @@ void magic_textfile_drawline( int posx, int posy, double alpha, font_descr *font
   posy += line->fm_asc_height;
   x = posx;
   for (i=0;i<line->nrfragments;i++)
-    {
-      if ( line->fragments[i]->size_override== -1 )
-	DrawSetFontSize( dwand, font->font_size );
-      else
-	DrawSetFontSize( dwand, line->fragments[i]->size_override );
-      switch( line->fragments[i]->fontnr )
-	{
-	case 0:   /* regular */
-	  DrawSetFont( dwand, font->font_name ) ;
-	  break;
-	case 1:   /* bold */
-	  if ( font->bold_name != NULL )
-	    DrawSetFont( dwand, font->bold_name ) ;
-	  else
-	    DrawSetFont( dwand, font->font_name ) ;
-	  break;
-	case 2:   /* italics */
-	  if ( font->italic_name != NULL )
-	    DrawSetFont( dwand, font->italic_name ) ;
-	  else
-	    DrawSetFont( dwand, font->font_name ) ;
-	  break;
-	case 3:   /* bolditalics */
-	  if ( font->bolditalic_name != NULL )
-	    DrawSetFont( dwand, font->bolditalic_name ) ;
-	  else
-	    DrawSetFont( dwand, font->font_name ) ;
-	  break;
-	}
+  {
+    if ( line->fragments[i]->size_override== -1 )
+	     DrawSetFontSize( dwand, font->font_size );
+    else
+	     DrawSetFontSize( dwand, line->fragments[i]->size_override );
+
+    switch( line->fragments[i]->fontnr )
+	  {
+	    case 0:   /* regular */
+	      DrawSetFont( dwand, font->font_name ) ;
+	      break;
+	    case 1:   /* bold */
+	      if ( font->bold_name != NULL )
+	        DrawSetFont( dwand, font->bold_name ) ;
+	      else
+	        DrawSetFont( dwand, font->font_name ) ;
+	      break;
+	    case 2:   /* italics */
+	      if ( font->italic_name != NULL )
+	        DrawSetFont( dwand, font->italic_name ) ;
+	      else
+	        DrawSetFont( dwand, font->font_name ) ;
+	      break;
+	     case 3:   /* bolditalics */
+	       if ( font->bolditalic_name != NULL )
+	         DrawSetFont( dwand, font->bolditalic_name ) ;
+	       else
+	         DrawSetFont( dwand, font->font_name ) ;
+	       break;
+	  }
 
 
-      /* Pixel setalpha is not workgin on graphicsmagick */
-      //PixelSetAlpha( pwand, alpha );
-      //PixelSetOpacity( pwand, 1-alpha );
-      //PixelSetOpacity( pwand, 0.9 );
-      // DrawSetStrokeColor( dwand, pwand );
-      DrawSetFillColor( dwand, pwand );
+    /* Pixel setalpha is not workgin on graphicsmagick */
+    PixelSetAlpha( pwand, alpha );
+    // DrawSetStrokeColor( dwand, pwand );
+    DrawSetFillColor( dwand, pwand );
 
-      DrawAnnotation(dwand, x, posy, (unsigned char*) line->fragments[i]->words );
-      x += line->fragments[i]->fm_width;
-    }
+    DrawAnnotation(dwand, x, posy, (unsigned char*) line->fragments[i]->words );
+    x += line->fragments[i]->fm_width;
+  }
 
   // Draw the image on to the magick_wand
   MagickDrawImage( current_image->im, dwand);
@@ -456,7 +459,7 @@ void magick_load_imagedef( imagedef_descr *imagedef )
     MagickResizeImage( imagedef->im,
 		       imagedef->width,
 		       imagedef->height,
-		       LanczosFilter, 1 );
+		       LanczosFilter );
 
   output( 1, "Done.\n" );
 }
@@ -516,7 +519,11 @@ void magick_image_endwindow( void )
   w = magick_pop_image( &x, &y, &width, &height );
 
   // MagickCompositeImage( current_image->im, w, BlurCompositeOp, 0, 0 );
-  MagickCompositeImage( current_image->im, w, ReplaceCompositeOp, x, y );
+  MagickCompositeImage( current_image->im, w,
+                        ReplaceCompositeOp,
+                        MagickTrue,
+                        x,
+                        y );
 
   DestroyMagickWand( w );
 
@@ -533,7 +540,7 @@ void magick_image_load( filedef *file )
   int size;
   unsigned char *pixels;
 
-  MagickPassFail result;
+  MagickBooleanType result;
 
   if ( current_image == NULL )
     {
@@ -583,7 +590,7 @@ void magick_image_load( filedef *file )
       /* Read the input image */
       result = MagickReadImage( current_image->im, file->name );
 
-      if ( result   == MagickFail )
+      if ( result   == MagickFalse )
 	      {
 	        output( 1, "Warning: Can't read image '%s'! Skip Image!\n", file->name );
 	        DestroyMagickWand( current_image->im );
@@ -663,7 +670,11 @@ void magick_text( parsenode *nposx,
 }
 
 
-void magick_textfile( parsenode *nposx, parsenode *nposy, parsenode *nfont, parsenode *nfilename, parsenode *nalpha )
+void magick_textfile( parsenode *nposx,
+                      parsenode *nposy,
+                      parsenode *nfont,
+                      parsenode *nfilename,
+                      parsenode *nalpha )
 {
   font_descr    *font;
 
@@ -751,10 +762,7 @@ void magick_basic_resize( int keep_aspect )
     }
 
   // Resize the image using the Lanczos filter
-  // The blur factor is a "double", where > 1 is blurry, < 1 is sharp
-  // I haven't figured out how you would change the blur parameter of MagickResizeImage
-  // on the command line so I have set it to its default of one.
-  MagickResizeImage( current_image->im, width, height, LanczosFilter, 1 );
+  MagickResizeImage( current_image->im, width, height, LanczosFilter );
 
   current_image->width = width;
   current_image->height = height;
@@ -855,6 +863,7 @@ void magick_drawimage( parsenode *nposx,
   MagickCompositeImage( current_image->im,
 			imagedef->im,
 			imagedef->composite_operator,
+      MagickTrue,
 			posx, posy );
 }
 

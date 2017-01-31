@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.6)
 project( animation )
 
 # written by: Oliver Cordes 2016-08-09
-# changed by: Oliver Cordes 2017-01-29
+# changed by: Oliver Cordes 2017-01-31
 
 set(VERSION 0.5.0)
 

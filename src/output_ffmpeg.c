@@ -22,7 +22,7 @@
 /* output_ffmpeg.c
 
    written by: Oliver Cordes 2013-01-11
-   changed by: Oliver Cordes 2016-08-14
+   changed by: Oliver Cordes 2017-01-31
 
    $Id: ffmpeg.c 432 2013-04-28 18:04:53Z ocordes $
 
@@ -37,9 +37,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <wand/magick_wand.h>
-
 #include "config.h"
+
+#if MAGICK_VERSION >= 7
+#include <MagickWand/MagickWand.h>
+#else
+#include <wand/magick_wand.h>
+#endif
+
 #include "image.h"
 #include "magick.h"
 #include "output.h"
@@ -284,7 +289,7 @@ void ffmpeg_create_yuv( unsigned char **yuv_pixels, int *yuv_size)
 
   int                i;
 
-  MagickPassFail    result;
+  MagickBooleanType  result;
 
 
   magick_check_current_image();
@@ -296,28 +301,27 @@ void ffmpeg_create_yuv( unsigned char **yuv_pixels, int *yuv_size)
   (*yuv_size) = i + i / 2;
   (*yuv_pixels) = malloc( (*yuv_size) );
 
-
-  result = MagickGetImagePixels( current_image->im,
+  result = MagickExportImagePixels( current_image->im,
 				    0, 0,
 				    current_image->width, current_image->height,
 				    "RGB",
 				    CharPixel,
 				    rgb_pixels );
 
-    if ( result == MagickFail )
-    {
-      output( 1, "Pixel extraction failed!\n" );
-      free( (*yuv_pixels) );
-      (*yuv_pixels) = NULL;
-    }
+  if ( result == MagickFalse )
+  {
+    output( 1, "Pixel extraction failed!\n" );
+    free( (*yuv_pixels) );
+    (*yuv_pixels) = NULL;
+  }
   else
-    {
-      ffmpeg_convert_rgb_yuv420p( rgb_pixels,
-				  (*yuv_pixels),
-				  current_image->width,
-				  current_image->height );
+  {
+    ffmpeg_convert_rgb_yuv420p( rgb_pixels,
+				(*yuv_pixels),
+				current_image->width,
+				current_image->height );
 
-    }
+  }
 
   free( rgb_pixels );
 }

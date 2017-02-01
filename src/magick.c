@@ -24,7 +24,7 @@
    written by: Oliver Cordes 2012-10-26
    changed by: Oliver Cordes 2017-01-31
 
-   $Id: magick.c 687 2014-09-14 17:53:49Z ocordes $
+   $Id$
 
 */
 
@@ -43,7 +43,6 @@
 
 #include "amath.h"
 #include "font.h"
-#include "gmagick_ext.h"
 #include "image.h"
 #include "imagedef.h"
 #include "magick.h"
@@ -462,10 +461,10 @@ void magick_load_imagedef( imagedef_descr *imagedef )
 		       imagedef->height,
 		       LanczosFilter );
   #else
-    MagickResizeImage( imagedef->im,     
+    MagickResizeImage( imagedef->im,
                        imagedef->width,
                        imagedef->height,
-                       LanczosFilter, 
+                       LanczosFilter,
                        1 );
   #endif
 

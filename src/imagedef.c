@@ -22,9 +22,9 @@
 /* imagedef.c
 
    written by: Oliver Cordes 2012-12-12
-   changed by: Oliver Cordes 2017-01-30
+   changed by: Oliver Cordes 2017-01-31
 
-   $Id: imagedef.c 687 2014-09-14 17:53:49Z ocordes $
+   $Id$
 
 */
 

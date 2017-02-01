@@ -456,10 +456,18 @@ void magick_load_imagedef( imagedef_descr *imagedef )
   // I haven't figured out how you would change the blur parameter of MagickResizeImage
   // on the command line so I have set it to its default of one.
   if ( imagedef->need_resize > resize_none )
+  #if MAGICK_VERSION >= 7
     MagickResizeImage( imagedef->im,
 		       imagedef->width,
 		       imagedef->height,
 		       LanczosFilter );
+  #else
+    MagickResizeImage( imagedef->im,     
+                       imagedef->width,
+                       imagedef->height,
+                       LanczosFilter, 
+                       1 );
+  #endif
 
   output( 1, "Done.\n" );
 }
@@ -514,16 +522,25 @@ void magick_image_endwindow( void )
 {
   MagickWand *w;
 
-  int x, y, width, height;
+  int x = 0;
+  int y = 0;
+  int width, height;
 
   w = magick_pop_image( &x, &y, &width, &height );
 
   // MagickCompositeImage( current_image->im, w, BlurCompositeOp, 0, 0 );
+  #if MAGICK_VERSION >= 7
   MagickCompositeImage( current_image->im, w,
                         ReplaceCompositeOp,
                         MagickTrue,
                         x,
                         y );
+  #else
+  MagickCompositeImage( current_image->im, w,
+                        ReplaceCompositeOp,
+                        x,
+                        y );
+  #endif
 
   DestroyMagickWand( w );
 
@@ -762,7 +779,11 @@ void magick_basic_resize( int keep_aspect )
     }
 
   // Resize the image using the Lanczos filter
+  #if MAGICK_VERSION >= 7
   MagickResizeImage( current_image->im, width, height, LanczosFilter );
+  #else
+  MagickResizeImage( current_image->im, width, height, LanczosFilter, 1 );
+  #endif
 
   current_image->width = width;
   current_image->height = height;
@@ -860,11 +881,18 @@ void magick_drawimage( parsenode *nposx,
   posx = image_position_x( nposx, current_image->width, imagedef->width );
   posy = image_position_y( nposy, current_image->height, imagedef->height );
 
+  #if MAGICK_VERSION >= 7
   MagickCompositeImage( current_image->im,
 			imagedef->im,
 			imagedef->composite_operator,
-      MagickTrue,
+                        MagickTrue,
 			posx, posy );
+  #else
+  MagickCompositeImage( current_image->im,
+                        imagedef->im,
+                        imagedef->composite_operator,
+                        posx, posy );
+  #endif
 }
 
 

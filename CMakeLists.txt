@@ -67,6 +67,10 @@ string( SUBSTRING ${PC_MagickWand_VERSION} 0 ${POSITION} MAGICK_VERSION)
 #target_link_libraries( arctic ${CCFITS_LIBRARIES})
 
 
+# add the math lib
+target_link_libraries( animation m )
+
+
 # os configuration file
 INCLUDE (CheckIncludeFiles)
 CHECK_INCLUDE_FILES (malloc.h HAVE_MALLOC_H)

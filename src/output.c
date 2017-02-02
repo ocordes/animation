@@ -22,9 +22,9 @@
 /* output.c
 
    written by: Oliver Cordes 2010-07-20
-   changed by: Oliver Cordes 2010-07-20
+   changed by: Oliver Cordes 2017-02-01
 
-   $Id: output.c 126 2010-07-20 18:07:49Z ocordes $
+   $Id$
 
 */
 
@@ -55,11 +55,11 @@ void debug_generate_timestamp( void )
 {
     struct tm   *timep;
     time_t       times;
-    
+
     times = time( NULL );
     timep = localtime( &times );
-  
-    snprintf( timestamp, 20, "%02i:%02i.%02i", 
+
+    snprintf( timestamp, 20, "%02i:%02i.%02i",
 	      timep->tm_hour, timep->tm_min, timep->tm_sec );
 }
 
@@ -76,16 +76,16 @@ void output( int dlevel, char *format, ... )
     va_list ap;
 
     /* be completly quiet */
-    if ( debug_level == 0 ) 
+    if ( debug_level == 0 )
       return;
 
     if ( dlevel <= debug_level )
-      {	
+      {
 	/* generate output */
 	va_start( ap, format );
 	vsnprintf( dummy, 1000, format, ap );
 	va_end( ap );
-	
+
 	if ( debug_level == 1 )
 	  printf( "%s", dummy );
 	else
@@ -93,7 +93,7 @@ void output( int dlevel, char *format, ... )
 	    debug_generate_timestamp();
 	    printf( "%s: %s", timestamp, dummy );
 	  }
-	
+
 	fflush( stdout );
     }
 }

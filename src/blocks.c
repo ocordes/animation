@@ -22,9 +22,9 @@
 /* blocks.c
 
    written by: Oliver Cordes 2013-03-29
-   changed by: Oliver Cordes 2016-08-28
+   changed by: Oliver Cordes 2017-02-01
 
-   $Id: blocks.c 420 2013-03-30 17:58:04Z ocordes $
+   $Id$
 
 */
 
@@ -270,6 +270,7 @@ void block_new_block_name( char *name )
     {
       add_variable( current_block->vars, "FILE", constant_string );
       add_variable( current_block->vars, "IMAGENR", constant_int );
+      add_variable( current_block->vars, "MAXFRAMES", constant_int );
     }
 }
 

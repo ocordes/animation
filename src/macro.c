@@ -19,12 +19,12 @@
 
 */
 
-/* macro.c 
+/* macro.c
 
    written by: Oliver Cordes 2014-08-31
-   changed by: Oliver Cordes 2014-09-13
+   changed by: Oliver Cordes 2017-02-01
 
-
+   $Id$
 */
 
 
@@ -87,7 +87,7 @@ void macro_new_macro( parsenode *macroname, parsenode *varargs )
 	register_node_variable( n->left );
       n = n->right;
     }
-  
+
 }
 
 
@@ -110,6 +110,3 @@ void macro_free_macro( macrodef *macro )
 
   nfree( macro );
 }
-
-
-

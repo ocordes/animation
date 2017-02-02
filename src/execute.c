@@ -15,16 +15,16 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2014-09-14
+   changed by: Oliver Cordes 2017-02-01
 
-   $Id: execute.c 687 2014-09-14 17:53:49Z ocordes $
+   $Id$
 
 */
 
@@ -76,7 +76,7 @@ int execute_if( parsenode *cond, parsenode *then_cmds, parsenode *else_cmds )
     erg = execute_image_script( else_cmds );
 
   free_constant( con );
-  
+
   return erg;
 }
 
@@ -107,7 +107,7 @@ int execute_cmd_window( parsenode *node )
 {
   int erg;
 
-  magick_image_window( node->args[0], node->args[1], node->args[2], node->args[3] ); 
+  magick_image_window( node->args[0], node->args[1], node->args[2], node->args[3] );
 
   erg = execute_image_script( node->left );
 
@@ -156,26 +156,26 @@ int execute_cmd_print( parsenode *variable )
   switch( con->type )
     {
     case constant_none:
-      output( 1, "PRINT=NONE\n" );
+      output( 1, "PRINT: NONE\n" );
       break;
     case constant_int:
-      output( 1, "PRINT=%i\n", con->i );
+      output( 1, "PRINT: %i\n", con->i );
       break;
     case constant_double:
-      output( 1, "PRINT=%f\n", con->d );
+      output( 1, "PRINT: %f\n", con->d );
       break;
     case constant_string:
-      output( 1, "PRINT=%s\n", con->s );
+      output( 1, "PRINT: %s\n", con->s );
       break;
     case constant_bool:
-      output( 1, "PRINT=%s\n", (con->b?"TRUE":"FALSE" ) );
+      output( 1, "PRINT: %s\n", (con->b?"TRUE":"FALSE" ) );
       break;
     }
 
-  free_constant( con ); 
+  free_constant( con );
 
   /*
-    just an idea ... not really working 
+    just an idea ... not really working
     mprintf( "%s", variable );
   */
 
@@ -186,7 +186,7 @@ int execute_cmd_print( parsenode *variable )
 int execute_cmd_text( parsenode *node )
 {
   magick_text( node->args[0], node->args[1], node->left, node->args[2], node->args[3] );
-  
+
   return 0;
 }
 
@@ -194,7 +194,7 @@ int execute_cmd_text( parsenode *node )
 int execute_cmd_textfile( parsenode *node )
 {
   magick_textfile( node->args[0], node->args[1], node->args[2], node->args[3], node->args[4] );
-  
+
   return 0;
 }
 
@@ -216,13 +216,13 @@ int execute_cmd_macro( parsenode *node )
   parsenode *arg;
   parsenode *varg;
   constant  *con;
-  
+
   int        larg;
   int        lvarg;
 
 
   macro = project_get_macro( node->left );
-  
+
 
   if ( macro != NULL )
     {
@@ -258,7 +258,7 @@ int execute_cmd_macro( parsenode *node )
 	    }
 
 	  arg = arg->right;
-	  
+
 	  varg = varg->right;
 	}
 
@@ -355,7 +355,7 @@ int execute_image_script( parsenode *commands )
 	case node_cmd_macro:
 	  /* simple macro calls ... */
 	  erg = execute_cmd_macro( start );
-	  
+
 	  /* throw away return values ... */
 	  if ( return_value != NULL )
 	    {
@@ -372,7 +372,7 @@ int execute_image_script( parsenode *commands )
 
       start = start->next;
     }
-  
+
   return erg;
 }
 
@@ -393,6 +393,8 @@ int execute_image( int imagenr )
   local_vars[0] = current_block->vars;
   set_int_variable( local_vars[0], "IMAGENR", imagenr );
   set_string_variable( local_vars[0], "FILE", current_block->files[imagenr].name );
+
+  set_int_variable( local_vars[0], "MAXFRAMES", current_block->nrfiles );
 
   /* execute block script */
   erg = execute_image_script( current_block->commands );
@@ -435,7 +437,7 @@ int execute_block( int blocknr )
 	  erg = return_ok;
 	  continue;
 	}
-      
+
       if ( erg != return_ok )
 	break;
 

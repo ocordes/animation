@@ -1,4 +1,4 @@
-Constants / Variables 
+Constants / Variables
 ========================
 
 Constants
@@ -7,11 +7,11 @@ Constants
 .. index:: Constants
 
 Animation has some predefined constants, e.g. PI. The constants can be
-addressed like normal variables, e.g.  *$PI*.  
+addressed like normal variables, e.g.  *$PI*.
 
 .. index:: PI
 
-.. list-table:: 
+.. list-table::
    :widths: 15 50
    :header-rows: 1
 
@@ -41,7 +41,7 @@ Afterwards *$FOO* can be used as a referenz to this variable, e.g. ::
   ...
 
 Some examples for good and wrong variable names: ::
-  
+
   ...
   Foo = 1           # lower case characters
   0FOO = 1          # variable name starts with a number
@@ -58,7 +58,7 @@ internal Variables
 .. index:: MTIME.FRAME, MTIME.SEC, MTIME.MIN, MTIME.HOUR
 .. index:: BACKGROUND, GEOMETRY.X, GEOMETRY.Y, FILE, IMAGENR, MAGE.X, MAGE.Y
 
-.. list-table:: 
+.. list-table::
    :widths: 15 10 50
    :header-rows: 1
 
@@ -67,10 +67,10 @@ internal Variables
      - Description
    * - *FRAMENR*
      - global
-     - global number of the frame 
+     - global number of the frame
    * - *MTIME.FRAME*
      - global
-     - absolute time (frame part) 
+     - absolute time (frame part)
    * - *MTIME.SEC*
      - global
      - absolute time (seconds part)
@@ -101,6 +101,9 @@ internal Variables
    * - *IMAGENR*
      - block
      - number of the current image in a block
+   * - *MAXFRAMES*
+     - block
+     - number of the total amount of images in a block 
 
 
 global Variables
@@ -109,10 +112,9 @@ global Variables
 .. index:: Variables (global)
 
 Global variables are similar to constants. They are also readonly.
-The declaration is always outside any block definitions: ::
+The declaration is always outside any block definition: ::
 
   global FOO = 1
 
 
-Inside the block defintion the variable can be referenced like other variables.
-
+Inside the block the variable can be referenced like other variables.

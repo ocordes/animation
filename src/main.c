@@ -24,10 +24,10 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2016-08-29
+   changed by: Oliver Cordes 2017-02-01
 
 
-   $Id: main.c 343 2013-01-02 19:02:00Z ocordes $
+   $Id$
 
 */
 

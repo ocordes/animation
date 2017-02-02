@@ -1,0 +1,99 @@
+# test file for animation
+#
+# create a title movies with slides
+#
+# written by: Oliver Cordes 2016-08-08
+# changed by: Oliver Cordes 2017-02-01
+#
+
+project 'ex1-title_slides'
+
+#output     "ffmpeg"
+output     "png"
+outputfile "example1.avi"
+outputdir "~/test_animation"
+
+geometry "1024x576"
+
+fps 25  # default for ffmpeg
+
+bitrate 2000  # in whatever units
+
+blockmovies True    # default is False
+overwrite True     # default is True
+
+background "blue"
+
+fontdef "Copyright_font"
+ font "Helvetica"
+ #font "Verdana-Regular"
+ size 24
+ color "yellow"
+endfontdef
+
+fontdef "Test"
+ font "Verdana-Regular"
+ bold "Verdana-Bold"
+ italic "Verdana-Italic"
+ bolditalic "Verdana-Bold-Italic"
+ size 30
+ color "white"
+ separator 5
+endfontdef
+
+
+
+
+global DEBUG = 1
+
+macro fadein( START_FRAME, END_FRAME, CUR_FRAME )
+      #ALPHA = ( $CUR_FRAME - $START_FRAME ) / ( $END_FRAME - $START_FRAME )
+      #return $ALPHA
+      return ( 1.0 * ( $CUR_FRAME - $START_FRAME ) / ( $END_FRAME - $START_FRAME ) )
+endmacro
+
+block "intro"
+      loop empty 250 1024 576 3 # 10 seconds black
+      #loop empty 1 1024 576 # 10 seconds black
+      print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
+
+      SPLIT_FRAME1 = $MAXFRAMES / 3
+      SPLIT_FRAME2 = $SPLIT_FRAME1 * 2
+      ALPHA = 0.0
+      if ( $FRAMENR <= $SPLIT_FRAME1 )
+       ALPHA = fadein( 0, $SPLIT_FRAME1, $FRAMENR )
+       #ALPHA = 0.0
+      else
+       if ( $FRAMENR <= $SPLIT_FRAME2 )
+         ALPHA = 1.0
+       else
+         #ALPHA = fadeout( SPLIT_FRAME2, $MAXFRAMES, $FRAMENR )
+         ALPHA = 0.0
+       endif
+      endif
+      print "max=%i left=%i right=%i alpha=%f" % ( $MAXFRAMES, $SPLIT_FRAME1, $SPLIT_FRAME2, $ALPHA )
+      textalpha $ALPHA "center" "center" "Test" "Hallo"
+
+      load $FILE
+
+      text "left" "top" "Copyright_font" "i=%i" % ( $FRAMENR )
+endblock
+
+
+postproc
+ ALPHA = 1.0 - ( $FRAMENR * 0.05 )
+ if ( $ALPHA < 0.0 )
+  ALPHA = 0.0
+ endif
+ #print "Postproc"
+ text "left" 100 "Copyright_font" "(C) 2016 by <b>Rinaldo Lonley</b>"
+ textalpha $ALPHA  "left" "bottom" "Copyright_font" "(C) by Rinaldo Lonley Animation V%s" % $AVERSION
+ #if ( $FRAMENR > 2000 ) & ( $FRAMENR < 1000 )
+ text "right" "bottom" "Copyright_font" "%i %02i:%02i:%02i.%02i" % ($FRAMENR, $MTIME.HOUR, $MTIME.MIN, $MTIME.SEC, $MTIME.FRAME )
+ #endif
+endpostproc
+
+
+control
+ block "intro"
+endcontrol

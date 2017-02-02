@@ -22,9 +22,9 @@
 /* blocks.h
 
    written by: Oliver Cordes 2013-03-29
-   changed by: Oliver Cordes 2016-ß8-28
+   changed by: Oliver Cordes 2017-02-01
 
-   $Id: blocks.h 679 2014-09-07 17:32:05Z ocordes $
+   $Id$
 
 */
 
@@ -59,6 +59,7 @@ typedef struct{
   filedef   *files;
   int        nrfiles;
   variables *vars;                /* local variables */
+	int        maxfiles;
 } blockdef;
 
 
@@ -74,7 +75,7 @@ int file_create_static_files( blockdef *block, char *filename, int nrfiles );
 /* block setting routines */
 
 void       block_new_block( parsenode  *name );
-void       block_new_block_name( char *name );   
+void       block_new_block_name( char *name );
 void       block_free_block( blockdef *block );
 void       block_add_commands( parsenode *commands );
 parsenode* block_add_files_empty( parsenode *nrfiles, parsenode *ndimx, parsenode *ndimy, parsenode *nfps );

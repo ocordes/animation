@@ -15,16 +15,16 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* project.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2014-09-07
+   changed by: Oliver Cordes 2017-02-01
 
-   $Id: project.c 679 2014-09-07 17:32:05Z ocordes $
+   $Id$
 
 */
 
@@ -59,7 +59,7 @@ projectdef  *main_project;
 /* variable stack */
 
 #define      max_local_vars 100
-int          stack_vars = 1;                
+int          stack_vars = 1;
 variables   *local_vars[max_local_vars];
 
 
@@ -112,9 +112,9 @@ int push_parser_status( int newstatus )
 
   parser_status[parser_status_nr] = newstatus;
   parser_status_nr++;
-  
+
   output( 2, "Entering '%s' level ...\n", str_parser_status( newstatus) );
-  
+
   return parser_status_nr;
 }
 
@@ -124,18 +124,18 @@ int pop_parser_status( void )
   int status;
 
   assert( parser_status_nr > 0 );
-  
+
   output( 2, "Leaving '%s' level ...\n", str_parser_status( get_parser_status() ) );
-  
+
   parser_status_nr--;
 
   if ( parser_status_nr == 0 )
     status = parser_status_default;
   else
     status = parser_status[parser_status_nr-1];
-  
+
   output( 2, "Re-entering '%s' level ...\n", str_parser_status( status ) );
-  
+
   return status;
 }
 
@@ -144,9 +144,9 @@ int check_parser_status( int status, char *command )
 {
   int pstatus;
   int erg;
-  
+
   pstatus = get_parser_status();
-  
+
   if ( ( erg = ( status == pstatus ) ) )
     {
       output( 2, "Correct parser level '%s' for command!\n", str_parser_status( status ) );
@@ -171,7 +171,7 @@ void project_init( void )
 
   if ( main_project == NULL )
     {
-      fprintf( stderr, 
+      fprintf( stderr,
 	       "Can't allocate memory for project structure! Abort program!\n" );
       exit( -1 );
     }
@@ -208,19 +208,19 @@ void project_init( void )
 
   add_variable( main_project->vars, "PI", constant_double );
   set_double_variable( main_project->vars, "PI", M_PI );
-  
+
   add_variable( main_project->vars, "AVERSION", constant_string );
-  set_string_variable( main_project->vars, "AVERSION", VERSION ); 
+  set_string_variable( main_project->vars, "AVERSION", VERSION );
 
   add_variable( main_project->vars, "BACKGROUND", constant_string );
-  set_string_variable( main_project->vars, "BACKGROUND", main_project->background ); 
+  set_string_variable( main_project->vars, "BACKGROUND", main_project->background );
 
   add_variable( main_project->vars, "GEOMETRY.X", constant_int );
   add_variable( main_project->vars, "GEOMETRY.Y", constant_int );
   set_int_variable( main_project->vars, "GEOMETRY.X", 640 );
   set_int_variable( main_project->vars, "GEOMETRY.Y", 480 );
 
-  /* one can think that these should be block variables, 
+  /* one can think that these should be block variables,
      but I need the info also in the postproc block */
   add_variable( main_project->vars, "IMAGE.X", constant_int );
   add_variable( main_project->vars, "IMAGE.Y", constant_int );
@@ -241,7 +241,7 @@ void project_done( void )
   nfree( main_project->outputdir );
   nfree( main_project->geometry_name );
   nfree( main_project->background );
-  
+
   for (i=0;i<main_project->nrblocks;i++)
     block_free_block( main_project->blocks[i] );
 
@@ -292,7 +292,7 @@ void project_show( void )
 	      main_project->macros[i]->name );
       print_variables( main_project->macros[i]->vars );
     }
-  
+
   /* print blocks */
   output( 1, "# of blocks   : %i\n", main_project->nrblocks );
   for (i=0;i<main_project->nrblocks;i++)
@@ -313,12 +313,12 @@ void project_show( void )
     {
       output( 1, "no postproc block defined!\n" );
     }
-  
+
   if ( main_project->nrcontrols > 0 )
     {
       output( 1, "# of controls : %i\n", main_project->nrcontrols );
       for (i=0;i<main_project->nrcontrols;i++)
-	output( 1, " #%-3i: %s\n", i+1, main_project->controls[i]->name ); 
+	output( 1, " #%-3i: %s\n", i+1, main_project->controls[i]->name );
     }
   else
     {
@@ -340,7 +340,7 @@ int project_sanity_check( void )
 
   assert( main_project != NULL );
 
-  if ( main_project->name == NULL ) 
+  if ( main_project->name == NULL )
     {
       fprintf( stderr, "Error: no project name given!\n" );
       erg = 1;
@@ -362,7 +362,7 @@ int project_sanity_check( void )
 	    break;
 	}
     }
-    
+
 
   return erg;
 }
@@ -421,7 +421,7 @@ void project_set_output_filename( parsenode *newfilename )
   assert( main_project != NULL );
 
   s = get_string_from_node( newfilename );
-  
+
   project_set_output_filename_string( s );
 
   nfree( s );
@@ -487,7 +487,7 @@ void project_set_geometry( parsenode *newgeometry )
     newg[j] = toupper( newg[j] );
 
   erg = lookup_geometry( newg, &width, &height);
-  
+
   if ( erg != 0 )
     erg = translate_geometry( newg, &width, &height);
 
@@ -532,7 +532,7 @@ void project_set_background( parsenode* newbackground)
 
   nfree( main_project->background );
   main_project->background = strdup( newb );
-  set_string_variable( main_project->vars, "BACKGROUND", main_project->background ); 
+  set_string_variable( main_project->vars, "BACKGROUND", main_project->background );
 
   free( newb );
   free_node( newbackground );
@@ -597,7 +597,7 @@ void project_add_block( blockdef *newblock )
 	}
       else
 	{
-	  fprintf( stderr, 
+	  fprintf( stderr,
 		   "Too much block definitions (limit=%i)! Ignoring new block '%s'!\n",
 		   max_blocks, newblock->name );
 	}
@@ -631,7 +631,7 @@ void project_add_macro( macrodef *newmacro )
     }
   else
     {
-      fprintf( stderr, 
+      fprintf( stderr,
 	       "Too much macro definitions (limit=%i)! Ignoring new macro '%s'!\n",
 	       max_macros, newmacro->name );
     }
@@ -709,5 +709,3 @@ void project_pop_local_variables( void )
 	output( 2, "v[%i]=%x\n", i, local_vars[i] );
     }
 }
-
-

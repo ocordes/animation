@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.6)
 project( animation )
 
 # written by: Oliver Cordes 2016-08-09
-# changed by: Oliver Cordes 2017-01-31
+# changed by: Oliver Cordes 2017-02-03
 
 set(VERSION 0.5.0)
 
@@ -65,6 +65,11 @@ string( SUBSTRING ${PC_MagickWand_VERSION} 0 ${POSITION} MAGICK_VERSION)
 #find_package(CCFITS REQUIRED)
 #include_directories(${CCFITS_INCLUDE_DIR})
 #target_link_libraries( arctic ${CCFITS_LIBRARIES})
+
+find_package( ffmpeg REQUIRED )
+target_include_directories( animation PUBLIC ${FFMPEG_INCLUDE_DIRS} )
+target_link_libraries( animation ${FFMPEG_LIBRARIES} )
+#message(STATUS "Compilation date = ${FFMPEG_LIBRARY_DIRS}")
 
 
 # add the math lib

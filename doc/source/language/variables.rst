@@ -56,7 +56,7 @@ internal Variables
 .. index:: Variables (internal)
 .. index:: FRAMENR
 .. index:: MTIME.FRAME, MTIME.SEC, MTIME.MIN, MTIME.HOUR
-.. index:: BACKGROUND, GEOMETRY.X, GEOMETRY.Y, FILE, IMAGENR, MAGE.X, MAGE.Y
+.. index:: BACKGROUND, GEOMETRY.X, GEOMETRY.Y, FILE, IMAGENR, MAGE.X, MAGE.Y, MAXFRAMES
 
 .. list-table::
    :widths: 15 10 50
@@ -103,7 +103,7 @@ internal Variables
      - number of the current image in a block
    * - *MAXFRAMES*
      - block
-     - number of the total amount of images in a block 
+     - number of the total amount of images in a block
 
 
 global Variables

@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-02-01
+   changed by: Oliver Cordes 2017-02-06
 
    $Id$
 
@@ -34,6 +34,7 @@
 
 
 #include "amath.h"
+#include "emoji.h"
 #include "execute.h"
 #include "image.h"
 #include "magick.h"
@@ -126,11 +127,11 @@ int execute_cmd_load( parsenode *variable )
   if ( con != NULL )
     {
       if ( con->type == constant_string )
-	magick_image_load( current_start_image );
+	       magick_image_load( current_start_image );
       else
-	{
-	  output( 1, "LOAD: variable doesn't contain a string (con->type=%i)! Abort LOAD!\n", con->type );
-	}
+	    {
+	       output( 1, "LOAD: variable doesn't contain a string (con->type=%i)! Abort LOAD!\n", con->type );
+	    }
     }
   else
     output( 1, "LOAD: NULL variable! Abort LOAD!\n" );
@@ -298,9 +299,9 @@ int  execute_check( void )
 {
   int erg = 0;
 
-  printf( "Running sanity checks ...\n" );
+  output( 0, "Running sanity checks ...\n" );
   erg = project_sanity_check();
-  printf( "Done.\n" );
+  output( 0, "Done. %s\n", _em[_em_okay] );
 
   return erg;
 }
@@ -445,7 +446,7 @@ int execute_block( int blocknr )
       /*break; */
     }
 
-  output( 1, "Done.\n" );
+  output( 1, "Done.%s\n", _em[_em_okay] );
 
   return erg;
 }

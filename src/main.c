@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-02-01
+   changed by: Oliver Cordes 2017-02-05
 
 
    $Id$
@@ -41,6 +41,7 @@
 
 #include <errno.h>
 
+#include "emoji.h"
 #include "execute.h"
 #include "font.h"
 #include "helpers.h"
@@ -125,7 +126,7 @@ void parse_options( int argc, char *argv[] )
 
   if ( srcfile == NULL )
     {
-      printf( "No source input file specified!\n" );
+      printf( "Error: %sNo source input file specified!%s\n", _em[_em_red], _em[_em_col_full_reset] );
       exit( -1 );
     }
   else
@@ -139,6 +140,8 @@ int main( int argc, char* argv[] )
 {
   int    erg;
   char  *s;
+
+  emoji_init();
 
   printf( "ANIMATION v%s (build %s) (C) 2010-2016 Oliver Cordes\n",
 	  VERSION, BUILD );
@@ -157,10 +160,10 @@ int main( int argc, char* argv[] )
 
   open_parser_source( srcfile );
 
-  printf( "Parsing file ...\n" );
+  output( 0, "Parsing file ...\n" );
   erg = yyparse();
   fclose( yyin );
-  printf( "Done.\n" );
+  output( 0, "Done.%s\n", _em[_em_okay] );
   free( srcfile );
 
   if ( erg != 0 )

@@ -71,7 +71,7 @@ void macro_new_macro( parsenode *macroname, parsenode *varargs )
       current_macro->name = strdup( "foo" );
     }
 
-  output( 1,"Creating a new macro '%s'!\n", current_macro->name );
+  output( 1,"Creating a new macro '%s' ...\n", current_macro->name );
 
   current_macro->vars     = new_variables();
   current_macro->commands = NULL;
@@ -94,7 +94,10 @@ void macro_new_macro( parsenode *macroname, parsenode *varargs )
 void macro_add_commands( parsenode *commands )
 {
   if ( current_macro != NULL )
+  {
     current_macro->commands = commands;
+    output( 1, "End of macro '%s'\n", current_macro->name );
+  }
 }
 
 

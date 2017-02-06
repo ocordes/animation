@@ -24,9 +24,9 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2016-08-28
+   changed by: Oliver Cordes 2017-02-05
 
-   $Id: parser.y 679 2014-09-07 17:32:05Z ocordes $
+   $Id$
 
 */
 
@@ -255,7 +255,7 @@ control_header   : TCONTROL TRETURN
                  ;
 
 
-macrodef         : macro_header commands TENDMACRO      { output( 1, "finishing macro\n" ); macro_add_commands( $2); project_add_macro( current_macro ); }
+macrodef         : macro_header commands TENDMACRO      { macro_add_commands( $2); project_add_macro( current_macro ); }
                  ;
 
 macro_header     : TMACRO TMACRONAME TL_BRACKET TR_BRACKET { macro_new_macro( $2, NULL ); }

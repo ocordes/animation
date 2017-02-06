@@ -22,7 +22,7 @@
 /* blocks.c
 
    written by: Oliver Cordes 2013-03-29
-   changed by: Oliver Cordes 2017-02-01
+   changed by: Oliver Cordes 2017-02-06
 
    $Id$
 
@@ -254,7 +254,7 @@ void block_new_block_name( char *name )
   if ( current_block == NULL ) aabort( abort_msg_malloc, "block structure" );
 
   current_block->name = strdup( name );
-  output( 1,"Creating a new block '%s'!\n", current_block->name );
+  output( 1,"Creating a new block '%s' ...\n", current_block->name );
 
   push_parser_status( parser_status_block );
 

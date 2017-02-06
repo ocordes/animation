@@ -22,8 +22,7 @@
 /* project.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-02-01
-
+   changed by: Oliver Cordes 2017-02-06
    $Id$
 
 */
@@ -42,6 +41,7 @@
 #include "abort.h"
 #include "blocks.h"
 #include "controls.h"
+#include "emoji.h"
 #include "font.h"
 #include "geometry.h"
 #include "helpers.h"
@@ -584,14 +584,14 @@ void project_add_block( blockdef *newblock )
 
   if ( strcmp( newblock->name, "postproc" ) == 0 )
     {
-       output( 1, "Adding new postproc block\n" );
+       output( 1, "Adding new postproc block.%s\n", _em[_em_okay] );
        main_project->postproc_block = newblock;
     }
   else
     {
       if ( main_project->nrblocks < max_blocks )
 	{
-	  output( 1, "Adding new block `%s`\n", newblock->name );
+	  output( 1, "Adding new block '%s'.%s\n", newblock->name, _em[_em_okay] );
 	  main_project->blocks[main_project->nrblocks] = newblock;
 	  main_project->nrblocks++;
 	}
@@ -625,7 +625,7 @@ void project_add_macro( macrodef *newmacro )
 
   if ( main_project->nrmacros < max_macros )
     {
-      output( 1, "Adding new macro `%s`\n", newmacro->name );
+      output( 1, "Adding new macro '%s'.%s\n", newmacro->name, _em[_em_okay] );
       main_project->macros[main_project->nrmacros] = newmacro;
       main_project->nrmacros++;
     }

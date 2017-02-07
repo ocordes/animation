@@ -51,6 +51,7 @@ char * _em_emoji_list[] = { "\x1b[31m",             /* red */
                             "\x1b[36;1m",           /* bright cyan */
                             "\x1b[39;49m",          /* col reset */
                             "\x1b[32;1m✔\x1b[0m",   /* okqy */
+                            "🖨 ",                   /* printer */
                            NULL
 };
 
@@ -72,6 +73,7 @@ char * _em_no_emoji_list[] = { "",
                                "",
                                "",
                                "",   /* okay */
+                               "PRINT",   /* printer */
                             NULL
 };
 

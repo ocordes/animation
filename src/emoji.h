@@ -22,7 +22,7 @@
 /* emoji.h
 
    written by: Oliver Cordes 2017-02-06
-   changed by: Oliver Cordes 2017-02-06
+   changed by: Oliver Cordes 2017-02-11
 
    $Id$
 
@@ -34,7 +34,7 @@
 #define __emoji_h 1
 
 
-/* some old definitions 
+/* some old definitions
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
 #define ANSI_COLOR_YELLOW  "\x1b[33m"
@@ -68,6 +68,7 @@
 #define _em_bright_cyan      12
 #define _em_col_reset        13
 #define _em_okay             14
+#define _em_copyright        15
 
 
 extern char * *_em;

@@ -22,9 +22,9 @@
 /* variable.h
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2013-04-13
+   changed by: Oliver Cordes 2017-02-12
 
-   $Id: variable.h 687 2014-09-14 17:53:49Z ocordes $
+   $Id$
 
 */
 
@@ -39,7 +39,12 @@
 #define constant_int    2
 #define constant_double 3
 #define constant_string 4
+#define constant_point  5
 
+
+typedef struct {
+  double x,y;
+} Point;
 
 
 typedef struct {
@@ -49,6 +54,7 @@ typedef struct {
                 double  d;
                 char   *s;
                 int     b;
+                Point   p;
         };
 } constant;
 

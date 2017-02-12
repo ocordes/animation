@@ -53,26 +53,30 @@ macro fadein( START_FRAME, END_FRAME, CUR_FRAME )
 endmacro
 
 block "intro"
-      loop empty 250 1024 576 3 # 10 seconds black
-      #loop empty 1 1024 576 # 10 seconds black
-      print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
+      #loop empty 250 1024 576 3 # 10 seconds black
+      loop empty 1 1024 576 # 10 seconds black
+      ##print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
 
-      SPLIT_FRAME1 = $MAXFRAMES / 3
-      SPLIT_FRAME2 = $SPLIT_FRAME1 * 2
-      ALPHA = 0.0
-      if ( $FRAMENR <= $SPLIT_FRAME1 )
-       ALPHA = fadein( 0, $SPLIT_FRAME1, $FRAMENR )
-       #ALPHA = 0.0
-      else
-       if ( $FRAMENR <= $SPLIT_FRAME2 )
-         ALPHA = 1.0
-       else
-         #ALPHA = fadeout( SPLIT_FRAME2, $MAXFRAMES, $FRAMENR )
-         ALPHA = 0.0
-       endif
-      endif
-      print "max=%i left=%i right=%i alpha=%f" % ( $MAXFRAMES, $SPLIT_FRAME1, $SPLIT_FRAME2, $ALPHA )
-      textalpha $ALPHA "center" "center" "Test" "Hallo"
+      ##SPLIT_FRAME1 = $MAXFRAMES / 3
+      ##SPLIT_FRAME2 = $SPLIT_FRAME1 * 2
+      ##ALPHA = 0.0
+      ##if ( $FRAMENR <= $SPLIT_FRAME1 )
+      ## ALPHA = fadein( 0, $SPLIT_FRAME1, $FRAMENR )
+      ## #ALPHA = 0.0
+      ##else
+      ## if ( $FRAMENR <= $SPLIT_FRAME2 )
+      ##  ALPHA = 1.0
+      ## else
+      ##   #ALPHA = fadeout( SPLIT_FRAME2, $MAXFRAMES, $FRAMENR )
+      ##   ALPHA = 0.0
+      ## endif
+      ##endif
+      ##print "max=%i left=%i right=%i alpha=%f" % ( $MAXFRAMES, $SPLIT_FRAME1, $SPLIT_FRAME2, $ALPHA )
+      ##textalpha $ALPHA "center" "center" "Test" "Hallo"
+
+      P = ( 0.123, 0.456 )
+
+      print $P
 
       load $FILE
 

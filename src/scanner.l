@@ -219,6 +219,8 @@ else                    return TELSE;
 ";"                     return TSEMICOLON;
 "("                     return TL_BRACKET;
 ")"                     return TR_BRACKET;
+"["                     return TL_ARRAY;
+"]"                     return TR_ARRAY;
 "&&"                    return TAND;
 \|\|                    return TOR;
 "!"                     return TNOT;

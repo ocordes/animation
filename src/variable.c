@@ -22,9 +22,9 @@
 /* variable.c
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2013-04-13
+   changed by: Oliver Cordes 2017-02-10
 
-   $Id: variable.c 687 2014-09-14 17:53:49Z ocordes $
+   $Id$
 
 */
 
@@ -122,7 +122,7 @@ constant *add_constant_int( int i )
       con->i = i;
       output( 2, "add_constant_int=%i\n", i );
     }
-  
+
   return con;
 }
 
@@ -149,7 +149,7 @@ constant *add_constant_string( char *s )
   constant *con;
 
   con = new_constant();
-  
+
   if ( con != NULL )
     {
       con->type = constant_string;
@@ -199,7 +199,7 @@ variables *new_variables( void )
   new_variable->vars = malloc( increment_vars * sizeof( variable ) );
 
   if ( new_variable->vars == NULL ) aabort( abort_msg_malloc, "new_variables(vars)" );
-  
+
   new_variable->nrvars  = 0;
   new_variable->maxvars = increment_vars;
   new_variable->flags   = variable_flag_read;
@@ -218,10 +218,10 @@ void free_variables( variables *vars)
   if ( vars->vars != NULL )
     {
       for (i=0;i<vars->nrvars;i++)
-	{
-	  nfree( vars->vars[i].name );
-	  free_constant_static( vars->vars[i].con );
-	}
+	      {
+	        nfree( vars->vars[i].name );
+	        free_constant_static( vars->vars[i].con );
+	      }
       free( vars->vars );
     }
 
@@ -239,17 +239,17 @@ void print_variables( variables *vars )
     switch( vars->vars[i].con.type )
       {
       case constant_none:
-	output( 1, "  %-40s : NONE\n", vars->vars[i].name );
-	break;
+	     output( 1, "  %-40s : NONE\n", vars->vars[i].name );
+	     break;
       case constant_int:
-	output( 1, "  %-40s : INT\n", vars->vars[i].name );
-	break;
+	     output( 1, "  %-40s : INT\n", vars->vars[i].name );
+	     break;
       case constant_double:
-	output( 1, "  %-40s : DOUBLE\n", vars->vars[i].name );
-	break;
+	     output( 1, "  %-40s : DOUBLE\n", vars->vars[i].name );
+	     break;
       case constant_string:
-	output( 1, "  %-40s : STRING\n", vars->vars[i].name );
-	break;
+	     output( 1, "  %-40s : STRING\n", vars->vars[i].name );
+	     break;
       }
 }
 
@@ -265,7 +265,7 @@ int find_variable( variables *vars, char *name )
 	found = 1;
 	break;
       }
-  
+
   if ( found == 1 )
     return i;
   else
@@ -438,4 +438,3 @@ constant *get_variable( variables *vars, char *name )
 
   return con;
 }
-

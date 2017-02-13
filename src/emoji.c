@@ -22,7 +22,7 @@
 /* emoji.c
 
    written by: Oliver Cordes 2017-02-06
-   changed by: Oliver Cordes 2017-02-11
+   changed by: Oliver Cordes 2017-02-13
 
    $Id$
 
@@ -36,6 +36,7 @@
 
 
 /* list of all emoji and color codes */
+A
 char * _em_emoji_list[] = { "\x1b[31m",             /* red */
                             "\x1b[32m",             /* green */
                             "\x1b[33m",             /* yellow */
@@ -51,6 +52,7 @@ char * _em_emoji_list[] = { "\x1b[31m",             /* red */
                             "\x1b[36;1m",           /* bright cyan */
                             "\x1b[39;49m",          /* col reset */
                             "\x1b[32;1m✔\x1b[0m",   /* okqy */
+                            "🖨 ",                   /* printer */
                             "©️",                    /* copyright */
                            NULL
 };
@@ -72,6 +74,8 @@ char * _em_no_emoji_list[] = { "",
                                "",
                                "",
                                "",
+                               "",   /* okay */
+                               "PRINT",   /* printer */
                                "",     /* okay */
                                "(C)", /* copyright */
                             NULL

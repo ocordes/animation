@@ -3,7 +3,7 @@
 # create a title movies with slides
 #
 # written by: Oliver Cordes 2016-08-08
-# changed by: Oliver Cordes 2017-02-01
+# changed by: Oliver Cordes 2017-02-07
 #
 
 project 'ex1-title_slides'
@@ -50,6 +50,10 @@ macro fadein( START_FRAME, END_FRAME, CUR_FRAME )
       #ALPHA = ( $CUR_FRAME - $START_FRAME ) / ( $END_FRAME - $START_FRAME )
       #return $ALPHA
       return ( 1.0 * ( $CUR_FRAME - $START_FRAME ) / ( $END_FRAME - $START_FRAME ) )
+endmacro
+
+macro fadeout( START_FRAME, END_FRAME, CUR_FRAME )
+      return ( 1.0 - fadein( $START_FRAME, $END_FRAME, $CUR_FRAME ))
 endmacro
 
 block "intro"

@@ -150,26 +150,26 @@ int execute_cmd_print( parsenode *variable )
 
   if ( con == NULL )
     {
-      output( 1, "PRINT=NULL\n" );
+      output( 1, "%s: NULL\n", _em[_em_printer] );
       return 0;
     }
 
   switch( con->type )
     {
     case constant_none:
-      output( 1, "PRINT: NONE\n" );
+      output( 1, "%s: NONE\n", _em[_em_printer] );
       break;
     case constant_int:
-      output( 1, "PRINT: %i\n", con->i );
+      output( 1, "%s: %i\n", _em[_em_printer], con->i );
       break;
     case constant_double:
-      output( 1, "PRINT: %f\n", con->d );
+      output( 1, "%s: %f\n", _em[_em_printer], con->d );
       break;
     case constant_string:
-      output( 1, "PRINT: %s\n", con->s );
+      output( 1, "%s: %s\n", _em[_em_printer], con->s );
       break;
     case constant_bool:
-      output( 1, "PRINT: %s\n", (con->b?"TRUE":"FALSE" ) );
+      output( 1, "%s: %s\n", _em[_em_printer], (con->b?"TRUE":"FALSE" ) );
       break;
     }
 

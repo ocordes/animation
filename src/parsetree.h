@@ -177,6 +177,7 @@ char   *get_string_from_constant( constant *con );
 int     get_int_from_constant( constant *con );
 double  get_double_from_constant( constant *con );
 int     get_bool_from_constant( constant *con );
+Point   get_point_from_constant( constant *con );
 
 char   *get_string_from_node( parsenode *node );
 int     get_int_from_node( parsenode *node );

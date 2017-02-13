@@ -15,16 +15,16 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* mprintf.c
 
    written by: Oliver Cordes 2012-10-07
-   changed by: Oliver Cordes 2012-11-10
+   changed by: Oliver Cordes 2017-02-13
 
-   $Id: mprintf.c 687 2014-09-14 17:53:49Z ocordes $
+   $Id$
 
 */
 
@@ -49,17 +49,17 @@ char *arg2str( parsenode *variable, char code, char *fmt )
 
   if ( variable == NULL )
     return strdup( "NULL" );
-  
+
   con  = math_execute_node( variable );
 
   if ( con == NULL )
-    {
-      p = strdup( "NULL" );
-      return p;
-    }
+  {
+    p = strdup( "NULL" );
+    return p;
+  }
 
   switch( con->type )
-    {
+  {
     case constant_none:
       p = strdup( "NONE" );
       break;
@@ -70,16 +70,16 @@ char *arg2str( parsenode *variable, char code, char *fmt )
       break;
     case constant_double:
       switch( code )
-	{
-	case 'f':
-	case 'g':
-	case 'e':
-	  break;
-	default:
-	  output( 1, "Warning: '%%%c' doesn't fit to a double variable! Assuming %%f!\n", code );
-	  code = 'f';
-	  break;
-	}
+	    {
+	      case 'f':
+	      case 'g':
+	      case 'e':
+	        break;
+	      default:
+	        output( 1, "Warning: '%%%c' doesn't fit to a double variable! Assuming %%f!\n", code );
+	        code = 'f';
+	        break;
+	    }
       snprintf( dummy2, 100, "%%%s%c", fmt, code );
       snprintf( dummy, 100, dummy2, con->d );
       p = strdup( dummy );
@@ -89,6 +89,13 @@ char *arg2str( parsenode *variable, char code, char *fmt )
       break;
     case constant_bool:
       p = strdup( (con->b?"TRUE":"FALSE" ) );
+      break;
+    case constant_point:
+      snprintf( dummy, 100, "(%f,%f)", con->p.x, con->p.y );
+      p = strdup( dummy );
+      break;
+    default:
+      p = strdup( "FOO" );
       break;
     }
 
@@ -135,7 +142,7 @@ void msnprintf( char *dest, int length, char *fmt, parsenode *arglist )
   ip = fmt;
   op = dest;
 
-  
+
   arg = arglist;
   while ( (*ip) != '\0' )
     {
@@ -194,11 +201,11 @@ constant *evaluate_fmt_string( constant *con, parsenode *arglist )
 {
   char dummy[1000];
 
-  
+
   msnprintf( dummy, 1000, con->s, arglist );
 
   free( con->s );
-  con->s = strdup( dummy ); 
+  con->s = strdup( dummy );
 
   return con;
 }

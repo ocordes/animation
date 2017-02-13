@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-02-05
+   changed by: Oliver Cordes 2017-02-13
 
    $Id$
 
@@ -310,14 +310,13 @@ expr              : expr TPLUS term                     { $$ = add_node_math( $1
                   | TMINUS term                         { $$ = add_node_math_func( $2, add_node_math_op( node_math_minus ) ); }
                   | TPLUS term                          { $$ = add_node_math_func( $2, add_node_math_op( node_math_plus ) ); }
                   | term                                { $$ = $1; }
-                  | point_expr
                   ;
 
 
 term              : term TMULTIPLY factor               { $$ = add_node_math( $1, $3, node_math_mul ); }
                   | term TDIVIDE factor                 { $$ = add_node_math( $1, $3, node_math_div ); }
                   | term TMOD factor                    { $$ = add_node_math( $1, $3, node_math_mod ); }
-                  | factor	                        { $$ = $1; }
+                  | factor	                            { $$ = $1; }
                   ;
 
 factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
@@ -326,6 +325,7 @@ factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
                   | TCONSTANT                           { $$ = $1; }
                   | stringf                             { $$ = $1; }
                   | macro_func                          { $$ = $1; }
+                  | point_expr                          { $$ = $1; }
                   ;
 
 

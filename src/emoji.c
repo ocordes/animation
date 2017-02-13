@@ -36,7 +36,7 @@
 
 
 /* list of all emoji and color codes */
-A
+
 char * _em_emoji_list[] = { "\x1b[31m",             /* red */
                             "\x1b[32m",             /* green */
                             "\x1b[33m",             /* yellow */

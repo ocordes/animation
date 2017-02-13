@@ -22,7 +22,7 @@
 /* variable.h
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-02-12
+   changed by: Oliver Cordes 2017-02-13
 
    $Id$
 
@@ -92,6 +92,7 @@ constant *add_constant_int( int i );
 constant *add_constant_double( double d );
 constant *add_constant_string( char *s );
 constant *add_constant_bool( int b );
+constant *add_constant_point( double x, double y );
 
 char     *print_bool( int b );
 

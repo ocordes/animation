@@ -22,7 +22,7 @@
 /* variable.c
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-02-10
+   changed by: Oliver Cordes 2017-02-13
 
    $Id$
 
@@ -178,6 +178,24 @@ constant *add_constant_bool( int b )
 }
 
 
+constant *add_constant_point( double x, double y )
+{
+  constant *con;
+
+  con = new_constant();
+
+  if ( con != NULL )
+  {
+    con->type = constant_point;
+    con->p.x  = x;
+    con->p.y  = y;
+    output( 2, "add_constant_point=(%f,%f)\n", x, y );
+  }
+
+  return con;
+}
+
+
 char     *print_bool( int b )
 {
   if ( b == 1 )
@@ -249,6 +267,9 @@ void print_variables( variables *vars )
 	     break;
       case constant_string:
 	     output( 1, "  %-40s : STRING\n", vars->vars[i].name );
+       break;
+      case constant_point:
+       output( 1, "  %-40s : POINT\n", vars->vars[i].name );
 	     break;
       }
 }
@@ -325,13 +346,16 @@ int set_constant_variable( variables *vars, char *name, constant *con )
   assert( vars != NULL );
 
   if ( con == NULL )
+  {
+    output( 2, "Can't set NULL constant to variable '%s'!\n", name );
     return 1;
+  }
 
   nr = find_variable( vars, name );
 
   if ( nr == -1 )
     {
-      output( 2, "Can't set variable `%s`!\n", name );
+      output( 2, "Can't set variable '%s'!\n", name );
       return -1;
     }
   else

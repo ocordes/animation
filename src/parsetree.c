@@ -23,7 +23,7 @@
 /* parsetree.c
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-02-12
+   changed by: Oliver Cordes 2017-02-13
 
    $Id$
 
@@ -722,6 +722,27 @@ int   get_bool_from_constant( constant *con )
     }
 
   return b;
+}
+
+
+Point get_point_from_constant( constant *con )
+{
+   Point p;
+
+   assert( con != NULL );
+
+   switch( con->type )
+   {
+     case constant_point:
+       p = con->p;
+       break;
+     default:
+       p.x = 0;
+       p.y = 0;
+       output( 1, "Warning: Converting type to Point is not supported! Returning '(0,0)\n'" );
+       break;
+   }
+   return p;
 }
 
 

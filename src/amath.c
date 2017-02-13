@@ -23,9 +23,9 @@
   amath.c
 
   written by: Oliver Cordes 2010-08-01
-  changed by: Oliver Cordes 2014-09-08
+  changed by: Oliver Cordes 2017-02-13
 
-  $Id: amath.c 680 2014-09-08 17:40:21Z ocordes $
+  $Id$
 
  */
 
@@ -39,7 +39,7 @@
 #include "helpers.h"
 #include "amath.h"
 #include "execute.h"
-#include "mprintf.h" 
+#include "mprintf.h"
 #include "output.h"
 #include "parsetree.h"
 #include "project.h"
@@ -144,12 +144,12 @@ constant *math_evaluate_double( constant *left,
 
   s1 = get_double_from_constant( left );
   s2 = get_double_from_constant( right );
-  
+
   free_constant( left );
   free_constant( right );
-  
+
   output( 2, "s1=%f s2=%f\n", s1, s2 );
-	
+
   switch( mathop )
     {
     case node_math_add:
@@ -167,16 +167,16 @@ constant *math_evaluate_double( constant *left,
     case node_math_div:
       con->type = constant_double;
       if ( s2 == 0.0 )
-	{
-	  fprintf( stderr, "Zero division! Using lefthand node!\n" );
-	  con->d = s1;
-	}
+			{
+				output( 1, "Zero division! Using lefthand node!\n" );
+	  		con->d = s1;
+			}
       else
-	con->d = s1 / s2;
+				con->d = s1 / s2;
       break;
     case node_math_mod:
       con->type = constant_double;
-      /* the % operator is not defined for doubles, so emulate 
+      /* the % operator is not defined for doubles, so emulate
 	 the behaviour */
       if ( s2 == 0.0 )
 	con->d = s1;
@@ -211,7 +211,7 @@ constant *math_evaluate_double( constant *left,
       con->b = s1 != s2;
       break;
     }
-  
+
   switch( con->type )
     {
     case constant_double:
@@ -221,7 +221,7 @@ constant *math_evaluate_double( constant *left,
       output( 2, "math_double: bool=%s\n", (con->b?"TRUE":"FALSE" ) );
       break;
     }
-  
+
   return con;
 }
 
@@ -273,12 +273,12 @@ constant *math_evaluate_double_func( constant *left,
       d = exp( s1 );
       break;
     }
-  
+
   output( 2, "math: double_func=%f\n", d );
 
   left->d    = d;
   left->type = constant_double;
-  
+
   return left;
 }
 
@@ -297,7 +297,7 @@ constant *math_evaluate_int( constant *left,
 			     int mathop )
 {
   constant *con;
-  
+
   int s1, s2;
 
 
@@ -328,12 +328,12 @@ constant *math_evaluate_int( constant *left,
     case node_math_div:
       con->type = constant_int;
       if ( s2 == 0 )
-	{
-	  yyerror( "Zero division" );
-	  con->i = s1;
-	}
+			{
+				output( 1, "Zero division! Using lefthand node!\n" );
+	  		con->i = s1;
+			}
       else
-	con->i = s1 / s2;
+				con->i = s1 / s2;
       break;
     case node_math_mod:
       con->type = constant_int;
@@ -374,7 +374,7 @@ constant *math_evaluate_int( constant *left,
       output( 2, "math_int: bool=%s\n", (con->b?"TRUE":"FALSE" ) );
       break;
     }
-  
+
   return con;
 }
 
@@ -404,7 +404,7 @@ constant *math_evaluate_int_func( constant *left,
 
   left->i    = i;
   left->type = constant_int;
-  
+
   return left;
 }
 
@@ -462,9 +462,154 @@ constant *math_evaluate_bool( constant *left,
       b = 0;
       break;
     }
-  
+
   con->b = b;
   output( 2, "math: bool=%s\n", (b?"TRUE":"FALSE") );
+
+  return con;
+}
+
+
+constant *math_evaluate_point( constant *left,
+			                         constant *right,
+			                         int mathop )
+{
+  constant *con;
+
+  Point     s1, s2;
+	double    d = 0.0;
+
+  con = new_constant();
+  con->type = constant_point;
+
+  s1 = get_point_from_constant( left );
+
+	if ( right->type == constant_point )
+	{
+  	s2 = get_point_from_constant( right );
+
+  	output( 2, "s1=(%f,%f) s2=(%f,%f)\n", s1.x, s1.y, s2.x, s2.y );
+
+  	switch( mathop )
+    {
+    	case node_math_add:
+      	con->type = constant_point;
+      	con->p.x  = s1.x + s2.x;
+				con->p.y  = s2.y + s2.y;
+      break;
+     case node_math_sub:
+       con->type = constant_point;
+       con->p.x  = s1.x - s2.x;
+			 con->p.y  = s1.y - s2.y;
+       break;
+		 case node_math_mul:
+		 	 /* scalar product */
+			 con->type = constant_double;
+			 con->d    = s1.x * s2.y - s1.y * s2.x;
+			 break;
+		 case node_math_eq:
+	     con->type = constant_bool;
+			 con->b = ( s1.x == s2.x ) && ( s1.y == s2.y );
+	     break;
+		 case node_math_neq:
+		   con->type = constant_bool;
+		   con->b = ( s1.x != s2.x ) || ( s1.y != s2.y );
+		   break;
+		 case node_math_minus:
+		 	 con->type = constant_point;
+			 con->p.x = -s1.x;
+			 con->p.y = -s1.y;
+			 break;
+		 default:
+			 output( 2, "Math operation on Point not spported!\n" );
+       con->type = constant_point;
+			 con->p    = s1;
+       break;
+    }
+	}
+	else
+	{
+		/* try to get a double conversion from the right side */
+		d = get_double_from_constant( right );
+
+		switch( mathop )
+    {
+    	case node_math_mul:
+				con->type = constant_point;
+				con->p.x  = s1.x * d;
+				con->p.y  = s1.y * d;
+			  break;
+			case node_math_div:
+				if ( d == 0.0 )
+				{
+					output( 1, "Zero division! Using lefthand node!\n" );
+					con->p = s1;
+				}
+				else
+				{
+					con->type = constant_point;
+					con->p.x  = s1.x / d;
+					con->p.y  = s1.y / d;
+				}
+				break;
+			default:
+				output( 2, "Math operation on Point not spported!\n" );
+				break;
+		}
+	}
+
+  switch( con->type )
+    {
+    case constant_point:
+      output( 2, "math_point: point=(%f,%f)\n", con->p.x, con->p.y );
+      break;
+    case constant_bool:
+      output( 2, "math_point: bool=%s\n", (con->b?"TRUE":"FALSE" ) );
+      break;
+    }
+
+	free_constant( left );
+  free_constant( right );
+
+
+  return con;
+}
+
+
+constant *math_evaluate_point_func( constant *left,
+			                         			int mathop )
+{
+  constant *con;
+
+  Point     s1;
+
+  con = new_constant();
+  con->type = constant_point;
+
+  s1 = get_point_from_constant( left );
+
+  output( 2, "s1=(%f,%f)\n", s1.x, s1.y );
+
+  switch( mathop )
+  {
+		case node_math_plus:
+			/* do nothing */
+			break;
+    case node_math_minus:
+		 	con->type = constant_point;
+			con->p.x = -s1.x;
+			con->p.y = -s1.y;
+			break;
+		default:
+     	 yyerror( "Math function operation on Point not spported!");
+			 output( 2, "Math funczion operation on Point not spported!" );
+       con->type = constant_point;
+			 con->p    = s1;
+       break;
+  }
+
+
+	free_constant( left );
 
   return con;
 }
@@ -511,6 +656,9 @@ int  math_maximum_type( constant *left,
 		case constant_bool:
 			type = constant_bool;
 			break;
+		case constant_point:
+			type = constant_point;
+			break;
 		default:
 			type = constant_none;
 			break;
@@ -551,8 +699,11 @@ constant *math_evaluate_node( constant *left,
     case constant_bool:
       con = math_evaluate_bool( left, right, mathop );
       break;
+		case constant_point:
+			con = math_evaluate_point( left, right, mathop );
+			break;
     }
-  
+
   return con;
 }
 
@@ -563,29 +714,42 @@ constant *math_evaluate_node_func( constant *left, int mathop )
 
 	switch( left->type )
 	{
-	case constant_none:
-		return left;
-		break;
-	case constant_int:
-		switch( mathop )
-		{
-		case node_math_minus:
-		case node_math_plus:
-			left = math_evaluate_int_func( left, mathop );
+	  case constant_none:
+			return left;
 			break;
-		default:
+		case constant_int:
+			switch( mathop )
+			{
+				case node_math_minus:
+				case node_math_plus:
+					left = math_evaluate_int_func( left, mathop );
+					break;
+				default:
+					left = math_evaluate_double_func( left, mathop );
+					break;
+			}
+			break;
+		case constant_double:
 			left = math_evaluate_double_func( left, mathop );
 			break;
-		}
-		break;
-	case constant_double:
-		left = math_evaluate_double_func( left, mathop );
-		break;
-	case constant_string:
-		output( 1, "Can't use functions on strings!\n" );
-		free_constant( left );
-		return NULL;
-		break;
+		case constant_string:
+			output( 1, "Can't use functions on strings!\n" );
+			free_constant( left );
+			return NULL;
+			break;
+		case constant_point:
+			switch( mathop )
+			{
+				case node_math_minus:
+				case node_math_plus:
+					left = math_evaluate_point_func( left, mathop );
+					break;
+				default:
+					output( 1, "Can't use funtions on Points!\n" );
+					return NULL;
+					break;
+			}
+			break;
 	}
 
 	return left;
@@ -597,7 +761,7 @@ constant *math_evaluate_node_func( constant *left, int mathop )
 constant *math_execute_node( parsenode *node )
 {
   constant *conl, *conr, *con = NULL;
-  
+
   switch( node->type )
     {
     case node_not:
@@ -607,7 +771,7 @@ constant *math_execute_node( parsenode *node )
     case node_math:
       conl = math_execute_node( node->left );
       conr = math_execute_node( node->right );
-      
+
       con = math_evaluate_node( conl, conr, node->mathop );
       break;
     case node_math_op:
@@ -621,15 +785,15 @@ constant *math_execute_node( parsenode *node )
       output( 10, "node_variable=%s\n", node->var );
       con = get_variable( main_project->vars, node->var );
       if ( con == NULL )
-	con = get_variable( local_vars[0], node->var );
-      
+	       con = get_variable( local_vars[0], node->var );
+
       if ( con == NULL )
-	output( 1, "NULL variable!\n" );
+	       output( 1, "NULL variable!\n" );
       else
-	{
-	  if ( con->type == constant_none )
-	    fprintf( stderr, "Type of %s is undefined!\n", node->var );
-	}
+	    {
+	      if ( con->type == constant_none )
+	        fprintf( stderr, "Type of %s is undefined!\n", node->var );
+	    }
       break;
     case node_string_fmt:
       conl = math_execute_node( node->left );
@@ -641,8 +805,14 @@ constant *math_execute_node( parsenode *node )
       con = return_value;
       return_value = NULL;
       break;
+		case node_point:
+			con = add_constant_point( math_execute_node_double( node->left ),
+																math_execute_node_double( node->right ) );
+			break;
+		case node_array:
+			break;
     }
-  
+
   return con;
 }
 
@@ -672,7 +842,7 @@ int      math_execute_node_int( parsenode *node )
     }
 
   free_constant( con );
-  
+
   return i;
 }
 

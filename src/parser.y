@@ -71,7 +71,7 @@ char *get_amx_lang_version( void )
 
 %token TRETURN TSEMICOLON TASSIGN TCOMMA
 %token TTRUE TFALSE
-%token TL_BRACKET TR_BRACKET
+%token TL_BRACKET TR_BRACKET TL_ARRAY TR_ARRAY
 %token TIF TELSE TENDIF
 %token TEQ TNEQ TGREATER TLOWER TGREQ TLOEQ TAND TOR TNOT
 %token TPLUS TMINUS TMULTIPLY TDIVIDE TMOD TSTRING_FMT
@@ -164,9 +164,9 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TMIRRORY                     { $$ = add_node_cmd_mirrory(); }
                  | TMIRRORXY                    { $$ = add_node_cmd_mirrorxy(); }
                  | TRECTANGLE factor factor factor factor factor TSTRING
-		 | TRECTANGLEFILL factor factor factor factor TSTRING
+		             | TRECTANGLEFILL factor factor factor factor TSTRING
                  | TSYSTEM stringf              { $$ = add_node_cmd_system( $2 );}
-		 | window
+		             | window
                  | if_command                   { $$ = $1; }
                  | TPRINT r_value               { $$ = add_node_cmd_print( $2 ); }
                  | TPRINTF r_value              { $$ = add_node_cmd_print( $2 ); }
@@ -275,7 +275,8 @@ empty_command    : TRETURN
                  ;
 
 r_value          : expr                                 { $$ = $1; }
-		 | bool_expr
+		             | bool_expr                            { $$ = $1; }
+                 | array_expr
                  ;
 
 if_command       : TIF if_cond commands TENDIF          { $$ = add_node_if( $2, $3, NULL ); }
@@ -287,17 +288,17 @@ if_cond          : bool_expr TRETURN
 
 bool_expr        : bool_term TAND bool_term             { $$ = add_node_math( $1, $3, node_math_and ); }
                  | bool_term TOR bool_term              { $$ = add_node_math( $1, $3, node_math_or ); }
-                 | TNOT bool_term	                { $$ = add_node_not( $2 ); }
+                 | TNOT bool_term	                      { $$ = add_node_not( $2 ); }
                  | bool_term                            { $$ = $1; }
                  ;
 
 bool_term        : bool_factor TEQ bool_factor          { $$ = add_node_math( $1, $3, node_math_eq ); }
-		 | bool_factor TGREATER bool_factor     { $$ = add_node_math( $1, $3, node_math_greater ); }
-		 | bool_factor TLOWER bool_factor       { $$ = add_node_math( $1, $3, node_math_lower ); }
-		 | bool_factor TGREQ bool_factor        { $$ = add_node_math( $1, $3, node_math_greq ); }
-		 | bool_factor TLOEQ bool_factor        { $$ = add_node_math( $1, $3, node_math_loeq ); }
-		 | bool_factor TNEQ bool_factor         { $$ = add_node_math( $1, $3, node_math_neq ); }
-		 | TL_BRACKET  bool_expr TR_BRACKET     { $$ = $2; }
+		             | bool_factor TGREATER bool_factor     { $$ = add_node_math( $1, $3, node_math_greater ); }
+		             | bool_factor TLOWER bool_factor       { $$ = add_node_math( $1, $3, node_math_lower ); }
+		             | bool_factor TGREQ bool_factor        { $$ = add_node_math( $1, $3, node_math_greq ); }
+		             | bool_factor TLOEQ bool_factor        { $$ = add_node_math( $1, $3, node_math_loeq ); }
+		             | bool_factor TNEQ bool_factor         { $$ = add_node_math( $1, $3, node_math_neq ); }
+		             | TL_BRACKET  bool_expr TR_BRACKET     { $$ = $2; }
                  ;
 
 bool_factor      : expr                                 { $$ = $1; }
@@ -309,6 +310,7 @@ expr              : expr TPLUS term                     { $$ = add_node_math( $1
                   | TMINUS term                         { $$ = add_node_math_func( $2, add_node_math_op( node_math_minus ) ); }
                   | TPLUS term                          { $$ = add_node_math_func( $2, add_node_math_op( node_math_plus ) ); }
                   | term                                { $$ = $1; }
+                  | point_expr
                   ;
 
 
@@ -319,7 +321,7 @@ term              : term TMULTIPLY factor               { $$ = add_node_math( $1
                   ;
 
 factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
-		  | function TL_BRACKET expr TR_BRACKET { $$ = add_node_math_func( $3, $1 ); }
+		              | function TL_BRACKET expr TR_BRACKET { $$ = add_node_math_func( $3, $1 ); }
                   | TVARIABLE                           { $$ = $1; }
                   | TCONSTANT                           { $$ = $1; }
                   | stringf                             { $$ = $1; }
@@ -355,4 +357,14 @@ simple_args       : TVARIABLE                          { $$ = add_node_arglist( 
 
 arg_list          : r_value TCOMMA arg_list            { $$ = add_node_arglist( $3, $1 ); }
                   | r_value                            { $$ = add_node_arglist( NULL, $1 ); }
+                  ;
+
+array_expr        : TL_ARRAY array_list TR_ARRAY
+                  ;
+
+array_list        : expr TCOMMA array_list             { $$ = add_node_array_list( $3, $1 ); }
+                  | expr                               { $$ = add_node_array_list( NULL, $1 ); }
+                  ;
+
+point_expr        : TL_BRACKET expr TCOMMA expr TR_BRACKET { $$ =  add_node_point( $2, $4 ); }
                   ;

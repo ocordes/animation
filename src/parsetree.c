@@ -23,9 +23,9 @@
 /* parsetree.c
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2014-09-07
+   changed by: Oliver Cordes 2017-02-12
 
-   $Id: parsetree.c 679 2014-09-07 17:32:05Z ocordes $
+   $Id$
 
 */
 
@@ -153,7 +153,7 @@ parsenode *add_node_constant_int( int i )
       newnode->type = node_constant;
       newnode->con  = add_constant_int( i );
     }
-  
+
   return newnode;
 }
 
@@ -218,7 +218,7 @@ parsenode *add_node_constant_bool( int b )
       newnode->type = node_constant;
       newnode->con  = add_constant_bool( b );
     }
-  
+
   return newnode;
 }
 
@@ -235,13 +235,13 @@ parsenode *add_node_variable_r( char *s )
   if ( newnode != NULL )
     {
       newnode->type = node_variable;
-      newnode->var  = strdup( s ); 
+      newnode->var  = strdup( s );
     }
 
   /* check if the variable is already defined */
 
   ps = get_parser_status();
-  
+
   nr = find_variable( main_project->vars, s );
 
   if ( nr == -1 )
@@ -259,7 +259,7 @@ parsenode *add_node_variable_r( char *s )
   if ( nr == -1 )
     output( 1,  "Warning: variable `%s`is not defined!\n", s );
 
-  
+
   return newnode;
 }
 
@@ -275,7 +275,7 @@ parsenode *add_node_variable( char *s )
       newnode->type = node_variable;
       newnode->var  = strdup( s );
     }
-  
+
   return newnode;
 }
 
@@ -335,7 +335,7 @@ parsenode *add_node_arglist( parsenode *arglist, parsenode *rvalue )
 
   newnode->left  = rvalue;
   newnode->right = arglist;
-  
+
   return newnode;
 }
 
@@ -350,7 +350,38 @@ parsenode *add_node_vararglist( parsenode *vararglist, parsenode *tlvariable )
 
   newnode->left  = tlvariable;
   newnode->right = vararglist;
-  
+
+  return newnode;
+}
+
+
+/* array node definitions */
+parsenode *add_node_array_list( parsenode *array_list, parsenode *element )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->type  = node_array;
+
+  newnode->left  = element;
+  newnode->right = array_list;
+
+  return newnode;
+}
+
+/* point node definitions */
+parsenode *add_node_point( parsenode *x, parsenode *y  )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->type  = node_point;
+
+  newnode->left  = x;
+  newnode->right = y;
+
   return newnode;
 }
 
@@ -383,14 +414,14 @@ parsenode *add_node_cmd( parsenode *cmdlist, parsenode *command )
       /* command list is empty ! */
       return command;
     }
-  
+
 
   /* check for empty command */
   if ( command != NULL )
     {
       start = cmdlist;
       while( start->next != NULL ) start = start->next;
-      
+
       start->next = command;
     }
 
@@ -468,7 +499,7 @@ parsenode *add_node_if( parsenode *cond, parsenode *then_cmds, parsenode *else_c
   else
     {
       newnode = new_node();
-      
+
       newnode->type = node_if;
       newnode->cond = cond;
       newnode->left = then_cmds;
@@ -689,7 +720,7 @@ int   get_bool_from_constant( constant *con )
       b = con->b;
       break;
     }
-  
+
   return b;
 }
 
@@ -761,11 +792,11 @@ int  get_bool_from_node( parsenode *node )
   else
     if ( node->type != node_constant )
       erg = 1;
-  
+
   if ( erg == 0 )
     return get_bool_from_constant( node->con );
   else
     i = 0;
-  
+
   return i;
 }

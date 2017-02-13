@@ -22,9 +22,9 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2014-09-07
+   changed by: Oliver Cordes 2017-02-12
 
-   $Id: parsetree.h 679 2014-09-07 17:32:05Z ocordes $
+   $Id$
 
 */
 
@@ -40,8 +40,10 @@
 #define node_none         0
 #define node_variable     1
 #define node_constant     2
-#define node_if           3
-#define node_not          4
+#define node_point        3
+#define node_array        4
+#define node_if           5
+#define node_not          6
 
 #define node_quit         10
 #define node_exit         11
@@ -153,7 +155,7 @@ parsenode *add_node_cmd( parsenode *cmdlist, parsenode *command );
 
 
 
-parsenode *add_node_window_finish( parsenode *window, parsenode *commands ); 
+parsenode *add_node_window_finish( parsenode *window, parsenode *commands );
 parsenode *add_node_window( parsenode *x1, parsenode *y1, parsenode *x2, parsenode *y2 );
 
 parsenode *add_node_if( parsenode *cond, parsenode *then_cmds, parsenode *else_cmds );
@@ -162,6 +164,13 @@ parsenode *add_node_not( parsenode *cond );
 parsenode *add_node_math( parsenode *left, parsenode *right, int mathop );
 parsenode *add_node_math_op( int mathop );
 parsenode *add_node_math_func( parsenode *left, parsenode *mathfuncop );
+
+
+/* array node definitions */
+parsenode *add_node_array_list( parsenode *array_list, parsenode *element );
+
+/* point node definitions */
+parsenode *add_node_point( parsenode *x, parsenode *y  );
 
 
 char   *get_string_from_constant( constant *con );

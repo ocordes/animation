@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-02-05
+   changed by: Oliver Cordes 2017-02-11
 
 
    $Id$
@@ -143,8 +143,8 @@ int main( int argc, char* argv[] )
 
   emoji_init();
 
-  printf( "ANIMATION v%s (build %s) (C) 2010-2016 Oliver Cordes\n",
-	  VERSION, BUILD );
+  printf( "ANIMATION v%s (build %s) %s 2010-2016 Oliver Cordes\n",
+	  VERSION, BUILD, _em[_em_copyright] );
 
   s = get_amx_lang_version();
   printf( " amx_lang_version=%s\n", s);

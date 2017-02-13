@@ -22,7 +22,7 @@
 /* emoji.h
 
    written by: Oliver Cordes 2017-02-06
-   changed by: Oliver Cordes 2017-02-06
+   changed by: Oliver Cordes 2017-02-13
 
    $Id$
 
@@ -69,6 +69,7 @@
 #define _em_col_reset        13
 #define _em_okay             14
 #define _em_printer          15
+#define _em_copyright        16
 
 
 extern char * *_em;

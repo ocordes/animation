@@ -22,7 +22,7 @@
 /* variable.h
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-02-13
+   changed by: Oliver Cordes 2017-02-15
 
    $Id$
 
@@ -40,14 +40,29 @@
 #define constant_double 3
 #define constant_string 4
 #define constant_point  5
+#define constant_array  6
+
+/* forward declaration */
+struct _constant;
 
 
+/* special types */
+
+/* point definition */
 typedef struct {
   double x,y;
 } Point;
 
-
+/* Array definition */
 typedef struct {
+  int  nr;
+  struct _constant *cons;
+} Array;
+
+
+/* standard constand including all types */
+
+struct _constant{
         int type;
         union{
                 int     i;
@@ -55,8 +70,11 @@ typedef struct {
                 char   *s;
                 int     b;
                 Point   p;
+                Array   a;
         };
-} constant;
+};
+
+typedef struct _constant constant;
 
 
 /* variable definition */

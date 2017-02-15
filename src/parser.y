@@ -331,13 +331,13 @@ factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
 
 function          : TSIN                                { $$ = add_node_math_op( node_math_sin ); }
                   | TCOS                                { $$ = add_node_math_op( node_math_cos ); }
-                  | TTAN			        { $$ = add_node_math_op( node_math_tan ); }
+                  | TTAN			                          { $$ = add_node_math_op( node_math_tan ); }
                   | TASIN                               { $$ = add_node_math_op( node_math_asin ); }
-                  | TACOS      			        { $$ = add_node_math_op( node_math_acos ); }
-                  | TATAN			        { $$ = add_node_math_op( node_math_atan ); }
-                  | TLOG10			        { $$ = add_node_math_op( node_math_log10 ); }
-                  | TLN			     	        { $$ = add_node_math_op( node_math_ln ); }
-                  | TEXP			        { $$ = add_node_math_op( node_math_exp ); }
+                  | TACOS      			                    { $$ = add_node_math_op( node_math_acos ); }
+                  | TATAN			                          { $$ = add_node_math_op( node_math_atan ); }
+                  | TLOG10			                        { $$ = add_node_math_op( node_math_log10 ); }
+                  | TLN			     	                      { $$ = add_node_math_op( node_math_ln ); }
+                  | TEXP			                          { $$ = add_node_math_op( node_math_exp ); }
                   ;
 
 macro_func        : TMACRONAME TL_BRACKET TR_BRACKET    { $$ = add_node_cmd_macro( $1, NULL ); }
@@ -360,6 +360,7 @@ arg_list          : r_value TCOMMA arg_list            { $$ = add_node_arglist( 
                   ;
 
 array_expr        : TL_ARRAY array_list TR_ARRAY
+                  | TL_ARRAY TR_ARRAY 
                   ;
 
 array_list        : expr TCOMMA array_list             { $$ = add_node_array_list( $3, $1 ); }

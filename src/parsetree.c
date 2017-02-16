@@ -23,7 +23,7 @@
 /* parsetree.c
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-02-13
+   changed by: Oliver Cordes 2017-02-16
 
    $Id$
 
@@ -223,6 +223,7 @@ parsenode *add_node_constant_bool( int b )
 }
 
 
+
 parsenode *add_node_variable_r( char *s )
 {
   parsenode *newnode;
@@ -356,13 +357,27 @@ parsenode *add_node_vararglist( parsenode *vararglist, parsenode *tlvariable )
 
 
 /* array node definitions */
-parsenode *add_node_array_list( parsenode *array_list, parsenode *element )
+parsenode *add_node_array( parsenode *list )
 {
   parsenode *newnode;
 
   newnode = new_node();
 
   newnode->type  = node_array;
+
+  newnode->left  = list;
+
+  return newnode;
+}
+
+
+parsenode *add_node_array_list( parsenode *array_list, parsenode *element )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->type  = node_array_list;
 
   newnode->left  = element;
   newnode->right = array_list;

@@ -85,6 +85,10 @@ block "intro"
       #F= 1.0
       #print "point=%f" % ( ($F,-$F) )
 
+      A = [ (0,0), (1,0), (1,1) , (0,1) ]
+
+      print $A
+
       load $FILE
 
       text "left" "top" "Copyright_font" "i=%i" % ( $FRAMENR )

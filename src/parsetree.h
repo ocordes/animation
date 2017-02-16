@@ -22,7 +22,7 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-02-12
+   changed by: Oliver Cordes 2017-02-16
 
    $Id$
 
@@ -78,9 +78,10 @@
 #define node_math_and     46
 #define node_math_or      47
 #define node_string_fmt   48
+#define node_array_list   49
 
-#define node_cmd_arglist  49
-#define node_cmd_vararglist 50
+#define node_cmd_arglist  50
+#define node_cmd_vararglist 51
 
 
 /* commands */
@@ -167,6 +168,7 @@ parsenode *add_node_math_func( parsenode *left, parsenode *mathfuncop );
 
 
 /* array node definitions */
+parsenode *add_node_array( parsenode *list );
 parsenode *add_node_array_list( parsenode *array_list, parsenode *element );
 
 /* point node definitions */

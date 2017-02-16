@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-02-13
+   changed by: Oliver Cordes 2017-02-16
 
    $Id$
 
@@ -359,8 +359,8 @@ arg_list          : r_value TCOMMA arg_list            { $$ = add_node_arglist( 
                   | r_value                            { $$ = add_node_arglist( NULL, $1 ); }
                   ;
 
-array_expr        : TL_ARRAY array_list TR_ARRAY
-                  | TL_ARRAY TR_ARRAY 
+array_expr        : TL_ARRAY array_list TR_ARRAY       { $$ = add_node_array( $2 ); }
+                  | TL_ARRAY TR_ARRAY                  { $$ = add_node_array( NULL ); }
                   ;
 
 array_list        : expr TCOMMA array_list             { $$ = add_node_array_list( $3, $1 ); }

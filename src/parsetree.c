@@ -23,7 +23,7 @@
 /* parsetree.c
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-02-16
+   changed by: Oliver Cordes 2017-02-23
 
    $Id$
 
@@ -77,30 +77,28 @@ void free_node( parsenode *node)
   if ( node != NULL )
     {
       switch( node->type )
-	{
-	case node_variable:
-	  nfree( node->var );
-	  break;
-	case node_constant:
-	  free_constant( node->con );
-	  break;
-	case node_if:
-	  free_node( node->cond );
-	  break;
-	}
+	    {
+	     case node_variable:
+	      nfree( node->var );
+	      break;
+	     case node_constant:
+	      free_constant( node->con );
+	      break;
+	    case node_if:
+	     free_node( node->cond );
+	     break;
+	    }
       /* release arguments */
       if ( node->nrargs > 0 )
-	{
-	  for (i=0;i<node->nrargs;i++)
-	    free_node( node->args[i] );
-	  free( node->args );
-	}
-      if ( node->left != NULL )
-	free_node( node->left );
-      if ( node->right != NULL )
-	free_node( node->right );
-      if ( node->next != NULL )
-	free_node( node->next );
+      {
+	     for (i=0;i<node->nrargs;i++)
+	       free_node( node->args[i] );
+	     free( node->args );
+	    }
+
+      free_node( node->left );
+      free_node( node->right );
+      free_node( node->next );
       free( node );
     }
 }

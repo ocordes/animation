@@ -22,9 +22,9 @@
 /* output_ffmpeg.c
 
    written by: Oliver Cordes 2013-01-11
-   changed by: Oliver Cordes 2017-01-31
+   changed by: Oliver Cordes 2017-02-23
 
-   $Id: ffmpeg.c 432 2013-04-28 18:04:53Z ocordes $
+   $Id$
 
 */
 
@@ -111,7 +111,9 @@ int ffmpeg_start( int blockmovies )
       return 1;
     }
 
-  snprintf( cmdline, 1000, "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i %s 2> ffmpeg.log &",
+  snprintf( cmdline,
+            1000,
+            "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i %s 2> ffmpeg.log &",
 	    main_project->geometry[0],
 	    main_project->geometry[1],
 	    tempfile,

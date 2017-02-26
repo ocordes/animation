@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-02-16
+   changed by: Oliver Cordes 2017-02-25
 
    $Id$
 
@@ -45,6 +45,8 @@
 #include "parsetree.h"
 #include "project.h"
 #include "scanner.h"
+#include "type_array.h"
+#include "type_point.h"
 
 int yywrap()
 {

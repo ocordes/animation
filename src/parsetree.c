@@ -23,7 +23,7 @@
 /* parsetree.c
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-02-23
+   changed by: Oliver Cordes 2017-02-25
 
    $Id$
 
@@ -353,50 +353,6 @@ parsenode *add_node_vararglist( parsenode *vararglist, parsenode *tlvariable )
   return newnode;
 }
 
-
-/* array node definitions */
-parsenode *add_node_array( parsenode *list )
-{
-  parsenode *newnode;
-
-  newnode = new_node();
-
-  newnode->type  = node_array;
-
-  newnode->left  = list;
-
-  return newnode;
-}
-
-
-parsenode *add_node_array_list( parsenode *array_list, parsenode *element )
-{
-  parsenode *newnode;
-
-  newnode = new_node();
-
-  newnode->type  = node_array_list;
-
-  newnode->left  = element;
-  newnode->right = array_list;
-
-  return newnode;
-}
-
-/* point node definitions */
-parsenode *add_node_point( parsenode *x, parsenode *y  )
-{
-  parsenode *newnode;
-
-  newnode = new_node();
-
-  newnode->type  = node_point;
-
-  newnode->left  = x;
-  newnode->right = y;
-
-  return newnode;
-}
 
 
 int get_node_vararglist_len( parsenode *vararglist )
@@ -738,25 +694,6 @@ int   get_bool_from_constant( constant *con )
 }
 
 
-Point get_point_from_constant( constant *con )
-{
-   Point p;
-
-   assert( con != NULL );
-
-   switch( con->type )
-   {
-     case constant_point:
-       p = con->p;
-       break;
-     default:
-       p.x = 0;
-       p.y = 0;
-       output( 1, "Warning: Converting type to Point is not supported! Returning '(0,0)\n'" );
-       break;
-   }
-   return p;
-}
 
 
 char *get_string_from_node( parsenode *node )

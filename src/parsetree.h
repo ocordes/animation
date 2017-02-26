@@ -22,7 +22,7 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-02-16
+   changed by: Oliver Cordes 2017-02-25
 
    $Id$
 
@@ -167,19 +167,11 @@ parsenode *add_node_math_op( int mathop );
 parsenode *add_node_math_func( parsenode *left, parsenode *mathfuncop );
 
 
-/* array node definitions */
-parsenode *add_node_array( parsenode *list );
-parsenode *add_node_array_list( parsenode *array_list, parsenode *element );
-
-/* point node definitions */
-parsenode *add_node_point( parsenode *x, parsenode *y  );
-
 
 char   *get_string_from_constant( constant *con );
 int     get_int_from_constant( constant *con );
 double  get_double_from_constant( constant *con );
 int     get_bool_from_constant( constant *con );
-Point   get_point_from_constant( constant *con );
 
 char   *get_string_from_node( parsenode *node );
 int     get_int_from_node( parsenode *node );

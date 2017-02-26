@@ -22,8 +22,7 @@
 /* parsecmd.h
 
    written by: Oliver Cordes 2014-08-30
-   changed by: Oliver Cordes 2014-09-07
-
+   changed by: Oliver Cordes 2018-02-26
 
 */
 
@@ -48,11 +47,11 @@ parsenode *add_node_cmd_mirrorx( void );
 parsenode *add_node_cmd_mirrory( void );
 parsenode *add_node_cmd_mirrorxy( void );
 parsenode *add_node_cmd_print( parsenode *variable );
-parsenode *add_node_cmd_printf( parsenode *variable, parsenode *arguments ); 
+parsenode *add_node_cmd_printf( parsenode *variable, parsenode *arguments );
 parsenode *add_node_cmd_quit( void );
 parsenode *add_node_cmd_system( parsenode *cmd );
-parsenode *add_node_cmd_textfile( parsenode *varx, parsenode *vary, parsenode *font, parsenode *filename, parsenode *alpha );
-parsenode *add_node_cmd_text( parsenode *varx, parsenode *vary, parsenode *font, parsenode *s, parsenode *alpha );
+parsenode *add_node_cmd_textfile( parsenode *, parsenode *, parsenode *, parsenode *, parsenode * );
+parsenode *add_node_cmd_text( parsenode *, parsenode *, parsenode *, parsenode *, parsenode * );
 
 parsenode *add_node_cmd_macro( parsenode *func, parsenode *args );
 

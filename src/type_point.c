@@ -23,7 +23,7 @@
 /* type_point.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-02-25
+changed by: Oliver Cordes 2017-02-27
 
 $Id$
 
@@ -57,6 +57,25 @@ parsenode *add_node_point( parsenode *x, parsenode *y  )
   newnode->right = y;
 
   return newnode;
+}
+
+/* node to constant conversion */
+
+constant *add_constant_point( double x, double y )
+{
+  constant *con;
+
+  con = new_constant();
+
+  if ( con != NULL )
+  {
+    con->type = constant_point;
+    con->p.x  = x;
+    con->p.y  = y;
+    output( 2, "add_constant_point=(%f,%f)\n", x, y );
+  }
+
+  return con;
 }
 
 

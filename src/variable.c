@@ -22,7 +22,7 @@
 /* variable.c
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-02-13
+   changed by: Oliver Cordes 2017-02-27
 
    $Id$
 
@@ -40,6 +40,8 @@
 #include "helpers.h"
 #include "output.h"
 #include "variable.h"
+#include "type_array.h"
+#include "type_point.h"
 
 
 char sTRUE[]  = "True";
@@ -68,6 +70,10 @@ void free_constant_static( constant con )
     case constant_string:
       free( con.s );
       break;
+    case constant_array:
+      free_array_constant( &con );
+      break;
+    case constant_point:
     case constant_none:
     case constant_int:
     case constant_double:
@@ -90,11 +96,22 @@ void free_constant( constant *con )
 
 void clone_constant_static( constant *newcon, constant *con )
 {
+  char *s;
+
+  s = constant2str( con );
+  output( 11, "clone_constant_static called: %s\n", s );
+  free( s );
+
   memcpy( newcon, con, sizeof( constant ) );
-  if ( con->type == constant_string )
-    {
+  switch( con->type )
+  {
+    case constant_string:
       newcon->s = strdup( con->s );
-    }
+      break;
+    case constant_array:
+      clone_array_constant( newcon, con );
+      break;
+  }
 }
 
 
@@ -177,23 +194,6 @@ constant *add_constant_bool( int b )
   return con;
 }
 
-
-constant *add_constant_point( double x, double y )
-{
-  constant *con;
-
-  con = new_constant();
-
-  if ( con != NULL )
-  {
-    con->type = constant_point;
-    con->p.x  = x;
-    con->p.y  = y;
-    output( 2, "add_constant_point=(%f,%f)\n", x, y );
-  }
-
-  return con;
-}
 
 
 char     *print_bool( int b )
@@ -461,4 +461,44 @@ constant *get_variable( variables *vars, char *name )
 
 
   return con;
+}
+
+
+char *constant2str( constant *con )
+{
+  char  dummy[1000];
+  char *s;
+
+  switch( con->type )
+  {
+    case constant_none:
+      strncpy( dummy, "NONE", 1000 );
+      break;
+    case constant_int:
+      snprintf( dummy, 1000, "%i", con->i );
+      break;
+    case constant_double:
+      snprintf( dummy, 1000, "%f", con->d );
+      break;
+    case constant_string:
+      strncpy( dummy, con->s, 1000 );
+      break;
+    case constant_bool:
+      strncpy( dummy, (con->b?"TRUE":"FALSE" ), 1000 );
+      break;
+    case constant_point:
+      snprintf( dummy, 1000, "(%f,%f)", con->p.x, con->p.y );
+      break;
+    case constant_array:
+      s = array2str( con );
+      strncpy( dummy, s, 1000 );
+      free( s );
+      break;
+    default:
+      output( 1, "Cannot convert constant to string!\n" );
+      strncpy( dummy, "NONE", 1000 );
+      break;
+    }
+
+  return strdup( dummy );
 }

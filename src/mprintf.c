@@ -22,7 +22,7 @@
 /* mprintf.c
 
    written by: Oliver Cordes 2012-10-07
-   changed by: Oliver Cordes 2017-02-13
+   changed by: Oliver Cordes 2017-02-27
 
    $Id$
 
@@ -93,6 +93,8 @@ char *arg2str( parsenode *variable, char code, char *fmt )
     case constant_point:
       snprintf( dummy, 100, "(%f,%f)", con->p.x, con->p.y );
       p = strdup( dummy );
+      break;
+    case constant_array:
       break;
     default:
       p = strdup( "FOO" );

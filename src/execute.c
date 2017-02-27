@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-02-13
+   changed by: Oliver Cordes 2017-02-27
 
    $Id$
 
@@ -43,6 +43,8 @@
 #include "parsetree.h"
 #include "project.h"
 #include "variable.h"
+#include "type_array.h"
+#include "type_point.h"
 
 
 filedef *current_start_image;
@@ -146,39 +148,19 @@ int execute_cmd_print( parsenode *variable )
 {
   constant *con;
 
+  char     *s;
+
   con  = math_execute_node( variable );
 
   if ( con == NULL )
-    {
-      output( 1, "PRINT=NULL\n" );
-      return 0;
-    }
+  {
+    output( 1, "PRINT=NULL\n" );
+    return 0;
+  }
 
-    switch( con->type )
-    {
-      case constant_none:
-        output( 1, "%s: NONE\n", _em[_em_printer] );
-        break;
-      case constant_int:
-        output( 1, "%s: %i\n", _em[_em_printer], con->i );
-        break;
-      case constant_double:
-        output( 1, "%s: %f\n", _em[_em_printer], con->d );
-        break;
-      case constant_string:
-        output( 1, "%s: %s\n", _em[_em_printer], con->s );
-        break;
-      case constant_bool:
-        output( 1, "%s: %s\n", _em[_em_printer], (con->b?"TRUE":"FALSE" ) );
-        break;
-      case constant_point:
-        output( 1, "%s: (%f,%f)\n", _em[_em_printer], con->p.x, con->p.y );
-        break;
-      default:
-        output( 1, "PRINT command not supported for this type!\n" );
-        break;
-    }
-
+  s = constant2str( con );
+  output( 1, "%s: %s\n", _em[_em_printer], s );
+  free( s );
 
   free_constant( con );
 

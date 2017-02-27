@@ -23,17 +23,105 @@
 /* type_array.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-02-25
+changed by: Oliver Cordes 2017-02-27
 
 $Id$
 
 */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "config.h"
 
+#include "amath.h"
+#include "output.h"
 #include "parsetree.h"
 #include "type_array.h"
+#include "variable.h"
 
+
+/* internal functions */
+constant * new_array_constant( void )
+{
+  constant *con;
+
+  con = new_constant();
+  con->type = constant_array;
+  con->a.alloc = 10;
+  con->a.nr    = 0;
+  con->a.cons  = malloc( 10 * sizeof( constant* ));
+
+  return con;
+}
+
+void free_array_constant( constant *con )
+{
+  int i;
+
+  for (i=0;i<con->a.nr;++i)
+    free( con->a.cons[i] ) ;
+  free( con->a.cons );
+}
+
+void clone_array_constant( constant* newcon, constant* con )
+{
+  int i;
+
+  newcon->a.cons = malloc( sizeof( constant* ) * con->a.alloc );
+
+  for (i=0;i<con->a.nr;++i)
+    newcon->a.cons[i] = clone_constant( con->a.cons[i] );
+}
+
+
+void add_array_element( constant *con, constant *el )
+{
+  constant **p = NULL;
+  int        i;
+  char      *s;
+
+  s = constant2str( el );
+  output( 2, "add_array_element: %s\n", s );
+  free( s );
+
+  if ( con->a.nr == con->a.alloc )
+  {
+    con->a.alloc += 10;
+    p = malloc( sizeof( constant* ) * con->a.alloc );
+
+    for (i=0;i<con->a.nr;++i)
+      p[i] = con->a.cons[i];
+    free( con->a.cons );
+    con->a.cons = p;
+  }
+  con->a.cons[con->a.nr] = el;
+  con->a.nr++;
+}
+
+
+/* aaray 2 string conversion */
+char *array2str( constant *con )
+{
+  char  dummy[1000] = "\0";
+  char *s;
+  int   i;
+
+  for (i=0;i<con->a.nr;++i)
+  {
+    s = constant2str( con->a.cons[i] );
+    if ( i != 0 )
+    {
+      strncat( dummy, ",", 1000 );
+    }
+    strncat( dummy, s, 1000 );
+    free( s );
+  }
+  s = malloc( strlen( dummy ) + 3 );
+  sprintf( s, "[%s]", dummy );
+  return s;
+}
 
 /* array node definitions */
 parsenode *add_node_array( parsenode *list )
@@ -62,4 +150,42 @@ parsenode *add_node_array_list( parsenode *array_list, parsenode *element )
   newnode->right = array_list;
 
   return newnode;
+}
+
+/* node to constand conversion */
+constant *add_constant_array( parsenode *node )
+{
+  constant *con;
+  constant *el;
+
+  parsenode *n;
+
+  output( 2, "add_constant_array\n");
+  con = new_array_constant();
+
+  n = node;
+  while( n != NULL )
+  {
+    el = math_execute_node( n->left );
+    add_array_element( con, el );
+    n = n->right;
+  }
+
+  return con;
+}
+
+/* math functions */
+constant *math_evaluate_array( constant *left,
+                               constant *right,
+                               int mathop )
+{
+  constant *con;
+
+  return left;
+}
+
+
+constant *math_evaluate_array_func( constant *left, int mathop )
+{
+  return left;
 }

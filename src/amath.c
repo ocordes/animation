@@ -23,7 +23,7 @@
   amath.c
 
   written by: Oliver Cordes 2010-08-01
-  changed by: Oliver Cordes 2017-02-25
+  changed by: Oliver Cordes 2017-02-27
 
   $Id$
 
@@ -563,6 +563,7 @@ constant *math_evaluate_node( constant *left,
 			con = math_evaluate_point( left, right, mathop );
 			break;
 		case constant_array:
+		  con = math_evaluate_array( left, right, mathop );
 			break;
     }
 
@@ -607,7 +608,7 @@ constant *math_evaluate_node_func( constant *left, int mathop )
 					left = math_evaluate_point_func( left, mathop );
 					break;
 				default:
-					output( 1, "Can't use funtions on Points!\n" );
+					output( 1, "Can't use functions on Points!\n" );
 					return NULL;
 					break;
 			}
@@ -672,6 +673,7 @@ constant *math_execute_node( parsenode *node )
 																math_execute_node_double( node->right ) );
 			break;
 		case node_array:
+		  con = add_constant_array( node->left );
 			break;
     }
 

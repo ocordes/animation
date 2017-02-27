@@ -23,7 +23,7 @@
 /* type_point.h
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-02-25
+changed by: Oliver Cordes 2017-02-27
 
 $Id$
 
@@ -40,6 +40,11 @@ $Id$
 
 /* point node definitions */
 parsenode *add_node_point( parsenode *x, parsenode *y  );
+
+
+/* node to constant conversion */
+constant *add_constant_point( double x, double y );
+
 
 /* type conversion */
 Point   get_point_from_constant( constant *con );

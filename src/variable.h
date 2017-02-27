@@ -56,7 +56,8 @@ typedef struct {
 /* Array definition */
 typedef struct {
   int  nr;
-  struct _constant *cons;
+  int  alloc;
+  struct _constant **cons;
 } Array;
 
 
@@ -110,7 +111,7 @@ constant *add_constant_int( int i );
 constant *add_constant_double( double d );
 constant *add_constant_string( char *s );
 constant *add_constant_bool( int b );
-constant *add_constant_point( double x, double y );
+
 
 char     *print_bool( int b );
 
@@ -131,5 +132,6 @@ void set_string_variable( variables *vars, char *name, char *s );
 
 constant  *get_variable( variables *vars, char *name );
 
+char *constant2str( constant *);
 
 #endif

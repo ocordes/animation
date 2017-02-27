@@ -23,7 +23,7 @@
 /* type_array.h
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-02-25
+changed by: Oliver Cordes 2017-02-27
 
 $Id$
 
@@ -36,10 +36,23 @@ $Id$
 #include "config.h"
 
 #include "parsetree.h"
+#include "variable.h"
 
+void free_array_constant( constant *con );
+void clone_array_constant( constant*, constant* );
 
+/* array node definitions */
 parsenode *add_node_array( parsenode * );
 parsenode *add_node_array_list( parsenode *, parsenode * );
 
+
+/* aaray 2 string conversion */
+char *array2str( constant *);
+
+/* node to constant conversion */
+constant *add_constant_array( parsenode *);
+
+constant *math_evaluate_array( constant *, constant *, int );
+constant *math_evaluate_array_func( constant *left, int mathop );
 
 #endif

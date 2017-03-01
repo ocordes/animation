@@ -3,7 +3,7 @@
 # create a title movies with slides
 #
 # written by: Oliver Cordes 2016-08-08
-# changed by: Oliver Cordes 2017-02-07
+# changed by: Oliver Cordes 2017-02-27
 #
 
 project 'ex1-title_slides'
@@ -85,8 +85,8 @@ block "intro"
       #F= 1.0
       #print "point=%f" % ( ($F,-$F) )
 
-      A = [ (0,0), (1,0), (1,1) , (0,1) ]
-      #A = [ 0, 1, 2, 3 ]
+      #A = [ (0,0), (1,0), (1,1) , (0,1), 1 ]
+      A = [ 0, 1, 2, 3, 4 ] * 2
 
       print $A
 

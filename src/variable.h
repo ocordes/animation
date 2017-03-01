@@ -22,7 +22,7 @@
 /* variable.h
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-02-15
+   changed by: Oliver Cordes 2017-03-01
 
    $Id$
 
@@ -57,6 +57,7 @@ typedef struct {
 typedef struct {
   int  nr;
   int  alloc;
+  int  type;
   struct _constant **cons;
 } Array;
 

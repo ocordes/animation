@@ -23,7 +23,7 @@
 /* type_array.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-02-27
+changed by: Oliver Cordes 2017-03-01
 
 $Id$
 
@@ -52,6 +52,7 @@ constant * new_array_constant( void )
   con->a.alloc = 10;
   con->a.nr    = 0;
   con->a.cons  = malloc( 10 * sizeof( constant* ));
+  con->a.type  = constant_none;
 
   return con;
 }
@@ -85,6 +86,19 @@ void add_array_element( constant *con, constant *el )
   s = constant2str( el );
   output( 2, "add_array_element: %s\n", s );
   free( s );
+
+  if ( con->a.type == constant_none )
+  {
+    con->a.type = el->type;
+  }
+  else
+  {
+    if ( con->a.type != el->type )
+    {
+      output( 1, "Cannot add element to array, wrong type!\n" );
+      return;
+    }
+  }
 
   if ( con->a.nr == con->a.alloc )
   {
@@ -180,6 +194,25 @@ constant *math_evaluate_array( constant *left,
                                int mathop )
 {
   constant *con;
+  int       i;
+
+  switch( left->a.type )
+  {
+    case constant_int:
+    case constant_double:
+      /* element wise math operation */
+      for (i=0;i<left->a.nr;++i)
+      {
+        con = math_evaluate_node( left->a.cons[i], right, mathop );
+        free( left->a.cons[i] );
+        left->a.cons[i] = con;
+      }
+      break;
+    default:
+      output( 1, "Math operation on this type of array is not allowed!\n");
+      return left;
+      break;
+  }
 
   return left;
 }

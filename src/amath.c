@@ -23,7 +23,7 @@
   amath.c
 
   written by: Oliver Cordes 2010-08-01
-  changed by: Oliver Cordes 2017-02-27
+  changed by: Oliver Cordes 2017-03-02
 
   $Id$
 
@@ -518,6 +518,9 @@ int  math_maximum_type( constant *left,
 			break;
 		case constant_point:
 			type = constant_point;
+			break;
+		case constant_array:
+			type = constant_array;
 			break;
 		default:
 			type = constant_none;

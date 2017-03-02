@@ -196,6 +196,7 @@ constant *math_evaluate_array( constant *left,
   constant *con;
   int       i;
 
+  output( 2, "nath_evaluate_array called\n" );
   switch( left->a.type )
   {
     case constant_int:
@@ -204,7 +205,7 @@ constant *math_evaluate_array( constant *left,
       for (i=0;i<left->a.nr;++i)
       {
         con = math_evaluate_node( left->a.cons[i], right, mathop );
-        free( left->a.cons[i] );
+        ree( left->a.cons[i] ); 
         left->a.cons[i] = con;
       }
       break;

@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-01
+   changed by: Oliver Cordes 2017-03-02
 
    $Id$
 
@@ -177,7 +177,7 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TBREAK                       { $$ = add_node_cmd_break(); }
                  | TRETURNMACRO                 { $$ = add_node_cmd_return( NULL ); }
                  | TRETURNMACRO expr            { $$ = add_node_cmd_return( $2 ); }
-		 | TRETURNMACRO bool_expr       { $$ = add_node_cmd_return( $2 ); }
+		             | TRETURNMACRO bool_expr       { $$ = add_node_cmd_return( $2 ); }
                  | macro_func                   { $$ = $1; }
                  ;
 
@@ -278,7 +278,6 @@ empty_command    : TRETURN
 
 r_value          : expr                                 { $$ = $1; }
 		             | bool_expr                            { $$ = $1; }
-                 | array_expr
                  ;
 
 if_command       : TIF if_cond commands TENDIF          { $$ = add_node_if( $2, $3, NULL ); }
@@ -328,6 +327,7 @@ factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
                   | stringf                             { $$ = $1; }
                   | macro_func                          { $$ = $1; }
                   | point_expr                          { $$ = $1; }
+                  | array_expr                          { $$ = $1; }
                   ;
 
 

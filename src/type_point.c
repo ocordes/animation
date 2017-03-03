@@ -23,7 +23,7 @@
 /* type_point.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-02-27
+changed by: Oliver Cordes 2017-03-03
 
 $Id$
 
@@ -103,9 +103,10 @@ Point get_point_from_constant( constant *con )
 
 /* math operations */
 
-constant *math_evaluate_point( constant *left,
-			                         constant *right,
-			                         int mathop )
+constant *math_evaluate_point_dir( constant *left,
+			                             constant *right,
+			                             int mathop,
+                                   int direction  )
 {
   constant *con;
 
@@ -119,7 +120,13 @@ constant *math_evaluate_point( constant *left,
 
 	if ( right->type == constant_point )
 	{
-  	s2 = get_point_from_constant( right );
+    if ( direction == 1 )
+    {
+      s2 = s1;
+      s1 = get_point_from_constant( right );
+    }
+    else
+  	  s2 = get_point_from_constant( right );
 
   	output( 2, "s1=(%f,%f) s2=(%f,%f)\n", s1.x, s1.y, s2.x, s2.y );
 
@@ -154,7 +161,7 @@ constant *math_evaluate_point( constant *left,
 			 con->p.y = -s1.y;
 			 break;
 		 default:
-			 output( 2, "Math operation on Point not spported!\n" );
+			 output( 1, "Math operation on Point not spported!\n" );
        con->type = constant_point;
 			 con->p    = s1;
        break;
@@ -163,7 +170,7 @@ constant *math_evaluate_point( constant *left,
 	else
 	{
 		/* try to get a double conversion from the right side */
-		d = get_double_from_constant( right );
+    d = get_double_from_constant( right );
 
 		switch( mathop )
     {
@@ -173,20 +180,28 @@ constant *math_evaluate_point( constant *left,
 				con->p.y  = s1.y * d;
 			  break;
 			case node_math_div:
-				if ( d == 0.0 )
-				{
-					output( 1, "Zero division! Using lefthand node!\n" );
-					con->p = s1;
-				}
-				else
-				{
-					con->type = constant_point;
-					con->p.x  = s1.x / d;
-					con->p.y  = s1.y / d;
-				}
+        if ( direction == 1 )
+        {
+          output( 1, "double / point is not allowed!\n");
+          con->p = s1;
+        }
+        else
+        {
+				  if ( d == 0.0 )
+				  {
+					  output( 1, "Zero division! Using lefthand node!\n" );
+					  con->p = s1;
+				  }
+				  else
+			  	{
+				  	con->type = constant_point;
+					  con->p.x  = s1.x / d;
+					  con->p.y  = s1.y / d;
+			  	}
+        }
 				break;
 			default:
-				output( 2, "Math operation on Point not spported!\n" );
+				output( 1, "Math operation on Point not spported!\n" );
 				break;
 		}
 	}
@@ -206,6 +221,19 @@ constant *math_evaluate_point( constant *left,
 
 
   return con;
+}
+
+
+constant *math_evaluate_point( constant *left,
+			                         constant *right,
+			                         int mathop )
+{
+  if ( left->type == constant_point )
+    return math_evaluate_point_dir( left, right, mathop, 0 );
+  else
+    return math_evaluate_point_dir( right, left, mathop, 1 );
+
+  return left;
 }
 
 
@@ -235,7 +263,7 @@ constant *math_evaluate_point_func( constant *left,
 			break;
 		default:
      	 yyerror( "Math function operation on Point not spported!");
-			 output( 2, "Math funczion operation on Point not spported!" );
+			 output( 1, "Math function operation on Point not spported!" );
        con->type = constant_point;
 			 con->p    = s1;
        break;

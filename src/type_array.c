@@ -23,7 +23,7 @@
 /* type_array.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-01
+changed by: Oliver Cordes 2017-03-03
 
 $Id$
 
@@ -189,31 +189,54 @@ constant *add_constant_array( parsenode *node )
 }
 
 /* math functions */
-constant *math_evaluate_array( constant *left,
-                               constant *right,
-                               int mathop )
+
+constant *math_evaluate_array_dir( constant *left,
+                                    constant *right,
+                                    int mathop,
+                                    int direction )
 {
   constant *con;
+  constant *conr;
   int       i;
 
-  output( 2, "nath_evaluate_array called\n" );
+  output( 2, "nath_evaluate_array_dir called\n" );
   switch( left->a.type )
   {
     case constant_int:
     case constant_double:
+    case constant_point:
       /* element wise math operation */
       for (i=0;i<left->a.nr;++i)
       {
-        con = math_evaluate_node( left->a.cons[i], right, mathop );
-        ree( left->a.cons[i] ); 
+        conr = clone_constant( right );
+        if ( direction == 0 )
+          con = math_evaluate_node( left->a.cons[i], conr, mathop );
+        else
+          con = math_evaluate_node( conr, left->a.cons[i], mathop );
+        /* free( left->a.cons[i] ); */
         left->a.cons[i] = con;
       }
+      free_constant( right );
       break;
     default:
-      output( 1, "Math operation on this type of array is not allowed!\n");
+      output( 1, "Math operation on this type is for arrays not allowed!\n");
       return left;
       break;
   }
+
+  return left;
+}
+
+
+constant *math_evaluate_array( constant *left,
+                               constant *right,
+                               int mathop )
+{
+  output( 2, "nath_evaluate_array called\n" );
+  if ( left->type == constant_array )
+    return math_evaluate_array_dir( left, right, mathop, 0 );
+  else
+    return math_evaluate_array_dir( right, left, mathop, 1 );
 
   return left;
 }

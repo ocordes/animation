@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-02-11
+   changed by: Oliver Cordes 2017-03-04
 
 
    $Id$
@@ -43,6 +43,7 @@
 
 #include "emoji.h"
 #include "execute.h"
+#include "filldef.h"
 #include "font.h"
 #include "helpers.h"
 #include "image.h"
@@ -154,6 +155,7 @@ int main( int argc, char* argv[] )
   project_init();
   font_init();
   imagedef_init();
+  filldef_init();
 
   project_set_outputdir_string( "." );
   parse_options( argc, argv );
@@ -190,6 +192,7 @@ int main( int argc, char* argv[] )
   else
     printf( "Dry run requested!\n" );
 
+  filldef_done();
   imagedef_done();
   font_done();
   project_done();

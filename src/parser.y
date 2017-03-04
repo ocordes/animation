@@ -86,8 +86,9 @@ char *get_amx_lang_version( void )
 %token TLOAD
 %token TPRINT TPRINTF
 %token TLOOP TEMPTY TFILES TSTATIC
+%token TPENDEF TENDPENDEF TFILLDEF TENDFILLDEF
 %token TTEXTFILE TTEXTFILEALPHA TTEXT TTEXTALPHA
-%token TRECTANGLE TRECTANGLEFILL
+%token TCIRCLE TRECTANGLE TRECTANGLEFILL
 %token TPROPERTY
 %token TSYSTEM
 %token TCROP
@@ -121,7 +122,9 @@ instruction      : empty_command
                  | block
                  | postproc
                  | fontdef
-		 | imagedef
+                 | pendef
+                 | filldef
+		             | imagedef
                  | globaldef
                  | control
                  | macrodef
@@ -165,6 +168,7 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TMIRRORX                     { $$ = add_node_cmd_mirrorx(); }
                  | TMIRRORY                     { $$ = add_node_cmd_mirrory(); }
                  | TMIRRORXY                    { $$ = add_node_cmd_mirrorxy(); }
+                 | TCIRCLE factor factor TSTRING TSTRING
                  | TRECTANGLE factor factor factor factor factor TSTRING
 		             | TRECTANGLEFILL factor factor factor factor TSTRING
                  | TSYSTEM stringf              { $$ = add_node_cmd_system( $2 );}
@@ -213,6 +217,43 @@ fontdef_header   : TFONTDEF TSTRING TRETURN   { font_start( $2 );}
                  ;
 
 fontname         : TSTRING                    { $$ = $1; }
+                 ;
+
+pendef           : pendef_header pendef_commands TENDPENDEF { /* pendef_end(); */ }
+                 ;
+
+pendef_commands  : pendef_commands pendef_commands_eol
+                 | pendef_commands_eol
+                 ;
+pendef_commands_eol : pendef_command TRETURN
+                 | pendef_command TSEMICOLON
+                 | empty_command
+                 ;
+
+pendef_command   : TCOLOR TSTRING
+                 | TSIZE  TCONSTANT
+                 ;
+
+pendef_header    : TPENDEF TSTRING TRETURN     { /* pendef_start( $2 ); */ }
+                 ;
+
+filldef          : filldef_header filldef_commands TENDFILLDEF { /* filldef_end(); */ }
+                 ;
+
+filldef_commands : filldef_commands filldef_commands_eol
+                 | filldef_commands_eol
+                 ;
+
+filldef_commands_eol : filldef_command TRETURN
+                 | filldef_command TSEMICOLON
+                 | empty_command
+                 ;
+
+filldef_command  : TCOLOR TSTRING
+                 | TSIZE  TSTRING
+                 ;
+
+filldef_header   : TFILLDEF TSTRING TRETURN     { /* filldef_start( $2 ); */ }
                  ;
 
 

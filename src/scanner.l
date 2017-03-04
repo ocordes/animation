@@ -24,7 +24,7 @@
 /* scanner.l
 
    written by: Oliver Cordes 2010-06-20
-   changed by: Oliver Cordes 2016-08-08
+   changed by: Oliver Cordes 2017-03-04
 
    $Id: scanner.l 677 2014-09-03 17:42:40Z ocordes $
 
@@ -150,6 +150,11 @@ macro                   return TMACRO;
 endmacro                return TENDMACRO;
 return                  return TRETURNMACRO;
 
+pendef                  return TPENDEF;
+endpendef               return TENDPENDEF;
+filldef                 return TFILLDEF;
+endfilldef              return TENDFILLDEF;
+
 crop                    return TCROP;
 mirrorx                 return TMIRRORX;
 mirrory                 return TMIRRORY;
@@ -158,6 +163,7 @@ textfile                return TTEXTFILE;
 textfilealpha           return TTEXTFILEALPHA;
 text                    return TTEXT;
 textalpha               return TTEXTALPHA;
+circle                  return TCIRCLE;
 rectangle               return TRECTANGLE;
 rectanglefill           return TRECTANGLEFILL;
 

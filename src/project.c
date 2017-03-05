@@ -22,7 +22,7 @@
 /* project.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-02-06
+   changed by: Oliver Cordes 2017-03-05
    $Id$
 
 */
@@ -42,6 +42,7 @@
 #include "blocks.h"
 #include "controls.h"
 #include "emoji.h"
+#include "filldef.h"
 #include "font.h"
 #include "geometry.h"
 #include "helpers.h"
@@ -280,6 +281,7 @@ void project_show( void )
   output( 1, "overwrite     : %s\n", print_bool( main_project->overwrite ) );
   font_print_fonts();
   imagedef_print_imagedefs();
+  filldef_print_defs();
   output( 1, "global variables: " );
   print_variables( main_project->vars );
 

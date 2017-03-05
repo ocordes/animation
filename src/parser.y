@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-02
+   changed by: Oliver Cordes 2017-03-05
 
    $Id$
 
@@ -36,6 +36,7 @@
 #include "blocks.h"
 #include "controls.h"
 #include "execute.h"
+#include "filldef.h"
 #include "font.h"
 #include "helpers.h"
 #include "imagedef.h"
@@ -219,7 +220,7 @@ fontdef_header   : TFONTDEF TSTRING TRETURN   { font_start( $2 );}
 fontname         : TSTRING                    { $$ = $1; }
                  ;
 
-pendef           : pendef_header pendef_commands TENDPENDEF { /* pendef_end(); */ }
+pendef           : pendef_header pendef_commands TENDPENDEF { pendef_end(); }
                  ;
 
 pendef_commands  : pendef_commands pendef_commands_eol
@@ -234,7 +235,7 @@ pendef_command   : TCOLOR TSTRING
                  | TSIZE  TCONSTANT
                  ;
 
-pendef_header    : TPENDEF TSTRING TRETURN     { /* pendef_start( $2 ); */ }
+pendef_header    : TPENDEF TSTRING TRETURN     { pendef_start( $2 );  }
                  ;
 
 filldef          : filldef_header filldef_commands TENDFILLDEF { /* filldef_end(); */ }

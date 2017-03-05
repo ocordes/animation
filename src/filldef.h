@@ -60,5 +60,13 @@ typedef struct{
 /* module init/done functions */
 void filldef_init( void );
 void filldef_done( void );
+void filldef_print_defs( void );
+
+void pendef_start( parsenode * );
+void pendef_end( void );
+
+void filldef_start( parsenode * );
+void filldef_end( void );
+
 
 #endif

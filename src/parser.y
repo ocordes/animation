@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-05
+   changed by: Oliver Cordes 2017-03-06
 
    $Id$
 
@@ -231,8 +231,8 @@ pendef_commands_eol : pendef_command TRETURN
                  | empty_command
                  ;
 
-pendef_command   : TCOLOR TSTRING
-                 | TSIZE  TCONSTANT
+pendef_command   : TCOLOR TSTRING              { pendef_set_color( $2 ); }
+                 | TSIZE  TCONSTANT            { pendef_set_size( $2 ); }
                  ;
 
 pendef_header    : TPENDEF TSTRING TRETURN     { pendef_start( $2 );  }

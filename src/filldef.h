@@ -65,6 +65,9 @@ void filldef_print_defs( void );
 void pendef_start( parsenode * );
 void pendef_end( void );
 
+void pendef_set_color( parsenode * );
+void pendef_set_size( parsenode * );
+
 void filldef_start( parsenode * );
 void filldef_end( void );
 

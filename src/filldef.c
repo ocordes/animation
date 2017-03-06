@@ -198,6 +198,21 @@ void pendef_end( void )
   }
 }
 
+void pendef_set_color( parsenode *color  )
+{
+  char *scolor;
+
+  assert( current_pendef != NULL );
+
+  scolor = get_string_from_node( color );
+}
+
+
+void pendef_set_size( parsenode * )
+{
+
+}
+
 
 void filldef_start( parsenode *n )
 {

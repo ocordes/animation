@@ -23,7 +23,7 @@
 /* filldef.c
 
   written by: Oliver Cordes 2017-03-04
-  changed by: Oliver Cordes 2017-03-04
+  changed by: Oliver Cordes 2017-03-07
 
   $Id$
 
@@ -171,7 +171,17 @@ void filldef_done( void )
 
 void filldef_print_defs( void )
 {
+  int i;
 
+  output( 1, "pendef descriptions: nr. of pens: %u\n", nr_pendefs );
+  if ( nr_pendefs > 0 )
+  {
+    output( 1, " %-40s %-10s %-20s\n", "Name", "Size", "Color" );
+    for (i=0;i<nr_pendefs;++i)
+      output( 1, " %-40s %-10i %-20s\n", pendefs[i]->name , pendefs[i]->size, pendefs[i]->color );
+  }
+
+  output( 1, "filldef descriptions: nr. of fill pattern: %u\n", nr_filldefs );
 }
 
 
@@ -191,36 +201,48 @@ void pendef_start( parsenode *n )
 
 void pendef_end( void )
 {
-  if ( current_pendef != NULL )
-  {
-    output( 1, "Finishing pendef!%s\n", _em[_em_okay] );
-    current_pendef = NULL;
-  }
+  assert( current_pendef != NULL );
+
+  output( 1, "Finishing pendef!%s\n", _em[_em_okay] );
+  current_pendef = NULL;
 }
 
 void pendef_set_color( parsenode *color  )
 {
-  char *scolor;
-
   assert( current_pendef != NULL );
 
-  scolor = get_string_from_node( color );
+  current_pendef->color = get_string_from_node( color );
+  free_node( color );
 }
 
 
-void pendef_set_size( parsenode * )
+void pendef_set_size( parsenode *size )
 {
+  assert( current_pendef != NULL );
 
+  current_pendef->size = get_int_from_node( size );
+  free_node( size );
 }
 
 
 void filldef_start( parsenode *n )
 {
+  char           *sname = NULL;
 
+  sname = get_string_from_node( n );
+
+  output( 1, "Starting a new filldef '%s'\n", sname );
+  current_filldef       = filldef_new_filldef();
+  current_filldef->name = sname;
+
+  free_node( n );
 }
 
 
 void filldef_end( void )
 {
+  assert( current_filldef != NULL );
 
+  output( 1, "Finishing filldef!%s\n", _em[_em_okay] );
+  current_filldef = NULL;
 }

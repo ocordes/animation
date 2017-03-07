@@ -22,7 +22,7 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-02-25
+   changed by: Oliver Cordes 2017-03-07
 
    $Id$
 
@@ -98,7 +98,8 @@
 #define node_cmd_system   71
 #define node_cmd_window   72
 #define node_cmd_image    73
-#define node_cmd_macro    74
+#define node_cmd_circle   74
+#define node_cmd_macro    75
 
 
 struct _parsenode{

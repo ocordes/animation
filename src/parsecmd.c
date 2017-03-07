@@ -22,7 +22,7 @@
 /* parsecmd.c
 
    written by: Oliver Cordes 2014-08-30
-   changed by: Oliver Cordes 2014-09-07
+   changed by: Oliver Cordes 2017-03-07
 
 
 */
@@ -50,7 +50,7 @@ parsenode *add_node_cmd_assign( parsenode *variable, parsenode *rvalue )
       output( 1, "NULL variable detected, cancel command!\n");
       return NULL;
     }
-  
+
 
   register_node_variable( variable );
 
@@ -59,7 +59,7 @@ parsenode *add_node_cmd_assign( parsenode *variable, parsenode *rvalue )
   newnode->type  = node_cmd_assign;
   newnode->left  = variable;
   newnode->right = rvalue;
-  
+
   return newnode;
 }
 
@@ -160,7 +160,7 @@ parsenode *add_node_cmd_image( parsenode *varx, parsenode *vary, parsenode *imag
   allocate_node_args( newnode, 2 );
   newnode->args[0] = varx;
   newnode->args[1] = vary;
-  
+
   return newnode;
 }
 
@@ -233,7 +233,7 @@ parsenode *add_node_cmd_print( parsenode *variable )
 }
 
 
-parsenode *add_node_cmd_printf( parsenode *variable, parsenode *arguments ) 
+parsenode *add_node_cmd_printf( parsenode *variable, parsenode *arguments )
 {
   parsenode *newnode;
 
@@ -274,16 +274,16 @@ parsenode *add_node_cmd_system( parsenode *cmd )
 }
 
 
-parsenode *add_node_cmd_text( parsenode *varx, 
-			      parsenode *vary, 
-			      parsenode *font, 
+parsenode *add_node_cmd_text( parsenode *varx,
+			      parsenode *vary,
+			      parsenode *font,
 			      parsenode *s,
-			      parsenode *alpha ) 
+			      parsenode *alpha )
 {
   parsenode *newnode;
-  
+
   newnode = new_node();
-  
+
   newnode->type = node_cmd_text;
   newnode->left = s;
   allocate_node_args( newnode, 4 );
@@ -296,16 +296,16 @@ parsenode *add_node_cmd_text( parsenode *varx,
 }
 
 
-parsenode *add_node_cmd_textfile( parsenode *varx, 
-				  parsenode *vary, 
-				  parsenode *font, 
+parsenode *add_node_cmd_textfile( parsenode *varx,
+				  parsenode *vary,
+				  parsenode *font,
 				  parsenode *filename,
 				  parsenode *alpha )
 {
   parsenode *newnode;
-  
+
   newnode = new_node();
-  
+
   newnode->type = node_cmd_textfile;
   allocate_node_args( newnode, 5 );
   newnode->args[0] = varx;
@@ -313,6 +313,26 @@ parsenode *add_node_cmd_textfile( parsenode *varx,
   newnode->args[2] = font;
   newnode->args[3] = filename;
   newnode->args[4] = alpha;
+
+  return newnode;
+}
+
+
+parsenode *add_node_cmd_circle( parsenode *center,
+                                parsenode *radius,
+                                parsenode *pendef,
+                                parsenode *filldef )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->type = node_cmd_circle;
+  allocate_node_args( newnode, 4 );
+  newnode->args[0] = center;
+  newnode->args[1] = radius;
+  newnode->args[2] = pendef;
+  newnode->args[4] = filldef;
 
   return newnode;
 }

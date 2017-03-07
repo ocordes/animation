@@ -169,7 +169,7 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TMIRRORX                     { $$ = add_node_cmd_mirrorx(); }
                  | TMIRRORY                     { $$ = add_node_cmd_mirrory(); }
                  | TMIRRORXY                    { $$ = add_node_cmd_mirrorxy(); }
-                 | TCIRCLE factor factor TSTRING TSTRING
+                 | TCIRCLE factor factor TSTRING TSTRING { $$ = add_node_cmd_circle( $2, $3, $4, $5 ); }
                  | TRECTANGLE factor factor factor factor factor TSTRING
 		             | TRECTANGLEFILL factor factor factor factor TSTRING
                  | TSYSTEM stringf              { $$ = add_node_cmd_system( $2 );}

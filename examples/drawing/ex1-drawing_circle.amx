@@ -95,9 +95,11 @@ block "intro"
 
       A = 2.0 / [ 0, 1, 2, 3, 4 ]
 
-      print $A
+      #print $A
 
       load $FILE
+
+      circle (100,100) 50 "redpen" "NONE"
 
       text "left" "top" "Copyright_font" "i=%i" % ( $FRAMENR )
 endblock

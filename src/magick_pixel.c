@@ -22,7 +22,7 @@
 /* magick_pixel.c
 
    written by: Oliver Cordes 2017-03-07
-   changed by: Oliver Cordes 2017-03-07
+   changed by: Oliver Cordes 2017-03-09
 
    $Id$
 
@@ -42,6 +42,7 @@
 #endif
 
 #include "amath.h"
+#include "filldef.h"
 #include "font.h"
 #include "image.h"
 #include "imagedef.h"
@@ -57,10 +58,55 @@
 /* internal variables */
 
 
+/* internal routines */
+
+PixelWand *magick_draw_setup_PixelWand( parsenode *node )
+{
+  PixelWand         *pwand = NULL;
+  MagickBooleanType  erg;
+  pendef_descr      *pendef;
+
+  pendef = get_pendef_from_node( node );
+  pwand = NewPixelWand();
+
+  if ( pendef != NULL )
+  {
+    erg = PixelSetColor( pwand, pendef->color);
+  }
+
+  return pwand;
+}
+
+PixelWand *magick_draw_setup_FillWand( PixelWand *pen_wand, parsenode *filldef )
+{
+  PixelWand *pwand = NULL;
+
+  pwand = NewPixelWand();
+
+  if ( filldef == NULL )
+    PixelSetColorFromWand( pwand, pen_wand );
+
+  return pwand;
+}
+
 
 /* module procedures */
 
-void magick_draw_cirlce( parsenode *central, parsenode *radius, parsenode *pendef, parsenode *filldef )
+void magick_draw_circle( parsenode *central, parsenode *radius, parsenode *pendef, parsenode *filldef )
 {
+  PixelWand    *pwand = NULL;
+  PixelWand    *fwand = NULL;
 
+  DrawingWand  *dwand = NULL;
+
+  pwand = magick_draw_setup_PixelWand( pendef );
+  fwand = magick_draw_setup_FillWand( pwand, NULL );
+
+  dwand = NewDrawingWand();
+
+  DrawSetFillColor( dwand, fwand );
+
+  DestroyDrawingWand( dwand );
+  DestroyPixelWand( fwand );
+  DestroyPixelWand( pwand );
 }

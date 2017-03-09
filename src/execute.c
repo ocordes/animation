@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-02-27
+   changed by: Oliver Cordes 2017-03-09
 
    $Id$
 
@@ -38,6 +38,7 @@
 #include "execute.h"
 #include "image.h"
 #include "magick.h"
+#include "magick_pixel.h"
 #include "mprintf.h"
 #include "output.h"
 #include "parsetree.h"
@@ -177,7 +178,7 @@ int execute_cmd_text( parsenode *node )
 {
   magick_text( node->args[0], node->args[1], node->left, node->args[2], node->args[3] );
 
-  return 0;
+  return return_ok;
 }
 
 
@@ -185,7 +186,7 @@ int execute_cmd_textfile( parsenode *node )
 {
   magick_textfile( node->args[0], node->args[1], node->args[2], node->args[3], node->args[4] );
 
-  return 0;
+  return return_ok;
 }
 
 
@@ -193,7 +194,7 @@ int execute_cmd_image( parsenode *node )
 {
   magick_drawimage( node->args[0], node->args[1], node->left );
 
-  return 0;
+  return return_ok;
 }
 
 
@@ -281,6 +282,12 @@ int execute_cmd_return( parsenode *val )
 }
 
 
+int execute_cmd_circle( parsenode *node )
+{
+  magick_draw_circle( node->args[0], node->args[1], node->args[2], node->args[3] );
+  return return_ok;
+}
+
 
 /* check  procedures */
 
@@ -303,18 +310,18 @@ int execute_image_script( parsenode *commands )
 
   start = commands;
   while ( start != NULL )
-    {
-      switch( start->type )
-	{
-	case node_quit:
-	  erg = return_quit;
-	  break;
-	case node_exit:
-	  erg = return_exit;
-	  break;
-	case node_break:
-	  erg = return_break;
-	  break;
+  {
+    switch( start->type )
+	  {
+	    case node_quit:
+	      erg = return_quit;
+	      break;
+	    case node_exit:
+	      erg = return_exit;
+	      break;
+	    case node_break:
+	      erg = return_break;
+	      break;
 	case node_return:
 	  erg = execute_cmd_return( start->left );
 	  break;
@@ -354,6 +361,11 @@ int execute_image_script( parsenode *commands )
 	      return_value = NULL;
 	    }
 	  break;
+
+  /* draewing routines */
+  case node_cmd_circle:
+    erg = execute_cmd_circle( start );
+    break;
 	}
 
       /* break the execution if there is any error */

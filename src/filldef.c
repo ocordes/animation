@@ -23,7 +23,7 @@
 /* filldef.c
 
   written by: Oliver Cordes 2017-03-04
-  changed by: Oliver Cordes 2017-03-07
+  changed by: Oliver Cordes 2017-03-09
 
   $Id$
 
@@ -225,6 +225,39 @@ void pendef_set_size( parsenode *size )
 }
 
 
+pendef_descr *get_pendef_from_node( parsenode *node )
+{
+  char              *pen_name;
+
+  pendef_descr      *pendef = NULL;
+  int                i;
+
+  pen_name = get_string_from_node( node );
+  output( 2, "pendef name: %s\n", pen_name );
+
+  if ( nr_pendefs > 0 )
+  {
+    for (i=0;i<nr_pendefs;++i)
+    {
+      if ( strcmp( pendefs[i]->name, pen_name ) == 0 )
+      {
+        pendef = pendefs[i];
+        break;
+      }
+    }
+    if ( pendef == NULL )
+    {
+      output( 1, "pendef structure for name '%s' not found!\n", pen_name );
+    }
+  }
+
+
+  nfree( pen_name );
+
+  return pendef;
+}
+
+
 void filldef_start( parsenode *n )
 {
   char           *sname = NULL;
@@ -245,4 +278,17 @@ void filldef_end( void )
 
   output( 1, "Finishing filldef!%s\n", _em[_em_okay] );
   current_filldef = NULL;
+}
+
+
+filldef_descr *get_filldef_from_node( parsenode *node )
+{
+  char              *fill_name;
+
+  fill_name = get_string_from_node( node );
+  output( 2, "filldef name: %s\n", fill_name );
+
+  nfree( fill_name );
+
+  return NULL;
 }

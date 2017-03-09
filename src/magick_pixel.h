@@ -22,7 +22,7 @@
 /* magick_pixel.h
 
    written by: Oliver Cordes 2017-03-07
-   changed by: Oliver Cordes 2017-03-07
+   changed by: Oliver Cordes 2017-03-09
 
    $Id$
 
@@ -45,6 +45,6 @@
 #include <wand/magick_wand.h>
 #endif
 
-void magick_draw_cirlce( parsenode *, parsenode *, parsenode *, parsenode * );
+void magick_draw_circle( parsenode *, parsenode *, parsenode *, parsenode * );
 
 #endif

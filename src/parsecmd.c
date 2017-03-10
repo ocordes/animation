@@ -22,7 +22,7 @@
 /* parsecmd.c
 
    written by: Oliver Cordes 2014-08-30
-   changed by: Oliver Cordes 2017-03-07
+   changed by: Oliver Cordes 2017-03-10
 
 
 */
@@ -321,18 +321,19 @@ parsenode *add_node_cmd_textfile( parsenode *varx,
 parsenode *add_node_cmd_circle( parsenode *center,
                                 parsenode *radius,
                                 parsenode *pendef,
-                                parsenode *filldef )
+                                int        filldef )
 {
   parsenode *newnode;
 
   newnode = new_node();
-
+  
+  newnode->flags = filldef;
   newnode->type = node_cmd_circle;
-  allocate_node_args( newnode, 4 );
+  allocate_node_args( newnode, 3);
   newnode->args[0] = center;
   newnode->args[1] = radius;
   newnode->args[2] = pendef;
-  newnode->args[4] = filldef;
+
 
   return newnode;
 }

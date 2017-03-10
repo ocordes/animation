@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-06
+   changed by: Oliver Cordes 2017-03-10
 
    $Id$
 
@@ -87,9 +87,9 @@ char *get_amx_lang_version( void )
 %token TLOAD
 %token TPRINT TPRINTF
 %token TLOOP TEMPTY TFILES TSTATIC
-%token TPENDEF TENDPENDEF TFILLDEF TENDFILLDEF
+%token TPENDEF TENDPENDEF TFILLCOLOR
 %token TTEXTFILE TTEXTFILEALPHA TTEXT TTEXTALPHA
-%token TCIRCLE TRECTANGLE TRECTANGLEFILL
+%token TCIRCLE TCIRCLEFILL TRECTANGLE TRECTANGLEFILL
 %token TPROPERTY
 %token TSYSTEM
 %token TCROP
@@ -124,7 +124,6 @@ instruction      : empty_command
                  | postproc
                  | fontdef
                  | pendef
-                 | filldef
 		             | imagedef
                  | globaldef
                  | control
@@ -169,7 +168,8 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TMIRRORX                     { $$ = add_node_cmd_mirrorx(); }
                  | TMIRRORY                     { $$ = add_node_cmd_mirrory(); }
                  | TMIRRORXY                    { $$ = add_node_cmd_mirrorxy(); }
-                 | TCIRCLE factor factor TSTRING TSTRING { $$ = add_node_cmd_circle( $2, $3, $4, $5 ); }
+                 | TCIRCLE factor factor TSTRING { $$ = add_node_cmd_circle( $2, $3, $4, 0 ); }
+                 | TCIRCLEFILL factor factor TSTRING { $$ = add_node_cmd_circle( $2, $3, $4, 1); }
                  | TRECTANGLE factor factor factor factor factor TSTRING
 		             | TRECTANGLEFILL factor factor factor factor TSTRING
                  | TSYSTEM stringf              { $$ = add_node_cmd_system( $2 );}
@@ -233,30 +233,11 @@ pendef_commands_eol : pendef_command TRETURN
 
 pendef_command   : TCOLOR TSTRING              { pendef_set_color( $2 ); }
                  | TSIZE  TCONSTANT            { pendef_set_size( $2 ); }
+                 | TFILLCOLOR TSTRING          { pendef_set_fillcolor( $2 ); }
                  ;
 
 pendef_header    : TPENDEF TSTRING TRETURN     { pendef_start( $2 );  }
                  ;
-
-filldef          : filldef_header filldef_commands TENDFILLDEF { /* filldef_end(); */ }
-                 ;
-
-filldef_commands : filldef_commands filldef_commands_eol
-                 | filldef_commands_eol
-                 ;
-
-filldef_commands_eol : filldef_command TRETURN
-                 | filldef_command TSEMICOLON
-                 | empty_command
-                 ;
-
-filldef_command  : TCOLOR TSTRING
-                 | TSIZE  TSTRING
-                 ;
-
-filldef_header   : TFILLDEF TSTRING TRETURN     { /* filldef_start( $2 ); */ }
-                 ;
-
 
 imagedef         : imagedef_header imagedef_commands TENDIMAGEDEF { imagedef_end(); }
                  ;

@@ -50,6 +50,8 @@
 #include "output.h"
 #include "project.h"
 #include "textfile.h"
+#include "type_array.h"
+#include "type_point.h"
 #include "variable.h"
 
 
@@ -60,53 +62,89 @@
 
 /* internal routines */
 
-PixelWand *magick_draw_setup_PixelWand( parsenode *node )
+void magick_draw_setup_Wand( parsenode *node, int flags,
+                            DrawingWand *dwand,
+                            PixelWand **pwand, PixelWand **fwand )
 {
-  PixelWand         *pwand = NULL;
   MagickBooleanType  erg;
   pendef_descr      *pendef;
 
-  pendef = get_pendef_from_node( node );
-  pwand = NewPixelWand();
+  (*pwand) = NewPixelWand();
+  (*fwand) = NewPixelWand();
 
+
+  if ( flags == 0 )
+    /* no fill pattern */
+    PixelSetColor( (*fwand), "none");
+
+  pendef = get_pendef_from_node( node );
   if ( pendef != NULL )
   {
-    erg = PixelSetColor( pwand, pendef->color);
+    if ( pendef->color != NULL )
+    {
+      output( 2, "No color set for a pen definition!\n" );
+      erg = PixelSetColor( (*pwand), pendef->color);
+    }
+
+    DrawSetStrokeWidth( dwand, pendef->size );
+
+    if ( flags == 1 )
+    {
+      if ( pendef->fillcolor != NULL )
+        PixelSetColor( (*fwand), pendef->fillcolor );
+      else
+        PixelSetColor( (*fwand), "none");
+    }
   }
-
-  return pwand;
-}
-
-PixelWand *magick_draw_setup_FillWand( PixelWand *pen_wand, parsenode *filldef )
-{
-  PixelWand *pwand = NULL;
-
-  pwand = NewPixelWand();
-
-  if ( filldef == NULL )
-    PixelSetColorFromWand( pwand, pen_wand );
-
-  return pwand;
+  DrawSetStrokeColor( dwand, pwand );
+  DrawSetFillColor( dwand, fwand );
 }
 
 
 /* module procedures */
 
-void magick_draw_circle( parsenode *central, parsenode *radius, parsenode *pendef, parsenode *filldef )
+void magick_draw_circle( parsenode *central, parsenode *radius, parsenode *pendef, int filldef )
 {
   PixelWand    *pwand = NULL;
   PixelWand    *fwand = NULL;
 
   DrawingWand  *dwand = NULL;
 
-  pwand = magick_draw_setup_PixelWand( pendef );
-  fwand = magick_draw_setup_FillWand( pwand, NULL );
+  constant     *xy;
+  double        r;
+  int           ix, iy, ir;
 
   dwand = NewDrawingWand();
 
-  DrawSetFillColor( dwand, fwand );
+  magick_draw_setup_Wand( pendef, filldef, dwand, &pwand, &fwand );
 
-  DestroyDrawingWand( dwand );
+    /* DrawSetFillColor( dwand, fwand ); */
+
+  /* extract the point from node */
+  xy = math_execute_node_point( central );
+
+  ix = round( xy->p.x );
+  iy = round( xy->p.y );
+  output( 2, "x=%i y=%i\n", ix, iy );
+
+  r = math_execute_node_double( radius );
+  ir = round( r );
+
+  output( 2, "r=%i\n", ir );
+
+  
   DestroyPixelWand( fwand );
   DestroyPixelWand( pwand );
+  fwand = NULL; pwand = NULL;
+
+  DrawCircle( dwand, xy->p.x, xy->p.y, xy->p.x+r, xy->p.y );
+  MagickDrawImage( current_image->im, dwand);
+
+  /* free all variables */
+  free_constant( xy );
+
+  DestroyDrawingWand( dwand );
+  /*DestroyPixelWand( fwand );
+  DestroyPixelWand( pwand ); */
+
 }

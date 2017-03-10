@@ -23,7 +23,7 @@
 /* type_point.h
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-02-27
+changed by: Oliver Cordes 2017-03-10
 
 $Id$
 
@@ -57,5 +57,6 @@ constant *math_evaluate_point( constant *left,
 constant *math_evaluate_point_func( constant *left,
                                			int mathop );
 
+constant *math_execute_node_point( parsenode *node );
 
 #endif

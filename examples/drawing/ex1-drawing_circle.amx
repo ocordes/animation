@@ -44,7 +44,8 @@ endfontdef
 
 pendef "redpen"
  color "red"
- size  2         # in pixels
+ size 2         # in pixels
+ #fillcolor "yellow"
 endpendef
 
 
@@ -99,7 +100,9 @@ block "intro"
 
       load $FILE
 
-      circle (100,100) 50 "redpen" "NONE"
+      circle (100,100) 45 "redpen"
+      circlefill (100,100) 30 "redpen"
+
 
       text "left" "top" "Copyright_font" "i=%i" % ( $FRAMENR )
 endblock

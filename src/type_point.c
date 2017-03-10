@@ -23,7 +23,7 @@
 /* type_point.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-03
+changed by: Oliver Cordes 2017-03-10
 
 $Id$
 
@@ -37,6 +37,7 @@ $Id$
 
 #include "config.h"
 
+#include "amath.h"
 #include "helpers.h"
 #include "output.h"
 #include "parsetree.h"
@@ -271,6 +272,27 @@ constant *math_evaluate_point_func( constant *left,
 
 
 	free_constant( left );
+
+  return con;
+}
+
+
+constant *math_execute_node_point( parsenode *node )
+{
+  constant *con;
+
+  con = math_execute_node( node );
+
+  if ( con->type != constant_point )
+  {
+    output( 1, "A point constant expected (type of constant= %i)!\n", con->type );
+    output( 1, "Return a (0,0)-Point!\n" );
+    /* delete the unused constant */
+    free_constant( con );
+
+    /* create an empty point */
+    con = add_constant_point( 0, 0);
+  }
 
   return con;
 }

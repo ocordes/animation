@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-03-09
+   changed by: Oliver Cordes 2017-03-10
 
    $Id$
 
@@ -284,7 +284,7 @@ int execute_cmd_return( parsenode *val )
 
 int execute_cmd_circle( parsenode *node )
 {
-  magick_draw_circle( node->args[0], node->args[1], node->args[2], node->args[3] );
+  magick_draw_circle( node->args[0], node->args[1], node->args[2], node->flags );
   return return_ok;
 }
 

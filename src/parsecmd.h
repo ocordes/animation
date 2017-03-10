@@ -22,7 +22,7 @@
 /* parsecmd.h
 
    written by: Oliver Cordes 2014-08-30
-   changed by: Oliver Cordes 2017-03-07
+   changed by: Oliver Cordes 2017-03-10
 
 */
 
@@ -52,7 +52,7 @@ parsenode *add_node_cmd_quit( void );
 parsenode *add_node_cmd_system( parsenode *cmd );
 parsenode *add_node_cmd_textfile( parsenode *, parsenode *, parsenode *, parsenode *, parsenode * );
 parsenode *add_node_cmd_text( parsenode *, parsenode *, parsenode *, parsenode *, parsenode * );
-parsenode *add_node_cmd_circle( parsenode *, parsenode *, parsenode *, parsenode * );
+parsenode *add_node_cmd_circle( parsenode *, parsenode *, parsenode *, int );
 
 parsenode *add_node_cmd_macro( parsenode *func, parsenode *args );
 

@@ -22,7 +22,7 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-03-07
+   changed by: Oliver Cordes 2017-03-10
 
    $Id$
 
@@ -107,13 +107,14 @@ struct _parsenode{
 	struct _parsenode   *next;
 	struct _parsenode   *left;
 	struct _parsenode   *right;
-        int                  nrargs;
-        struct _parsenode ** args;
+  int                  nrargs;
+  struct _parsenode ** args;
 	union{
 		constant          *con;
 		char              *var;
 		int                mathop;
 		struct _parsenode *cond;
+		int                flags;
 	};
 };
 

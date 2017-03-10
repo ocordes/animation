@@ -50,12 +50,9 @@ typedef struct {
   char *name;
   char *color;
   int   size;
+  char *fillcolor;
 } pendef_descr;
 
-
-typedef struct{
-  char *name;
-} filldef_descr;
 
 /* module init/done functions */
 void filldef_init( void );
@@ -67,13 +64,9 @@ void pendef_end( void );
 
 void pendef_set_color( parsenode * );
 void pendef_set_size( parsenode * );
+void pendef_set_fillcolor( parsenode * );
 
 pendef_descr *get_pendef_from_node( parsenode * );
-
-void filldef_start( parsenode * );
-void filldef_end( void );
-
-filldef_descr *get_filldef_from_node( parsenode * );
 
 
 #endif

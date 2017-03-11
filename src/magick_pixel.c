@@ -22,7 +22,7 @@
 /* magick_pixel.c
 
    written by: Oliver Cordes 2017-03-07
-   changed by: Oliver Cordes 2017-03-09
+   changed by: Oliver Cordes 2017-03-11
 
    $Id$
 
@@ -62,20 +62,22 @@
 
 /* internal routines */
 
-void magick_draw_setup_Wand( parsenode *node, int flags,
-                            DrawingWand *dwand,
-                            PixelWand **pwand, PixelWand **fwand )
+DrawingWand * magick_draw_setup_Wand( parsenode *node, int flags )
 {
   MagickBooleanType  erg;
   pendef_descr      *pendef;
+  PixelWand         *pwand, *fwand;
+  DrawingWand       *dwand;
 
-  (*pwand) = NewPixelWand();
-  (*fwand) = NewPixelWand();
+  dwand = NewDrawingWand();
+
+  pwand = NewPixelWand();
+  fwand = NewPixelWand();
 
 
   if ( flags == 0 )
     /* no fill pattern */
-    PixelSetColor( (*fwand), "none");
+    PixelSetColor( fwand, "none");
 
   pendef = get_pendef_from_node( node );
   if ( pendef != NULL )
@@ -83,7 +85,7 @@ void magick_draw_setup_Wand( parsenode *node, int flags,
     if ( pendef->color != NULL )
     {
       output( 2, "No color set for a pen definition!\n" );
-      erg = PixelSetColor( (*pwand), pendef->color);
+      erg = PixelSetColor( pwand, pendef->color);
     }
 
     DrawSetStrokeWidth( dwand, pendef->size );
@@ -91,13 +93,18 @@ void magick_draw_setup_Wand( parsenode *node, int flags,
     if ( flags == 1 )
     {
       if ( pendef->fillcolor != NULL )
-        PixelSetColor( (*fwand), pendef->fillcolor );
+        PixelSetColor( fwand, pendef->fillcolor );
       else
-        PixelSetColor( (*fwand), "none");
+        PixelSetColor( fwand, "none");
     }
   }
   DrawSetStrokeColor( dwand, pwand );
   DrawSetFillColor( dwand, fwand );
+
+  DestroyPixelWand( fwand );
+  DestroyPixelWand( pwand );
+
+  return dwand;
 }
 
 
@@ -105,18 +112,14 @@ void magick_draw_setup_Wand( parsenode *node, int flags,
 
 void magick_draw_circle( parsenode *central, parsenode *radius, parsenode *pendef, int filldef )
 {
-  PixelWand    *pwand = NULL;
-  PixelWand    *fwand = NULL;
-
   DrawingWand  *dwand = NULL;
 
   constant     *xy;
   double        r;
   int           ix, iy, ir;
 
-  dwand = NewDrawingWand();
 
-  magick_draw_setup_Wand( pendef, filldef, dwand, &pwand, &fwand );
+  dwand = magick_draw_setup_Wand( pendef, filldef );
 
     /* DrawSetFillColor( dwand, fwand ); */
 
@@ -132,10 +135,6 @@ void magick_draw_circle( parsenode *central, parsenode *radius, parsenode *pende
 
   output( 2, "r=%i\n", ir );
 
-  
-  DestroyPixelWand( fwand );
-  DestroyPixelWand( pwand );
-  fwand = NULL; pwand = NULL;
 
   DrawCircle( dwand, xy->p.x, xy->p.y, xy->p.x+r, xy->p.y );
   MagickDrawImage( current_image->im, dwand);
@@ -144,7 +143,4 @@ void magick_draw_circle( parsenode *central, parsenode *radius, parsenode *pende
   free_constant( xy );
 
   DestroyDrawingWand( dwand );
-  /*DestroyPixelWand( fwand );
-  DestroyPixelWand( pwand ); */
-
 }

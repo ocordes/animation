@@ -24,7 +24,7 @@
 /* scanner.l
 
    written by: Oliver Cordes 2010-06-20
-   changed by: Oliver Cordes 2017-03-10
+   changed by: Oliver Cordes 2017-03-12
 
    $Id$
 
@@ -163,10 +163,17 @@ textfile                return TTEXTFILE;
 textfilealpha           return TTEXTFILEALPHA;
 text                    return TTEXT;
 textalpha               return TTEXTALPHA;
+line                    return TLINE;
 circle                  return TCIRCLE;
 circlefill              return TCIRCLEFILL;
 rectangle               return TRECTANGLE;
 rectanglefill           return TRECTANGLEFILL;
+roundrectangle          return TROUNDRECTANGLE;
+roundrectanglefill      return TROUNDRECTANGLEFILL;
+polygon                 return TPOLYGON;
+polygonfill             return TPOLYGONFILL;
+polyline                return TPOLYLINE;
+polylinefill            return TPOLYLINEFILL;
 
 
 include                 BEGIN(include);
@@ -243,6 +250,10 @@ exp                     return TEXP;
 \n                      return TRETURN;
 [ \r\t]+                /* ignore whitespace */;
 .                       return TUNKNOWN;
+
+random_seek             return TRANDOM_SEEK;
+random                  return TRANDOM;
+random_point            return TRANDOM_POINT;
 
 
 [a-z][_a-z0-9.]*         yylval =  add_node_constant_string( yytext ); return TMACRONAME;

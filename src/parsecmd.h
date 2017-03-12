@@ -52,8 +52,18 @@ parsenode *add_node_cmd_quit( void );
 parsenode *add_node_cmd_system( parsenode *cmd );
 parsenode *add_node_cmd_textfile( parsenode *, parsenode *, parsenode *, parsenode *, parsenode * );
 parsenode *add_node_cmd_text( parsenode *, parsenode *, parsenode *, parsenode *, parsenode * );
+parsenode *add_node_cmd_line( parsenode *, parsenode *, parsenode * );
 parsenode *add_node_cmd_circle( parsenode *, parsenode *, parsenode *, int );
+parsenode *add_node_cmd_rectangle( parsenode *, parsenode *, parsenode *, int );
+parsenode *add_node_cmd_roundrectangle( parsenode *, parsenode *, parsenode *, parsenode *, int );
+parsenode *add_node_cmd_polygon( parsenode *, parsenode *, int );
+parsenode *add_node_cmd_polyline( parsenode *, parsenode *, int );
 
 parsenode *add_node_cmd_macro( parsenode *func, parsenode *args );
+
+parsenode *add_node_random( void );
+parsenode *add_node_random_point( void );
+parsenode *add_node_random_seek( parsenode * );
+
 
 #endif

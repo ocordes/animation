@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-03-04
+   changed by: Oliver Cordes 2017-03-12
 
 
    $Id$
@@ -50,6 +50,7 @@
 #include "imagedef.h"
 #include "output.h"
 #include "project.h"
+#include "random.h"
 #include "scanner.h"
 
 
@@ -156,6 +157,7 @@ int main( int argc, char* argv[] )
   font_init();
   imagedef_init();
   filldef_init();
+  random_init();
 
   project_set_outputdir_string( "." );
   parse_options( argc, argv );

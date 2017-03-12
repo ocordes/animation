@@ -73,13 +73,9 @@ block "intro"
 
 
 
-      A = [ (100,100), (200,100), (250,150), (200,200), (100,200)  ]
 
-      polygon $A "redpen"
 
-      B = [ (500,100), (600,100), (650,150), (600,200)  ]
-
-      polylinefill $B "redpen"
+      line (100,100) (300,300) "redpen"
 
 
       text "left" "top" "Copyright_font" "i=%i" % ( $FRAMENR )

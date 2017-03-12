@@ -22,7 +22,7 @@
 /* magick.c
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2017-01-31
+   changed by: Oliver Cordes 2017-03-12
 
    $Id$
 
@@ -375,7 +375,7 @@ void magic_textfile_drawline( int posx,
 
 
 
-void magick_draw_rectangle( int x1, int y1, int x2, int y2, int width, int filled,  char *color )
+void magick_image_rectangle( int x1, int y1, int x2, int y2, int width, int filled,  char *color )
 {
   DrawingWand   *dwand = NULL;
   PixelWand     *pwand = NULL;
@@ -588,7 +588,7 @@ void magick_image_load( filedef *file )
 	        current_image->width  = file->dimx;
 	        current_image->height = file->dimy;
 
-	        magick_draw_rectangle( 0, 0, current_image->width-1, current_image->height-1,
+	        magick_image_rectangle( 0, 0, current_image->width-1, current_image->height-1,
 				      1,    /* rectangle width */
 				      1,    /* filled */
 				      main_project->background  );

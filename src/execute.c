@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-03-10
+   changed by: Oliver Cordes 2017-03-12
 
    $Id$
 
@@ -282,9 +282,37 @@ int execute_cmd_return( parsenode *val )
 }
 
 
+int execute_cmd_line( parsenode *node )
+{
+  magick_draw_line( node->args[0], node->args[1], node->args[2] );
+  return return_ok;
+}
+
+
 int execute_cmd_circle( parsenode *node )
 {
   magick_draw_circle( node->args[0], node->args[1], node->args[2], node->flags );
+  return return_ok;
+}
+
+
+int execute_cmd_rectangle( parsenode *node )
+{
+  magick_draw_rectangle( node->args[0], node->args[1], node->args[2], node->flags );
+  return return_ok;
+}
+
+
+int execute_cmd_roundrectangle( parsenode *node )
+{
+  magick_draw_roundrectangle( node->args[0], node->args[1], node->args[2], node->args[3], node->flags );
+  return return_ok;
+}
+
+
+int execute_cmd_polygon( parsenode *node, int polyline )
+{
+  magick_draw_polygon( node->args[0], node->args[1], node->flags, polyline );
   return return_ok;
 }
 
@@ -322,58 +350,73 @@ int execute_image_script( parsenode *commands )
 	    case node_break:
 	      erg = return_break;
 	      break;
-	case node_return:
-	  erg = execute_cmd_return( start->left );
-	  break;
-	case node_if:
-	  erg = execute_if( start->cond, start->left, start->right );
-	  break;
-	case node_cmd_assign:
-	  erg = execute_cmd_assign( start->left, start->right );
-	  break;
-	case node_cmd_window:
-	  erg = execute_cmd_window( start );
-	  break;
-	case node_cmd_load:
-	  erg = execute_cmd_load( start->left );
-	  break;
-	case node_cmd_print:
-	  erg = execute_cmd_print( start->left );
-	  break;
-	case node_cmd_text:
-	  erg = execute_cmd_text( start );
-	  break;
-	case node_cmd_textfile:
-	  erg = execute_cmd_textfile( start );
-	  break;
-	case node_cmd_image:
-	  erg = execute_cmd_image( start );
-	  break;
-	case node_cmd_macro:
-	  /* simple macro calls ... */
-	  erg = execute_cmd_macro( start );
+	    case node_return:
+	      erg = execute_cmd_return( start->left );
+	      break;
+	    case node_if:
+	      erg = execute_if( start->cond, start->left, start->right );
+	      break;
+	    case node_cmd_assign:
+	      erg = execute_cmd_assign( start->left, start->right );
+	      break;
+	    case node_cmd_window:
+	      erg = execute_cmd_window( start );
+	      break;
+	    case node_cmd_load:
+	      erg = execute_cmd_load( start->left );
+	      break;
+	    case node_cmd_print:
+	      erg = execute_cmd_print( start->left );
+	      break;
+	    case node_cmd_text:
+	      erg = execute_cmd_text( start );
+	      break;
+	    case node_cmd_textfile:
+	      erg = execute_cmd_textfile( start );
+	      break;
+	    case node_cmd_image:
+	      erg = execute_cmd_image( start );
+	      break;
+	    case node_cmd_macro:
+	      /* simple macro calls ... */
+	      erg = execute_cmd_macro( start );
 
-	  /* throw away return values ... */
-	  if ( return_value != NULL )
-	    {
-	      output( 1, "Freeing unused return value!\n" );
-	      free_constant( return_value );
-	      return_value = NULL;
-	    }
-	  break;
+	      /* throw away return values ... */
+	      if ( return_value != NULL )
+	      {
+	        output( 1, "Freeing unused return value!\n" );
+	        free_constant( return_value );
+	        return_value = NULL;
+	      }
+	      break;
 
-  /* draewing routines */
-  case node_cmd_circle:
-    erg = execute_cmd_circle( start );
-    break;
-	}
+       /* draewing routines */
+      case node_cmd_line:
+        erg = execute_cmd_line( start );
+        break;
+      case node_cmd_circle:
+        erg = execute_cmd_circle( start );
+        break;
+      case node_cmd_rectangle:
+        erg = execute_cmd_rectangle( start );
+        break;
+      case node_cmd_roundrectangle:
+        erg = execute_cmd_roundrectangle( start );
+       break;
+      case node_cmd_polygon:
+        erg = execute_cmd_polygon( start, 0 );
+        break;
+      case node_cmd_polyline:
+        erg = execute_cmd_polygon( start, 1 );
+        break;
+	  }
 
-      /* break the execution if there is any error */
-      if ( erg != return_ok )
-	return erg;
+    /* break the execution if there is any error */
+    if ( erg != return_ok )
+	    return erg;
 
-      start = start->next;
-    }
+    start = start->next;
+  }
 
   return erg;
 }

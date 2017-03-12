@@ -22,7 +22,7 @@
 /* magick_pixel.h
 
    written by: Oliver Cordes 2017-03-07
-   changed by: Oliver Cordes 2017-03-10
+   changed by: Oliver Cordes 2017-03-12
 
    $Id$
 
@@ -45,6 +45,10 @@
 #include <wand/magick_wand.h>
 #endif
 
+void magick_draw_line( parsenode *, parsenode *, parsenode * );
 void magick_draw_circle( parsenode *, parsenode *, parsenode *, int );
+void magick_draw_rectangle( parsenode *, parsenode *, parsenode *, int );
+void magick_draw_roundrectangle( parsenode *, parsenode *, parsenode *, parsenode *, int );
+void magick_draw_polygon( parsenode *, parsenode *, int, int  );
 
 #endif

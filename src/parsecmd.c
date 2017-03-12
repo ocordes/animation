@@ -318,6 +318,24 @@ parsenode *add_node_cmd_textfile( parsenode *varx,
 }
 
 
+parsenode *add_node_cmd_line( parsenode *start,
+                              parsenode *end,
+                              parsenode *pendef )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->type = node_cmd_line;
+  allocate_node_args( newnode, 3);
+  newnode->args[0] = start;
+  newnode->args[1] = end;
+  newnode->args[2] = pendef;
+
+  return newnode;
+}
+
+
 parsenode *add_node_cmd_circle( parsenode *center,
                                 parsenode *radius,
                                 parsenode *pendef,
@@ -326,7 +344,7 @@ parsenode *add_node_cmd_circle( parsenode *center,
   parsenode *newnode;
 
   newnode = new_node();
-  
+
   newnode->flags = filldef;
   newnode->type = node_cmd_circle;
   allocate_node_args( newnode, 3);
@@ -334,6 +352,79 @@ parsenode *add_node_cmd_circle( parsenode *center,
   newnode->args[1] = radius;
   newnode->args[2] = pendef;
 
+  return newnode;
+}
+
+
+parsenode *add_node_cmd_rectangle( parsenode *start,
+                                   parsenode *size,
+                                   parsenode *pendef,
+                                  int         filldef)
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->flags = filldef;
+  newnode->type = node_cmd_rectangle;
+  allocate_node_args( newnode, 3);
+  newnode->args[0] = start;
+  newnode->args[1] = size;
+  newnode->args[2] = pendef;
+
+  return newnode;
+}
+
+
+parsenode *add_node_cmd_roundrectangle( parsenode *start,
+                                        parsenode *size,
+                                        parsenode *radius,
+                                        parsenode *pendef,
+                                        int        filldef )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->flags = filldef;
+  newnode->type = node_cmd_roundrectangle;
+  allocate_node_args( newnode, 4);
+  newnode->args[0] = start;
+  newnode->args[1] = size;
+  newnode->args[2] = radius;
+  newnode->args[3] = pendef;
+
+  return newnode;
+}
+
+
+parsenode *add_node_cmd_polygon( parsenode *array, parsenode *pendef, int filldef )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->flags = filldef;
+  newnode->type = node_cmd_polygon;
+  allocate_node_args( newnode, 2);
+  newnode->args[0] = array;
+  newnode->args[1] = pendef;
+
+  return newnode;
+}
+
+
+parsenode *add_node_cmd_polyline( parsenode *array, parsenode *pendef, int filldef )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->flags = filldef;
+  newnode->type = node_cmd_polyline;
+  allocate_node_args( newnode, 2);
+  newnode->args[0] = array;
+  newnode->args[1] = pendef;
 
   return newnode;
 }
@@ -349,6 +440,40 @@ parsenode *add_node_cmd_macro( parsenode *func, parsenode *args )
   newnode->type  = node_cmd_macro;
   newnode->left  = func;
   newnode->right = args;
+
+  return newnode;
+}
+
+
+parsenode *add_node_random( void )
+{
+  parsenode *newnode;
+
+  newnode        = new_node();
+  newnode->type  = node_cmd_random;
+
+  return newnode;
+}
+
+
+parsenode *add_node_random_point( void )
+{
+  parsenode *newnode;
+
+  newnode        = new_node();
+  newnode->type  = node_cmd_random_point;
+
+  return newnode;
+}
+
+
+parsenode *add_node_random_seek( parsenode *seek_val )
+{
+  parsenode *newnode;
+
+  newnode        = new_node();
+  newnode->type  = node_cmd_random_seek;
+  newnode->left  = seek_val;
 
   return newnode;
 }

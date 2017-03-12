@@ -19,42 +19,33 @@
 
 */
 
+/* random.h
 
-/* type_array.h
+   written by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-03-12
 
-written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-12
-
-$Id$
+   $Id$
 
 */
 
-#ifndef __type_array_h
 
-#define __type_array_h 1
+#ifndef __random_h
+
+#define __random_h 1
+
+
 
 #include "config.h"
-
-#include "parsetree.h"
-#include "variable.h"
-
-void free_array_constant( constant *con );
-void clone_array_constant( constant*, constant* );
-
-/* array node definitions */
-parsenode *add_node_array( parsenode * );
-parsenode *add_node_array_list( parsenode *, parsenode * );
+#include "project.h"
 
 
-/* aaray 2 string conversion */
-char *array2str( constant *);
+#if MAGICK_VERSION >= 7
+#include <MagickWand/MagickWand.h>
+#else
+#include <wand/magick_wand.h>
+#endif
 
-/* node to constant conversion */
-constant *add_constant_array( parsenode *);
 
-constant *math_evaluate_array( constant *, constant *, int );
-constant *math_evaluate_array_func( constant *left, int mathop );
-
-constant *math_execute_node_array( parsenode * );
+void random_init( void );
 
 #endif

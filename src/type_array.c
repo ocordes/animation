@@ -23,7 +23,7 @@
 /* type_array.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-03
+changed by: Oliver Cordes 2017-03-12
 
 $Id$
 
@@ -245,4 +245,25 @@ constant *math_evaluate_array( constant *left,
 constant *math_evaluate_array_func( constant *left, int mathop )
 {
   return left;
+}
+
+
+constant *math_execute_node_array( parsenode *node )
+{
+  constant *con;
+
+  con = math_execute_node( node );
+
+  if ( con->type != constant_array )
+  {
+    output( 1, "Array constant expected! (type of constant= %i)!\n", con->type );
+
+    output( 1, "Returning zero size array!\n");
+
+    free_constant( con );
+
+    con = new_array_constant();
+  }
+
+  return con;
 }

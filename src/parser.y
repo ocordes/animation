@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-10
+   changed by: Oliver Cordes 2017-03-12
 
    $Id$
 
@@ -79,6 +79,7 @@ char *get_amx_lang_version( void )
 %token TEQ TNEQ TGREATER TLOWER TGREQ TLOEQ TAND TOR TNOT
 %token TPLUS TMINUS TMULTIPLY TDIVIDE TMOD TSTRING_FMT
 %token TSIN TCOS TTAN TASIN TACOS TATAN TLOG10 TLN TEXP
+%token TRANDOM TRANDOM_SEEK TRANDOM_POINT
 %token TBLOCK TENDBLOCK
 %token TCONTROL TENDCONTROL
 %token TPOSTPROC TENDPOSTPROC
@@ -89,7 +90,8 @@ char *get_amx_lang_version( void )
 %token TLOOP TEMPTY TFILES TSTATIC
 %token TPENDEF TENDPENDEF TFILLCOLOR
 %token TTEXTFILE TTEXTFILEALPHA TTEXT TTEXTALPHA
-%token TCIRCLE TCIRCLEFILL TRECTANGLE TRECTANGLEFILL
+%token TLINE TCIRCLE TCIRCLEFILL TRECTANGLE TRECTANGLEFILL TROUNDRECTANGLE TROUNDRECTANGLEFILL
+%token TPOLYGON TPOLYGONFILL TPOLYLINE TPOLYLINEFILL
 %token TPROPERTY
 %token TSYSTEM
 %token TCROP
@@ -168,10 +170,17 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TMIRRORX                     { $$ = add_node_cmd_mirrorx(); }
                  | TMIRRORY                     { $$ = add_node_cmd_mirrory(); }
                  | TMIRRORXY                    { $$ = add_node_cmd_mirrorxy(); }
+                 | TLINE factor factor TSTRING  { $$ = add_node_cmd_line( $2, $3, $4 ); }
                  | TCIRCLE factor factor TSTRING { $$ = add_node_cmd_circle( $2, $3, $4, 0 ); }
                  | TCIRCLEFILL factor factor TSTRING { $$ = add_node_cmd_circle( $2, $3, $4, 1); }
-                 | TRECTANGLE factor factor factor factor factor TSTRING
-		             | TRECTANGLEFILL factor factor factor factor TSTRING
+                 | TRECTANGLE factor factor TSTRING { $$ = add_node_cmd_rectangle( $2, $3, $4, 0 ); }
+		             | TRECTANGLEFILL factor factor TSTRING  { $$ = add_node_cmd_rectangle( $2, $3, $4, 1 ); }
+                 | TROUNDRECTANGLE factor factor factor TSTRING { $$ = add_node_cmd_roundrectangle( $2, $3, $4, $5, 0 ); }
+                 | TROUNDRECTANGLEFILL factor factor factor TSTRING { $$ = add_node_cmd_roundrectangle( $2, $3, $4, $5, 1 ); }
+                 | TPOLYGON factor TSTRING      { $$ = add_node_cmd_polygon( $2, $3, 0 ); }
+                 | TPOLYGONFILL factor TSTRING  { $$ = add_node_cmd_polygon( $2, $3, 1 ); }
+                 | TPOLYLINE factor TSTRING     { $$ = add_node_cmd_polyline( $2, $3, 0 ); }
+                 | TPOLYLINEFILL factor TSTRING { $$ = add_node_cmd_polyline( $2, $3, 1 ); }
                  | TSYSTEM stringf              { $$ = add_node_cmd_system( $2 );}
 		             | window
                  | if_command                   { $$ = $1; }
@@ -184,6 +193,7 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TRETURNMACRO expr            { $$ = add_node_cmd_return( $2 ); }
 		             | TRETURNMACRO bool_expr       { $$ = add_node_cmd_return( $2 ); }
                  | macro_func                   { $$ = $1; }
+                 | random_seek                  { $$ = $1; }
                  ;
 
 window           : window_header commands TENDWINDOW  { $$ = add_node_window_finish( $1, $2 ); }
@@ -351,6 +361,8 @@ factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
                   | macro_func                          { $$ = $1; }
                   | point_expr                          { $$ = $1; }
                   | array_expr                          { $$ = $1; }
+                  | random_expr                         { $$ = $1; }
+                  | random_point_expr                   { $$ = $1; }
                   ;
 
 
@@ -393,4 +405,14 @@ array_list        : expr TCOMMA array_list             { $$ = add_node_array_lis
                   ;
 
 point_expr        : TL_BRACKET expr TCOMMA expr TR_BRACKET { $$ =  add_node_point( $2, $4 ); }
+                  ;
+
+random_expr       : TRANDOM TL_BRACKET TR_BRACKET      { $$ = add_node_random(); }
+                  ;
+
+random_point_expr : TRANDOM_POINT TL_BRACKET TR_BRACKET { $$ = add_node_random_point(); }
+                  ;
+
+random_seek       : TRANDOM_SEEK TL_BRACKET TR_BRACKET { $$ = add_node_random_seek( NULL ); }
+                  | TRANDOM_SEEK TL_BRACKET factor TR_BRACKET { $$ = add_node_random_seek( $3 ); }
                   ;

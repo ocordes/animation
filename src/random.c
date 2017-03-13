@@ -22,20 +22,63 @@
 /* random.c
 
    written by: Oliver Cordes 2017-03-12
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-03-14
 
    $Id$
 
 */
 
+#include <stdlib.h>
+
 #include "config.h"
 #include "project.h"
 
+#include "output.h"
+#include "parsetree.h"
+#include "type_point.h"
+#include "variable.h"
 
 
 /* module functions */
 
 void random_init( void )
 {
-  
+  srand48( 1234567890 );
+}
+
+
+constant *execute_cmd_random( void )
+{
+  constant *con;
+
+  con = new_constant();
+  con->type = constant_double;
+
+  con->d = drand48();
+
+  return con;
+}
+
+
+constant *execute_cmd_random_point( void )
+{
+  constant  *con;
+  double     x,y ;
+
+  x = drand48();
+  y = drand48();
+
+  con = add_constant_point( x, y );
+
+  return con;
+}
+
+
+void random_seed( parsenode *seed )
+{
+  int i;
+
+  i = get_int_from_node( seed );
+
+  srand48( i );
 }

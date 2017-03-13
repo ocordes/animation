@@ -24,7 +24,7 @@
 /* scanner.l
 
    written by: Oliver Cordes 2010-06-20
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-03-13
 
    $Id$
 
@@ -251,7 +251,7 @@ exp                     return TEXP;
 [ \r\t]+                /* ignore whitespace */;
 .                       return TUNKNOWN;
 
-random_seek             return TRANDOM_SEEK;
+random_seed             return TRANDOM_SEED;
 random                  return TRANDOM;
 random_point            return TRANDOM_POINT;
 

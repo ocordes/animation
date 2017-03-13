@@ -107,7 +107,7 @@
 #define node_cmd_macro          80
 
 #define node_cmd_random         100
-#define node_cmd_random_seek    101
+#define node_cmd_random_seed    101
 #define node_cmd_random_point   102
 
 

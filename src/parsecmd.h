@@ -63,7 +63,7 @@ parsenode *add_node_cmd_macro( parsenode *func, parsenode *args );
 
 parsenode *add_node_random( void );
 parsenode *add_node_random_point( void );
-parsenode *add_node_random_seek( parsenode * );
+parsenode *add_node_random_seed( parsenode * );
 
 
 #endif

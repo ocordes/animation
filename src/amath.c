@@ -23,7 +23,7 @@
   amath.c
 
   written by: Oliver Cordes 2010-08-01
-  changed by: Oliver Cordes 2017-03-02
+  changed by: Oliver Cordes 2017-03-12
 
   $Id$
 
@@ -43,6 +43,7 @@
 #include "output.h"
 #include "parsetree.h"
 #include "project.h"
+#include "random.h"
 #include "type_array.h"
 #include "type_point.h"
 
@@ -677,6 +678,14 @@ constant *math_execute_node( parsenode *node )
 			break;
 		case node_array:
 		  con = add_constant_array( node->left );
+			break;
+
+    /* random functions */
+		case node_cmd_random:
+			con = execute_cmd_random();
+			break;
+		case node_cmd_random_point:
+			con = execute_cmd_random_point();
 			break;
     }
 

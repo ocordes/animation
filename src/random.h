@@ -22,7 +22,7 @@
 /* random.h
 
    written by: Oliver Cordes 2017-03-12
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-03-13
 
    $Id$
 
@@ -47,5 +47,8 @@
 
 
 void random_init( void );
+constant *execute_cmd_random( void );
+constant *execute_cmd_random_point( void );
+void random_seed( parsenode * );
 
 #endif

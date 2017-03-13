@@ -467,13 +467,13 @@ parsenode *add_node_random_point( void )
 }
 
 
-parsenode *add_node_random_seek( parsenode *seek_val )
+parsenode *add_node_random_seed( parsenode *seed_val )
 {
   parsenode *newnode;
 
   newnode        = new_node();
-  newnode->type  = node_cmd_random_seek;
-  newnode->left  = seek_val;
+  newnode->type  = node_cmd_random_seed;
+  newnode->left  = seed_val;
 
   return newnode;
 }

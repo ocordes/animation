@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-03-13
 
    $Id$
 
@@ -43,6 +43,7 @@
 #include "output.h"
 #include "parsetree.h"
 #include "project.h"
+#include "random.h"
 #include "variable.h"
 #include "type_array.h"
 #include "type_point.h"
@@ -282,6 +283,14 @@ int execute_cmd_return( parsenode *val )
 }
 
 
+int execute_cmd_random_seed( parsenode *node )
+{
+  random_seed( node->left );
+
+  return return_ok;
+}
+
+
 int execute_cmd_line( parsenode *node )
 {
   magick_draw_line( node->args[0], node->args[1], node->args[2] );
@@ -390,7 +399,12 @@ int execute_image_script( parsenode *commands )
 	      }
 	      break;
 
-       /* draewing routines */
+      /* random routinges */
+      case node_cmd_random_seed:
+        erg = execute_cmd_random_seed( start );
+        break;
+
+      /* draewing routines */
       case node_cmd_line:
         erg = execute_cmd_line( start );
         break;

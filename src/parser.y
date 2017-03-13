@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-03-13
 
    $Id$
 
@@ -79,7 +79,7 @@ char *get_amx_lang_version( void )
 %token TEQ TNEQ TGREATER TLOWER TGREQ TLOEQ TAND TOR TNOT
 %token TPLUS TMINUS TMULTIPLY TDIVIDE TMOD TSTRING_FMT
 %token TSIN TCOS TTAN TASIN TACOS TATAN TLOG10 TLN TEXP
-%token TRANDOM TRANDOM_SEEK TRANDOM_POINT
+%token TRANDOM TRANDOM_SEED TRANDOM_POINT
 %token TBLOCK TENDBLOCK
 %token TCONTROL TENDCONTROL
 %token TPOSTPROC TENDPOSTPROC
@@ -193,7 +193,7 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TRETURNMACRO expr            { $$ = add_node_cmd_return( $2 ); }
 		             | TRETURNMACRO bool_expr       { $$ = add_node_cmd_return( $2 ); }
                  | macro_func                   { $$ = $1; }
-                 | random_seek                  { $$ = $1; }
+                 | random_seed                  { $$ = $1; }
                  ;
 
 window           : window_header commands TENDWINDOW  { $$ = add_node_window_finish( $1, $2 ); }
@@ -413,6 +413,6 @@ random_expr       : TRANDOM TL_BRACKET TR_BRACKET      { $$ = add_node_random();
 random_point_expr : TRANDOM_POINT TL_BRACKET TR_BRACKET { $$ = add_node_random_point(); }
                   ;
 
-random_seek       : TRANDOM_SEEK TL_BRACKET TR_BRACKET { $$ = add_node_random_seek( NULL ); }
-                  | TRANDOM_SEEK TL_BRACKET factor TR_BRACKET { $$ = add_node_random_seek( $3 ); }
+random_seed       : TRANDOM_SEED TL_BRACKET TR_BRACKET { $$ = add_node_random_seed( NULL ); }
+                  | TRANDOM_SEED TL_BRACKET factor TR_BRACKET { $$ = add_node_random_seed( $3 ); }
                   ;

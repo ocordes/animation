@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-13
+   changed by: Oliver Cordes 2017-03-15
 
    $Id$
 
@@ -54,7 +54,7 @@ int yywrap()
         return 1;
 }
 
-#define amx_lang_version "0.9"
+#define amx_lang_version "0.9.10"
 
 
 char *get_amx_lang_version( void )
@@ -363,6 +363,7 @@ factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
                   | array_expr                          { $$ = $1; }
                   | random_expr                         { $$ = $1; }
                   | random_point_expr                   { $$ = $1; }
+              /*    | array_element                       { $$ = $1; } */
                   ;
 
 
@@ -415,4 +416,10 @@ random_point_expr : TRANDOM_POINT TL_BRACKET TR_BRACKET { $$ = add_node_random_p
 
 random_seed       : TRANDOM_SEED TL_BRACKET TR_BRACKET { $$ = add_node_random_seed( NULL ); }
                   | TRANDOM_SEED TL_BRACKET factor TR_BRACKET { $$ = add_node_random_seed( $3 ); }
+                  ;
+
+array_element     : TVARIABLE TL_ARRAY array_elements  TR_ARRAY
+                  ;
+
+array_elements    : expr
                   ;

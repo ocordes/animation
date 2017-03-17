@@ -56,6 +56,11 @@ int yywrap()
 
 #define amx_lang_version "0.9.10"
 
+# history:
+# 0.9.10:  2017-03-17
+#  - change the command parameter syntax, parameter must be comma seperated
+#  - add array_element syntax
+
 
 char *get_amx_lang_version( void )
 {
@@ -161,26 +166,43 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TLOOP TFILES TSTRING TCONSTANT { $$ = block_add_files_string( $3, $4 ); }
                  | TLOOP TSTATIC TSTRING factor { $$ = block_add_files_static( $3, $4 ); }
                  | TLVARIABLE TASSIGN r_value   { $$ = add_node_cmd_assign( $1, $3 ); }
-                 | TTEXTFILE factor factor fontname stringf { $$ = add_node_cmd_textfile( $2, $3, $4, $5, NULL ); }
-                 | TTEXTFILEALPHA factor factor factor fontname stringf { $$ = add_node_cmd_textfile( $3, $4, $5, $6, $2 ); }
-                 | TTEXT factor factor fontname stringf  { $$ = add_node_cmd_text( $2, $3, $4, $5, NULL ); }
-                 | TTEXTALPHA factor factor factor fontname stringf  { $$ = add_node_cmd_text( $3, $4, $5, $6, $2 ); }
-                 | TIMAGE factor factor TSTRING { $$ = add_node_cmd_image( $2, $3, $4 );  }
-                 | TCROP factor factor factor factor { $$ = add_node_cmd_crop( $2, $3, $4, $5 ); }
+                 | TTEXTFILE factor TCOMMA factor TCOMMA fontname TCOMMA stringf
+                                                { $$ = add_node_cmd_textfile( $2, $4, $6, $8, NULL ); }
+                 | TTEXTFILEALPHA factor TCOMMA factor TCOMMA factor TCOMMA fontname TCOMMA stringf
+                                                { $$ = add_node_cmd_textfile( $4, $6, $8, $10, $2 ); }
+                 | TTEXT factor TCOMMA factor TCOMMA fontname TCOMMA stringf
+                                                { $$ = add_node_cmd_text( $2, $4, $6, $8, NULL ); }
+                 | TTEXTALPHA factor TCOMMA factor TCOMMA factor TCOMMA fontname TCOMMA stringf
+                                                { $$ = add_node_cmd_text( $4, $6, $8, $10, $2 ); }
+                 | TIMAGE factor TCOMMA factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_image( $2, $4, $6 );  }
+                 | TCROP factor TCOMMA factor TCOMMA factor TCOMMA factor
+                                                { $$ = add_node_cmd_crop( $2, $4, $6, $8 ); }
                  | TMIRRORX                     { $$ = add_node_cmd_mirrorx(); }
                  | TMIRRORY                     { $$ = add_node_cmd_mirrory(); }
                  | TMIRRORXY                    { $$ = add_node_cmd_mirrorxy(); }
-                 | TLINE factor factor TSTRING  { $$ = add_node_cmd_line( $2, $3, $4 ); }
-                 | TCIRCLE factor factor TSTRING { $$ = add_node_cmd_circle( $2, $3, $4, 0 ); }
-                 | TCIRCLEFILL factor factor TSTRING { $$ = add_node_cmd_circle( $2, $3, $4, 1); }
-                 | TRECTANGLE factor factor TSTRING { $$ = add_node_cmd_rectangle( $2, $3, $4, 0 ); }
-		             | TRECTANGLEFILL factor factor TSTRING  { $$ = add_node_cmd_rectangle( $2, $3, $4, 1 ); }
-                 | TROUNDRECTANGLE factor factor factor TSTRING { $$ = add_node_cmd_roundrectangle( $2, $3, $4, $5, 0 ); }
-                 | TROUNDRECTANGLEFILL factor factor factor TSTRING { $$ = add_node_cmd_roundrectangle( $2, $3, $4, $5, 1 ); }
-                 | TPOLYGON factor TSTRING      { $$ = add_node_cmd_polygon( $2, $3, 0 ); }
-                 | TPOLYGONFILL factor TSTRING  { $$ = add_node_cmd_polygon( $2, $3, 1 ); }
-                 | TPOLYLINE factor TSTRING     { $$ = add_node_cmd_polyline( $2, $3, 0 ); }
-                 | TPOLYLINEFILL factor TSTRING { $$ = add_node_cmd_polyline( $2, $3, 1 ); }
+                 | TLINE factor TCOMMA factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_line( $2, $4, $6 ); }
+                 | TCIRCLE factor TCOMMA factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_circle( $2, $4, $6, 0 ); }
+                 | TCIRCLEFILL factor TCOMMA factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_circle( $2, $4, $6, 1); }
+                 | TRECTANGLE factor TCOMMA factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_rectangle( $2, $4, $6, 0 ); }
+		             | TRECTANGLEFILL factor TCOMMA factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_rectangle( $2, $4, $6, 1 ); }
+                 | TROUNDRECTANGLE factor TCOMMA factor TCOMMA factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_roundrectangle( $2, $4, $6, $8, 0 ); }
+                 | TROUNDRECTANGLEFILL factor TCOMMA factor TCOMMA factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_roundrectangle( $2, $4, $6, $6, 1 ); }
+                 | TPOLYGON factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_polygon( $2, $4, 0 ); }
+                 | TPOLYGONFILL factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_polygon( $2, $4, 1 ); }
+                 | TPOLYLINE factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_polyline( $2, $4, 0 ); }
+                 | TPOLYLINEFILL factor TCOMMA TSTRING
+                                                { $$ = add_node_cmd_polyline( $2, $4, 1 ); }
                  | TSYSTEM stringf              { $$ = add_node_cmd_system( $2 );}
 		             | window
                  | if_command                   { $$ = $1; }
@@ -199,7 +221,7 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
 window           : window_header commands TENDWINDOW  { $$ = add_node_window_finish( $1, $2 ); }
                  ;
 
-window_header    : TWINDOW factor factor factor factor TRETURN { $$ = add_node_window( $2, $3, $4, $5 ); }
+window_header    : TWINDOW factor TCOMMA factor TCOMMA factor TCOMMA factor TRETURN { $$ = add_node_window( $2, $4, $6, $8 ); }
                  ;
 
 
@@ -363,7 +385,7 @@ factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
                   | array_expr                          { $$ = $1; }
                   | random_expr                         { $$ = $1; }
                   | random_point_expr                   { $$ = $1; }
-              /*    | array_element                       { $$ = $1; } */
+                  | array_element                       { $$ = $1; }
                   ;
 
 

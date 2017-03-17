@@ -88,10 +88,10 @@ block "intro"
       print $D
 
 
-      line (100,100) (300,300) "redpen"
+      line (100,100), (300,300) ,"redpen"
 
 
-      text "left" "top" "Copyright_font" "i=%i" % ( $FRAMENR )
+      text "left", "top", "Copyright_font", "i=%i" % ( $FRAMENR )
 endblock
 
 
@@ -101,10 +101,10 @@ postproc
   ALPHA = 0.0
  endif
  #print "Postproc"
- text "left" 100 "Copyright_font" "(C) 2016 by <b>Rinaldo Lonley</b>"
- textalpha $ALPHA  "left" "bottom" "Copyright_font" "(C) by Rinaldo Lonley Animation V%s" % $AVERSION
+ text "left", 100, "Copyright_font", "(C) 2016 by <b>Rinaldo Lonley</b>"
+ textalpha $ALPHA,  "left", "bottom", "Copyright_font", "(C) by Rinaldo Lonley Animation V%s" % $AVERSION
  #if ( $FRAMENR > 2000 ) & ( $FRAMENR < 1000 )
- text "right" "bottom" "Copyright_font" "%i %02i:%02i:%02i.%02i" % ($FRAMENR, $MTIME.HOUR, $MTIME.MIN, $MTIME.SEC, $MTIME.FRAME )
+ text "right", "bottom", "Copyright_font", "%i %02i:%02i:%02i.%02i" % ($FRAMENR, $MTIME.HOUR, $MTIME.MIN, $MTIME.SEC, $MTIME.FRAME )
  #endif
 endpostproc
 

@@ -214,6 +214,7 @@ include                 BEGIN(include);
 [\"|\'][^\"\t\n]+[\"|\']  yylval = add_node_constant_string( strip_string( yytext ) ); return TSTRING;
 
 ,                       return TCOMMA;
+:                       return TCOLON;
 =                       return TASSIGN;
 \+                      return TPLUS;
 -                       return TMINUS;

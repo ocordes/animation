@@ -56,10 +56,12 @@ int yywrap()
 
 #define amx_lang_version "0.9.10"
 
-# history:
-# 0.9.10:  2017-03-17
-#  - change the command parameter syntax, parameter must be comma seperated
-#  - add array_element syntax
+/*  history:
+0.9.10:  2017-03-17
+  - change the command parameter syntax, parameter must be comma seperated
+  - add array_element syntax
+
+*/
 
 
 char *get_amx_lang_version( void )
@@ -77,7 +79,7 @@ char *get_amx_lang_version( void )
 
 %token TPROJECT TOUTPUT TOUTPUTFILE TOUTPUTDIR TGEOMETRY TFPS TBITRATE TBACKGROUND TGLOBAL TBLOCKMOVIES TOVERWRITE
 
-%token TRETURN TSEMICOLON TASSIGN TCOMMA
+%token TRETURN TSEMICOLON TASSIGN TCOMMA TCOLON
 %token TTRUE TFALSE
 %token TL_BRACKET TR_BRACKET TL_ARRAY TR_ARRAY
 %token TIF TELSE TENDIF
@@ -165,7 +167,7 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                  | TLOOP TFILES TSTRING         { $$ = block_add_files_string( $3, NULL ); }
                  | TLOOP TFILES TSTRING TCONSTANT { $$ = block_add_files_string( $3, $4 ); }
                  | TLOOP TSTATIC TSTRING factor { $$ = block_add_files_static( $3, $4 ); }
-                 | TLVARIABLE TASSIGN r_value   { $$ = add_node_cmd_assign( $1, $3 ); }
+                 | l_value TASSIGN r_value      { $$ = add_node_cmd_assign( $1, $3 ); }
                  | TTEXTFILE factor TCOMMA factor TCOMMA fontname TCOMMA stringf
                                                 { $$ = add_node_cmd_textfile( $2, $4, $6, $8, NULL ); }
                  | TTEXTFILEALPHA factor TCOMMA factor TCOMMA factor TCOMMA fontname TCOMMA stringf
@@ -331,6 +333,10 @@ globaldef        : TGLOBAL TLVARIABLE TASSIGN TCONSTANT { add_node_cmd_assign_gl
 empty_command    : TRETURN
                  ;
 
+l_value          : TLVARIABLE                           { $$ = $1; }
+                 | TLVARIABLE TL_ARRAY expr TR_ARRAY    { $$ = $1; }
+                 ;
+
 r_value          : expr                                 { $$ = $1; }
 		             | bool_expr                            { $$ = $1; }
                  ;
@@ -444,4 +450,5 @@ array_element     : TVARIABLE TL_ARRAY array_elements  TR_ARRAY
                   ;
 
 array_elements    : expr
+                  | expr TCOLON expr
                   ;

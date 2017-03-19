@@ -83,9 +83,13 @@ block "intro"
 
       C = [ 1, 2, 3, 4]
 
-      D =$C [0]
+      D = $C[0]
 
       print $D
+
+      ##print "redpen"."color"
+
+      ##"redpen"."color" = "white"
 
 
       line (100,100), (300,300) ,"redpen"

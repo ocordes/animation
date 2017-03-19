@@ -623,12 +623,31 @@ constant *math_evaluate_node_func( constant *left, int mathop )
 }
 
 
+constant *math_execute_node_opt_variable( parsenode *node, constant *val )
+{
+	constant *con;
+
+	switch( node->left->type )
+	{
+		case node_array_element:
+			con = math_execute_array_element( node, val );
+			break;
+		case node_array_elements:
+			con = math_execute_array_element( node, val );
+			break;
+	}
+
+	return con;
+}
+
+
 /* math execution functions */
 
 constant *math_execute_node( parsenode *node )
 {
   constant *conl, *conr, *con = NULL;
 
+  output( 10, "math_execute_node: type = %i\n", node->type );
   switch( node->type )
     {
     case node_not:
@@ -649,6 +668,7 @@ constant *math_execute_node( parsenode *node )
       con = clone_constant( node->con );
       break;
     case node_variable:
+		case node_opt_variable:
       output( 10, "node_variable=%s\n", node->var );
       con = get_variable( main_project->vars, node->var );
       if ( con == NULL )
@@ -660,6 +680,11 @@ constant *math_execute_node( parsenode *node )
 	    {
 	      if ( con->type == constant_none )
 	        fprintf( stderr, "Type of %s is undefined!\n", node->var );
+				else
+				{
+					if ( node->type == node_opt_variable )
+					 con = math_execute_node_opt_variable( node, con );
+				}
 	    }
       break;
     case node_string_fmt:

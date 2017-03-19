@@ -22,7 +22,7 @@
 /* variable.h
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-03-01
+   changed by: Oliver Cordes 2017-03-19
 
    $Id$
 
@@ -84,7 +84,7 @@ typedef struct _constant constant;
 typedef struct{
 	char     *name;
 
-	constant  con;
+	constant  con;     /* used for static variables */
 } variable;
 
 

@@ -23,7 +23,7 @@
 /* parsetree.c
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-02-25
+   changed by: Oliver Cordes 2017-03-19
 
    $Id$
 
@@ -232,10 +232,10 @@ parsenode *add_node_variable_r( char *s )
   newnode = new_node();
 
   if ( newnode != NULL )
-    {
-      newnode->type = node_variable;
-      newnode->var  = strdup( s );
-    }
+  {
+    newnode->type = node_variable;
+    newnode->var  = strdup( s );
+  }
 
   /* check if the variable is already defined */
 
@@ -245,15 +245,15 @@ parsenode *add_node_variable_r( char *s )
 
   if ( nr == -1 )
     switch( ps )
-      {
+    {
       case parser_status_block:
       case parser_status_window:
-	nr = find_variable( current_block->vars, s );
-	break;
+	      nr = find_variable( current_block->vars, s );
+	      break;
       case parser_status_macro:
-	nr = find_variable( current_macro->vars, s );
-	break;
-      }
+	      nr = find_variable( current_macro->vars, s );
+	     break;
+    }
 
   if ( nr == -1 )
     output( 1,  "Warning: variable `%s`is not defined!\n", s );
@@ -276,6 +276,16 @@ parsenode *add_node_variable( char *s )
     }
 
   return newnode;
+}
+
+
+/* just modify the variable node */
+parsenode *add_node_opt_variable( parsenode *var, parsenode *opt )
+{
+  var->type = node_opt_variable;
+  var->left = opt;
+
+  return var;
 }
 
 

@@ -23,7 +23,7 @@
 /* type_array.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-12
+changed by: Oliver Cordes 2017-03-19
 
 $Id$
 
@@ -166,6 +166,33 @@ parsenode *add_node_array_list( parsenode *array_list, parsenode *element )
   return newnode;
 }
 
+parsenode *add_node_array_element( parsenode *element )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->type  = node_array_element;
+  newnode->left  = element;
+
+  return newnode;
+}
+
+
+parsenode *add_node_array_elements( parsenode *start, parsenode *end )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->type  = node_array_elements;
+  newnode->left  = start;
+  newnode->right = end;
+
+  return newnode;
+
+}
+
 /* node to constand conversion */
 constant *add_constant_array( parsenode *node )
 {
@@ -264,6 +291,41 @@ constant *math_execute_node_array( parsenode *node )
 
     con = new_array_constant();
   }
+
+  return con;
+}
+
+constant *math_execute_array_element( parsenode *node, constant *val )
+{
+  constant *con;
+
+  if ( val->type != constant_array )
+  {
+    output( 1, "Array constant expected! (type of constant= %i)!\n", val->type );
+    output( 1, "Reurning original variable!\n" );
+
+    return val;
+  }
+
+
+  con = val;
+
+  return con;
+}
+
+constant *math_execute_array_elements( parsenode *node, constant *val )
+{
+  constant *con;
+
+  if ( val->type != constant_array )
+  {
+    output( 1, "Array constant expected! (type of constant= %i)!\n", val->type );
+    output( 1, "Reurning original variable!\n" );
+
+    return val;
+  }
+
+  con = val;
 
   return con;
 }

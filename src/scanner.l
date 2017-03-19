@@ -213,6 +213,7 @@ include                 BEGIN(include);
 
 [\"|\'][^\"\t\n]+[\"|\']  yylval = add_node_constant_string( strip_string( yytext ) ); return TSTRING;
 
+"."                     return TPOINT;
 ,                       return TCOMMA;
 :                       return TCOLON;
 =                       return TASSIGN;

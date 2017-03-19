@@ -23,7 +23,7 @@
 /* type_array.h
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-12
+changed by: Oliver Cordes 2017-03-19
 
 $Id$
 
@@ -44,6 +44,8 @@ void clone_array_constant( constant*, constant* );
 /* array node definitions */
 parsenode *add_node_array( parsenode * );
 parsenode *add_node_array_list( parsenode *, parsenode * );
+parsenode *add_node_array_element( parsenode * );
+parsenode *add_node_array_elements( parsenode*, parsenode * );
 
 
 /* aaray 2 string conversion */
@@ -56,5 +58,8 @@ constant *math_evaluate_array( constant *, constant *, int );
 constant *math_evaluate_array_func( constant *left, int mathop );
 
 constant *math_execute_node_array( parsenode * );
+
+constant *math_execute_array_element( parsenode *, constant * );
+constant *math_execute_array_elements( parsenode *, constant * );
 
 #endif

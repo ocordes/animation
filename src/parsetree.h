@@ -22,7 +22,7 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-03-19
 
    $Id$
 
@@ -39,11 +39,12 @@
 
 #define node_none               0
 #define node_variable           1
-#define node_constant           2
-#define node_point              3
-#define node_array              4
-#define node_if                 5
-#define node_not                6
+#define node_opt_variable       2
+#define node_constant           3
+#define node_point              4
+#define node_array              5
+#define node_if                 6
+#define node_not                7
 
 #define node_quit               10
 #define node_exit               11
@@ -79,9 +80,11 @@
 #define node_math_or            47
 #define node_string_fmt         48
 #define node_array_list         49
+#define node_array_element      50
+#define node_array_elements     51
 
-#define node_cmd_arglist        50
-#define node_cmd_vararglist     51
+#define node_cmd_arglist        59
+#define node_cmd_vararglist     60
 
 
 /* commands */
@@ -154,8 +157,9 @@ parsenode *add_node_constant_string( char *s );
 parsenode *add_node_constant_string_arglist( parsenode *s, parsenode *arglist );
 parsenode *add_node_constant_bool( int b );
 
-parsenode *add_node_variable_r( char *s );
-parsenode *add_node_variable( char *s );
+parsenode *add_node_variable_r( char* );
+parsenode *add_node_variable( char* );
+parsenode *add_node_opt_variable( parsenode*, parsenode* );
 
 void       register_node_variable( parsenode *var );
 

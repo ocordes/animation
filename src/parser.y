@@ -79,7 +79,7 @@ char *get_amx_lang_version( void )
 
 %token TPROJECT TOUTPUT TOUTPUTFILE TOUTPUTDIR TGEOMETRY TFPS TBITRATE TBACKGROUND TGLOBAL TBLOCKMOVIES TOVERWRITE
 
-%token TRETURN TSEMICOLON TASSIGN TCOMMA TCOLON
+%token TRETURN TSEMICOLON TASSIGN TPOINT TCOMMA TCOLON
 %token TTRUE TFALSE
 %token TL_BRACKET TR_BRACKET TL_ARRAY TR_ARRAY
 %token TIF TELSE TENDIF
@@ -334,11 +334,30 @@ empty_command    : TRETURN
                  ;
 
 l_value          : TLVARIABLE                           { $$ = $1; }
-                 | TLVARIABLE TL_ARRAY expr TR_ARRAY    { $$ = $1; }
+                 | TLVARIABLE TL_ARRAY array_element TR_ARRAY
+                                                        { $$ = add_node_opt_variable( $1, $3); }
+                 | TLVARIABLE TPOINT stringf            { $$ = $1; }
+                 | TSTRING TPOINT stringf
                  ;
 
 r_value          : expr                                 { $$ = $1; }
 		             | bool_expr                            { $$ = $1; }
+                 ;
+
+variable         : TVARIABLE                            { $$ = $1; }
+                 | TVARIABLE TL_ARRAY array_elements TR_ARRAY
+                                                        { $$ = add_node_opt_variable( $1, $3); }
+                 | TVARIABLE TPOINT stringf             { $$ = $1; }
+                 | TSTRING TPOINT stringf               { $$ = $1; }
+                 ;
+
+array_elements   : array_element                        { $$ = $1; }
+                 | expr TCOLON expr                     { $$ = add_node_array_elements( $1, $3 ); }
+                 | expr TCOLON                          { $$ = add_node_array_elements( $1, NULL ); }
+                 | TCOLON expr                          { $$ = add_node_array_elements( NULL, $2 ); }
+                 ;
+
+array_element    : expr                                 { $$ = add_node_array_element( $1 ); }
                  ;
 
 if_command       : TIF if_cond commands TENDIF          { $$ = add_node_if( $2, $3, NULL ); }
@@ -383,7 +402,7 @@ term              : term TMULTIPLY factor               { $$ = add_node_math( $1
 
 factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
 		              | function TL_BRACKET expr TR_BRACKET { $$ = add_node_math_func( $3, $1 ); }
-                  | TVARIABLE                           { $$ = $1; }
+                  | variable                            { $$ = $1; }
                   | TCONSTANT                           { $$ = $1; }
                   | stringf                             { $$ = $1; }
                   | macro_func                          { $$ = $1; }
@@ -391,7 +410,6 @@ factor            : TL_BRACKET expr TR_BRACKET          { $$ = $2; }
                   | array_expr                          { $$ = $1; }
                   | random_expr                         { $$ = $1; }
                   | random_point_expr                   { $$ = $1; }
-                  | array_element                       { $$ = $1; }
                   ;
 
 
@@ -444,11 +462,4 @@ random_point_expr : TRANDOM_POINT TL_BRACKET TR_BRACKET { $$ = add_node_random_p
 
 random_seed       : TRANDOM_SEED TL_BRACKET TR_BRACKET { $$ = add_node_random_seed( NULL ); }
                   | TRANDOM_SEED TL_BRACKET factor TR_BRACKET { $$ = add_node_random_seed( $3 ); }
-                  ;
-
-array_element     : TVARIABLE TL_ARRAY array_elements  TR_ARRAY
-                  ;
-
-array_elements    : expr
-                  | expr TCOLON expr
                   ;

@@ -54,9 +54,11 @@ int yywrap()
         return 1;
 }
 
-#define amx_lang_version "0.9.10"
+#define amx_lang_version "0.9.11"
 
 /*  history:
+0.9.11:  2017-03-19
+  - add property syntax
 0.9.10:  2017-03-17
   - change the command parameter syntax, parameter must be comma seperated
   - add array_element syntax

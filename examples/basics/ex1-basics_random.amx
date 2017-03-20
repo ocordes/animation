@@ -83,7 +83,8 @@ block "intro"
 
       C = [ 1, 2, 3, 4]
 
-      D = $C[0]
+      print $C
+      D = $C[20]
 
       print $D
 

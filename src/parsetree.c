@@ -614,7 +614,7 @@ int     get_int_from_constant( constant *con )
   int i = 0;
 
   assert( con != NULL );
-
+  
   switch( con->type )
     {
     case constant_int:
@@ -628,8 +628,12 @@ int     get_int_from_constant( constant *con )
       i = atof( con->s );
       break;
     case constant_bool:
-      output( 1, "Warining: Converting 'bool' into 'int'! Returning '%i'!\n", con->b );
+      output( 1, "Warning: Converting 'bool' into 'int'! Returning '%i'!\n", con->b );
       i = con->b;
+      break;
+    default:
+      output( 1, "Warning: Converting unknown type '%i' cannot be converted to int! Returning 0!\n", con->type );
+      i = 0;
       break;
     }
 

@@ -297,18 +297,35 @@ constant *math_execute_node_array( parsenode *node )
 
 constant *math_execute_array_element( parsenode *node, constant *val )
 {
-  constant *con;
+  constant *con = val;
+  constant *element;
+  int       i;
 
   if ( val->type != constant_array )
   {
     output( 1, "Array constant expected! (type of constant= %i)!\n", val->type );
-    output( 1, "Reurning original variable!\n" );
+    output( 1, "Returning original variable!\n" );
 
     return val;
   }
 
+  element = math_execute_node( node->left->left );
+  
+  if ( ( element->type == constant_int) || ( element->type == constant_double ) )
+  {
+    i = get_int_from_constant( element );
+    output( 10, "index i=%i\n", i );
+    if ( i > val->a.nr  )
+    {
+      output( 1, "Element nr=%i is not in array!\n", i );
+      output( 1, "Returning original variable!\n" );
 
-  con = val;
+      return val;
+    }
+
+    con = clone_constant( val->a.cons[i] );
+    /*con = clone_constant( val ); */
+  }
 
   return con;
 }

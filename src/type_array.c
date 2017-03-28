@@ -23,7 +23,7 @@
 /* type_array.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-19
+changed by: Oliver Cordes 2017-03-28
 
 $Id$
 
@@ -310,7 +310,7 @@ constant *math_execute_array_element( parsenode *node, constant *val )
   }
 
   element = math_execute_node( node->left->left );
-  
+
   if ( ( element->type == constant_int) || ( element->type == constant_double ) )
   {
     i = get_int_from_constant( element );
@@ -345,4 +345,35 @@ constant *math_execute_array_elements( parsenode *node, constant *val )
   con = val;
 
   return con;
+}
+
+
+int set_constant_variable_array_element( variable *var, constant *element, constant *con )
+{
+  int i;
+  
+  if ( var->con.type != constant_array )
+  {
+    output( 1, "Array constant expected! (type of constant= %i)!\n", var->con.type );
+    return -1;
+  }
+
+  if ( ( element->type != constant_int) && ( element->type != constant_double ) )
+  {
+    output( 1, "Index element should be double or integer (type of index=%i)!\n", element->type );
+    return -1;
+  }
+
+  i = get_int_from_constant( element );
+  output( 10, "index i=%i\n", i );
+  if ( i > var->con.a.nr  )
+  {
+    output( 1, "Element nr=%i is not in array!\n", i );
+    return -1;
+  }
+
+  free_constant( var->con.a.cons[i] );
+  var->con.a.cons[i] = clone_constant( con );
+
+  return 0;
 }

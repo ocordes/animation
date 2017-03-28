@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-03-13
+   changed by: Oliver Cordes 2017-03-28
 
    $Id$
 
@@ -89,12 +89,27 @@ int execute_if( parsenode *cond, parsenode *then_cmds, parsenode *else_cmds )
 int execute_cmd_assign( parsenode *variable, parsenode *rvalue )
 {
   constant *con;
-  int       erg;
+  constant *el;
+  int       erg = 0;
 
   con = math_execute_node( rvalue );
 
   /* lookup only in block scope variables */
-  erg = set_constant_variable( local_vars[0], variable->var, con );
+  switch( variable->type )
+  {
+    case node_variable:
+      erg = set_constant_variable( local_vars[0], variable->var, con );
+      break;
+    case node_opt_variable:
+      switch( variable->left->type )
+      {
+        case node_array_element:
+          el = math_execute_node( variable->left->left );
+          erg = set_constant_variable_element( local_vars[0], variable->var, con, el );
+          break;
+      }
+      break;
+  }
 
   free_constant( con );
 

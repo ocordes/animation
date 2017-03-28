@@ -23,7 +23,7 @@
 /* type_array.h
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-19
+changed by: Oliver Cordes 2017-03-28
 
 $Id$
 
@@ -61,5 +61,7 @@ constant *math_execute_node_array( parsenode * );
 
 constant *math_execute_array_element( parsenode *, constant * );
 constant *math_execute_array_elements( parsenode *, constant * );
+
+int      set_constant_variable_array_element( variable *, constant *, constant * );
 
 #endif

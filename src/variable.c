@@ -22,7 +22,7 @@
 /* variable.c
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-02-27
+   changed by: Oliver Cordes 2017-03-28
 
    $Id$
 
@@ -39,6 +39,7 @@
 #include "abort.h"
 #include "helpers.h"
 #include "output.h"
+#include "parsetree.h"
 #include "variable.h"
 #include "type_array.h"
 #include "type_point.h"
@@ -354,17 +355,41 @@ int set_constant_variable( variables *vars, char *name, constant *con )
   nr = find_variable( vars, name );
 
   if ( nr == -1 )
-    {
-      output( 2, "Can't set variable '%s'!\n", name );
-      return -1;
-    }
-  else
-    {
-      free_constant_static( vars->vars[nr].con );
-      clone_constant_static( &vars->vars[nr].con, con );
-      /*memcpy( &vars->vars[nr].con, con, sizeof( constant ) ); */
-      return 0;
-    }
+  {
+    output( 2, "Can't set variable '%s'!\n", name );
+    return -1;
+  }
+
+  free_constant_static( vars->vars[nr].con );
+  clone_constant_static( &vars->vars[nr].con, con );
+
+  return 0;
+}
+
+
+int set_constant_variable_element( variables *vars, char *name, constant *con, constant *el )
+{
+  int nr;
+  
+  assert( vars != NULL );
+
+  if ( con == NULL )
+  {
+    output( 2, "Can't set NULL constant to variable '%s'!\n", name );
+    return 1;
+  }
+
+  nr = find_variable( vars, name );
+
+  if ( nr == -1 )
+  {
+    output( 2, "Can't set variable '%s'!\n", name );
+    return -1;
+  }
+
+  return set_constant_variable_array_element( &vars->vars[nr], el, con );
+
+  return 0;
 }
 
 

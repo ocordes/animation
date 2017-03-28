@@ -22,7 +22,7 @@
 /* variable.h
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-03-19
+   changed by: Oliver Cordes 2017-03-28
 
    $Id$
 
@@ -126,6 +126,7 @@ int find_variable( variables *vars, char *name );
 void       add_variable( variables *vars, char *name, int type );
 
 int set_constant_variable( variables *vars, char *name, constant *con );
+int set_constant_variable_element( variables*, char*, constant*, constant* );
 void set_int_variable( variables *vars, char *name, int i );
 void set_double_variable( variables *vars, char *name, double d );
 void set_string_variable( variables *vars, char *name, char *s );

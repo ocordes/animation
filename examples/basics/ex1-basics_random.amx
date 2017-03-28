@@ -83,10 +83,12 @@ block "intro"
 
       C = [ 1, 2, 3, 4]
 
-      print $C
-      D = $C[20]
+      print $C[2]
 
-      print $D
+      D = $C[1]
+
+      C[3] = 100
+      print $C
 
       ##print "redpen"."color"
 

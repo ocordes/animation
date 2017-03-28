@@ -22,7 +22,7 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-03-19
+   changed by: Oliver Cordes 2017-03-28
 
    $Id$
 
@@ -37,81 +37,83 @@
 
 /* parse node configurations */
 
-#define node_none               0
-#define node_variable           1
-#define node_opt_variable       2
-#define node_constant           3
-#define node_point              4
-#define node_array              5
-#define node_if                 6
-#define node_not                7
+#define node_none                0
+#define node_variable            1
+#define node_opt_variable        2
+#define node_constant            3
+#define node_point               4
+#define node_array               5
+#define node_if                  6
+#define node_not                 7
 
-#define node_quit               10
-#define node_exit               11
-#define node_break              12
-#define node_return             13
+#define node_quit                10
+#define node_exit                11
+#define node_break               12
+#define node_return              13
 
-#define node_math               20
-#define node_math_op            21
-#define node_math_add           22
-#define node_math_sub           23
-#define node_math_mul           24
-#define node_math_div           25
-#define node_math_mod           26
-#define node_math_sin           27
-#define node_math_cos           28
-#define node_math_tan           29
-#define node_math_asin          30
-#define node_math_acos          31
-#define node_math_atan          32
-#define node_math_log10         33
-#define node_math_ln            34
-#define node_math_exp           35
-#define node_math_minus         36
-#define node_math_plus          37
+#define node_math                20
+#define node_math_op             21
+#define node_math_add            22
+#define node_math_sub            23
+#define node_math_mul            24
+#define node_math_div            25
+#define node_math_mod            26
+#define node_math_sin            27
+#define node_math_cos            28
+#define node_math_tan            29
+#define node_math_asin           30
+#define node_math_acos           31
+#define node_math_atan           32
+#define node_math_log10          33
+#define node_math_ln             34
+#define node_math_exp            35
+#define node_math_minus          36
+#define node_math_plus           37
 
-#define node_math_eq            40
-#define node_math_greater       41
-#define node_math_lower         42
-#define node_math_greq          43
-#define node_math_loeq          44
-#define node_math_neq           45
-#define node_math_and           46
-#define node_math_or            47
-#define node_string_fmt         48
-#define node_array_list         49
-#define node_array_element      50
-#define node_array_elements     51
+#define node_math_eq             40
+#define node_math_greater        41
+#define node_math_lower          42
+#define node_math_greq           43
+#define node_math_loeq           44
+#define node_math_neq            45
+#define node_math_and            46
+#define node_math_or             47
+#define node_string_fmt          48
+#define node_array_list          49
+#define node_array_element       50
+#define node_array_elements      51
+#define node_property_variable   52
+#define node_property_definition 53
 
-#define node_cmd_arglist        59
-#define node_cmd_vararglist     60
+#define node_cmd_arglist         59
+#define node_cmd_vararglist      60
 
 
 /* commands */
-#define node_cmd_assign         61
-#define node_cmd_load           62
-#define node_cmd_print          63
-#define node_cmd_printf         64
-#define node_cmd_textfile       65
-#define node_cmd_text           66
-#define node_cmd_crop           67
-#define node_cmd_mirrorx        68
-#define node_cmd_mirrory        69
-#define node_cmd_mirrorxy       70
-#define node_cmd_system         71
-#define node_cmd_window         72
-#define node_cmd_image          73
-#define node_cmd_line           74
-#define node_cmd_circle         75
-#define node_cmd_rectangle      76
-#define node_cmd_roundrectangle 77
-#define node_cmd_polygon        78
-#define node_cmd_polyline       79
-#define node_cmd_macro          80
+#define node_cmd_assign          61
+#define node_cmd_load            62
+#define node_cmd_print           63
+#define node_cmd_printf          64
+#define node_cmd_textfile        65
+#define node_cmd_text            66
+#define node_cmd_crop            67
+#define node_cmd_mirrorx         68
+#define node_cmd_mirrory         69
+#define node_cmd_mirrorxy        70
+#define node_cmd_system          71
+#define node_cmd_window          72
+#define node_cmd_image           73
+#define node_cmd_line            74
+#define node_cmd_circle          75
+#define node_cmd_rectangle       76
+#define node_cmd_roundrectangle  77
+#define node_cmd_polygon         78
+#define node_cmd_polyline        79
+#define node_cmd_macro           80
 
-#define node_cmd_random         100
-#define node_cmd_random_seed    101
-#define node_cmd_random_point   102
+#define node_cmd_random          100
+#define node_cmd_random_seed     101
+#define node_cmd_random_point    102
 
 
 struct _parsenode{

@@ -90,7 +90,10 @@ block "intro"
       C[3] = 100
       print $C
 
-      ##print "redpen"."color"
+      print "redpen"."color"
+
+      print $C."type"
+      print $D."type"
 
       ##"redpen"."color" = "white"
 

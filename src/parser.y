@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-15
+   changed by: Oliver Cordes 2017-03-28
 
    $Id$
 
@@ -45,6 +45,7 @@
 #include "parsecmd.h"
 #include "parsetree.h"
 #include "project.h"
+#include "properties.h"
 #include "scanner.h"
 #include "type_array.h"
 #include "type_point.h"
@@ -348,9 +349,9 @@ r_value          : expr                                 { $$ = $1; }
 
 variable         : TVARIABLE                            { $$ = $1; }
                  | TVARIABLE TL_ARRAY array_elements TR_ARRAY
-                                                        { $$ = add_node_opt_variable( $1, $3); }
-                 | TVARIABLE TPOINT stringf             { $$ = $1; }
-                 | TSTRING TPOINT stringf               { $$ = $1; }
+                                                        { $$ = add_node_opt_variable( $1, $3 ); }
+                 | TVARIABLE TPOINT stringf             { $$ = add_node_property_element_variable( $1, $3 ); }
+                 | TSTRING TPOINT stringf               { $$ = add_node_property_element_definition( $1, $3 ); }
                  ;
 
 array_elements   : array_element                        { $$ = $1; }

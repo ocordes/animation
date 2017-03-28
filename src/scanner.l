@@ -24,7 +24,7 @@
 /* scanner.l
 
    written by: Oliver Cordes 2010-06-20
-   changed by: Oliver Cordes 2017-03-13
+   changed by: Oliver Cordes 2017-03-28
 
    $Id$
 
@@ -90,8 +90,8 @@ FALSE                   yylval = add_node_constant_bool( 0 ); return TCONSTANT;
 AND                     return TAND;
 OR                      return TOR;
 
-\$[A-Z][_A-Z0-9.]*      yylval = add_node_variable_r( strip_variable( yytext) ); return TVARIABLE;
-[A-Z][_A-Z0-9.]*        yylval = add_node_variable( yytext ); return TLVARIABLE;
+\$[A-Z]([_A-Z0-9]|("."[A-Z0-9]))* yylval = add_node_variable_r( strip_variable( yytext) ); return TVARIABLE;
+[A-Z]([_A-Z0-9]|("."[A-Z0-9]))*   yylval = add_node_variable( yytext ); return TLVARIABLE;
 
 project                 return TPROJECT;
 output                  return TOUTPUT;

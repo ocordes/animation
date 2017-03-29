@@ -23,7 +23,7 @@
 /* properties.h
 
 written by: Oliver Cordes 2017-03-28
-changed by: Oliver Cordes 2017-03-28
+changed by: Oliver Cordes 2017-03-29
 
 $Id$
 
@@ -39,10 +39,10 @@ $Id$
 #include "variable.h"
 
 
-parsenode *add_node_property_element_variable( parsenode *, parsenode* );
+parsenode *add_node_property_element_variable( parsenode * );
 parsenode *add_node_property_element_definition( parsenode*, parsenode*);
 
-constant* execute_property_variable( parsenode*, parsenode* );
+constant* math_execute_property_variable( parsenode*, constant* );
 constant* execute_property_definition( parsenode*, parsenode* );
 
 #endif

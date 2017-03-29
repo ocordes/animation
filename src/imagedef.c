@@ -308,6 +308,30 @@ void imagedef_set_mode( parsenode *mode )
 }
 
 
+constant *get_imagedef_property( char* name, char* element )
+{
+  imagedef_descr *imagedef;
+  constant       *con = NULL;
+
+  imagedef = imagedef_get_imagedef( name );
+  if ( imagedef != NULL )
+  {
+    if ( strcmp( element, "file_name" ) == 0 )
+      con = add_constant_string( imagedef->file_name );
+    if ( strcmp( element, "mode" ) == 0 )
+      con = add_constant_int( imagedef->composite_operator );
+
+    if ( con == NULL )
+    {
+      output( 1, "pendef description has no element '%s'\n", element );
+      con = add_constant_string( element );
+    }
+  }
+
+  return con;
+}
+
+
 /* init/done funtions */
 
 /* module funtions */

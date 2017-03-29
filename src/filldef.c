@@ -23,7 +23,7 @@
 /* filldef.c
 
   written by: Oliver Cordes 2017-03-04
-  changed by: Oliver Cordes 2017-03-10
+  changed by: Oliver Cordes 2017-03-29
 
   $Id$
 
@@ -191,15 +191,10 @@ void pendef_set_fillcolor( parsenode *fillcolor )
 }
 
 
-pendef_descr *get_pendef_from_node( parsenode *node )
+pendef_descr *get_pendef_from_string( char *pen_name )
 {
-  char              *pen_name;
-
-  pendef_descr      *pendef = NULL;
-  int                i;
-
-  pen_name = get_string_from_node( node );
-  output( 2, "pendef name: %s\n", pen_name );
+  pendef_descr  *pendef = NULL;
+  int           i;
 
   if ( nr_pendefs > 0 )
   {
@@ -217,8 +212,48 @@ pendef_descr *get_pendef_from_node( parsenode *node )
     }
   }
 
+  return pendef;
+}
+
+
+pendef_descr *get_pendef_from_node( parsenode *node )
+{
+  char              *pen_name;
+
+  pendef_descr      *pendef = NULL;
+
+  pen_name = get_string_from_node( node );
+  output( 2, "pendef name: %s\n", pen_name );
+
+  pendef = get_pendef_from_string( pen_name );
 
   nfree( pen_name );
 
   return pendef;
+}
+
+
+constant *get_pendef_property( char* pen_name, char* element )
+{
+  pendef_descr *pendef;
+  constant     *con = NULL;
+
+  pendef = get_pendef_from_string( pen_name );
+  if ( pendef != NULL )
+  {
+    if ( strcmp( element, "color") == 0 )
+      con = add_constant_string( pendef->color );
+    if ( strcmp( element, "size") == 0 )
+      con = add_constant_int( pendef->size );
+    if ( strcmp( element, "fillcolor" ) == 0 )
+      con = add_constant_string( pendef->fillcolor );
+
+    if ( con == NULL )
+    {
+      output( 1, "pendef description has no element '%s'\n", element );
+      con = add_constant_string( element );
+    }
+  }
+
+  return con;
 }

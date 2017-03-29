@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-28
+   changed by: Oliver Cordes 2017-03-29
 
    $Id$
 
@@ -348,13 +348,15 @@ r_value          : expr                                 { $$ = $1; }
                  ;
 
 variable         : TVARIABLE                            { $$ = $1; }
-                 | TVARIABLE TL_ARRAY array_elements TR_ARRAY
-                                                        { $$ = add_node_opt_variable( $1, $3 ); }
-                 | TVARIABLE TPOINT stringf             { $$ = add_node_property_element_variable( $1, $3 ); }
+                 | TVARIABLE variable_ext               { $$ = add_node_opt_variable( $1, $2 ); }
                  | TSTRING TPOINT stringf               { $$ = add_node_property_element_definition( $1, $3 ); }
                  ;
 
-array_elements   : array_element                        { $$ = $1; }
+variable_ext     : TL_ARRAY array_elements TR_ARRAY     { $$ = $2; }
+                 | TPOINT stringf                       { $$ = add_node_property_element_variable( $2 ); }
+                 ;
+
+array_elements   : expr                                 { $$ = add_node_array_element( $1 ); }
                  | expr TCOLON expr                     { $$ = add_node_array_elements( $1, $3 ); }
                  | expr TCOLON                          { $$ = add_node_array_elements( $1, NULL ); }
                  | TCOLON expr                          { $$ = add_node_array_elements( NULL, $2 ); }

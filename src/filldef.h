@@ -23,7 +23,7 @@
 /* filldef.h
 
   written by: Oliver Cordes 2017-03-04
-  changed by: Oliver Cordes 2017-03-09
+  changed by: Oliver Cordes 2017-03-29
 
   $Id$
 
@@ -43,6 +43,7 @@
 #endif
 
 #include "parsetree.h"
+#include "variable.h"
 
 
 
@@ -67,6 +68,8 @@ void pendef_set_size( parsenode * );
 void pendef_set_fillcolor( parsenode * );
 
 pendef_descr *get_pendef_from_node( parsenode * );
+
+constant *get_pendef_property( char*, char* );
 
 
 #endif

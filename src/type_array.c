@@ -309,7 +309,7 @@ constant *math_execute_array_element( parsenode *node, constant *val )
     return val;
   }
 
-  element = math_execute_node( node->left->left );
+  element = math_execute_node( node );
 
   if ( ( element->type == constant_int) || ( element->type == constant_double ) )
   {
@@ -351,7 +351,7 @@ constant *math_execute_array_elements( parsenode *node, constant *val )
 int set_constant_variable_array_element( variable *var, constant *element, constant *con )
 {
   int i;
-  
+
   if ( var->con.type != constant_array )
   {
     output( 1, "Array constant expected! (type of constant= %i)!\n", var->con.type );

@@ -22,7 +22,7 @@
 /* variable.h
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-03-28
+   changed by: Oliver Cordes 2017-03-29
 
    $Id$
 
@@ -135,5 +135,7 @@ void set_string_variable( variables *vars, char *name, char *s );
 constant  *get_variable( variables *vars, char *name );
 
 char *constant2str( constant *);
+
+char *typeofconstant( constant * );
 
 #endif

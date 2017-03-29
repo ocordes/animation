@@ -22,7 +22,7 @@
 /* variable.c
 
    written by: Oliver Cordes 2010-08-08
-   changed by: Oliver Cordes 2017-03-28
+   changed by: Oliver Cordes 2017-03-29
 
    $Id$
 
@@ -45,8 +45,19 @@
 #include "type_point.h"
 
 
+/* internal variable */
 char sTRUE[]  = "True";
 char sFALSE[] = "False";
+
+
+char *cTypes[] = { "None",
+                   "Bool",
+                   "Int",
+                   "Double",
+                   "String",
+                   "Point",
+                   "Array" };
+
 
 /* constant functions */
 
@@ -370,7 +381,7 @@ int set_constant_variable( variables *vars, char *name, constant *con )
 int set_constant_variable_element( variables *vars, char *name, constant *con, constant *el )
 {
   int nr;
-  
+
   assert( vars != NULL );
 
   if ( con == NULL )
@@ -526,4 +537,10 @@ char *constant2str( constant *con )
     }
 
   return strdup( dummy );
+}
+
+
+char *typeofconstant( constant *con )
+{
+  return cTypes[con->type];
 }

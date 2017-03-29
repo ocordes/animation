@@ -628,13 +628,16 @@ constant *math_execute_node_opt_variable( parsenode *node, constant *val )
 {
 	constant *con;
 
-	switch( node->left->type )
+	switch( node->type )
 	{
 		case node_array_element:
-			con = math_execute_array_element( node, val );
+			con = math_execute_array_element( node->left, val );
 			break;
 		case node_array_elements:
-			con = math_execute_array_element( node, val );
+			con = math_execute_array_element( node->left, val );
+			break;
+		case node_property_variable:
+			con =	math_execute_property_variable( node->left, val );
 			break;
 	}
 
@@ -684,7 +687,7 @@ constant *math_execute_node( parsenode *node )
 				else
 				{
 					if ( node->type == node_opt_variable )
-					 con = math_execute_node_opt_variable( node, con );
+					 con = math_execute_node_opt_variable( node->left, con );
 				}
 	    }
       break;
@@ -715,9 +718,6 @@ constant *math_execute_node( parsenode *node )
 			break;
 
 		/* property functions */
-		case node_property_variable:
-			con = execute_property_variable( node->left, node->right );
-			break;
 		case node_property_definition:
 			con = execute_property_definition( node->left, node->right );
 			break;

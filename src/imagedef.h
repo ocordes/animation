@@ -22,9 +22,9 @@
 /* imagedef.h
 
    written by: Oliver Cordes 2012-12-12
-   changed by: Oliver Cordes 2017-01-30
+   changed by: Oliver Cordes 2017-03-29
 
-   $Id: imagedef.h 687 2014-09-14 17:53:49Z ocordes $
+   $Id$
 
 */
 
@@ -80,5 +80,6 @@ void imagedef_set_resize_value( parsenode *x, parsenode *y );
 void imagedef_set_resize_factor( parsenode *fac );
 void imagedef_set_mode( parsenode *mode );
 
+constant *get_imagedef_property( char*, char* );
 
 #endif

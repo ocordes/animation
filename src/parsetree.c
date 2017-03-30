@@ -298,27 +298,27 @@ void register_node_variable( parsenode *var )
   ps = get_parser_status();
 
   switch( ps )
-    {
+  {
     case parser_status_block:
     case parser_status_window:
       nr = find_variable( main_project->vars, var->var );
       if ( nr != -1 )
-	{
-	  output( 1, "Warning: variable `%s` is already defined as a global variable!\n", var->var );
-	  return;
-	}
+	    {
+	      output( 1, "Warning: variable `%s` is already defined as a global variable!\n", var->var );
+	      return;
+	    }
       else
-	add_variable( current_block->vars, var->var, constant_none );
+	      add_variable( current_block->vars, var->var, constant_none );
       break;
     case parser_status_macro:
       nr = find_variable( main_project->vars, var->var );
       if ( nr != -1 )
-	{
-	  output( 1, "Warning: variable `%s` is already defined as a global variable!\n", var->var );
-	  return;
-	}
+	    {
+	       output( 1, "Warning: variable `%s` is already defined as a global variable!\n", var->var );
+	       return;
+	    }
       else
-	add_variable( current_macro->vars, var->var, constant_none );
+	      add_variable( current_macro->vars, var->var, constant_none );
       break;
     default:
       add_variable( main_project->vars, var->var, constant_none );
@@ -614,7 +614,7 @@ int     get_int_from_constant( constant *con )
   int i = 0;
 
   assert( con != NULL );
-  
+
   switch( con->type )
     {
     case constant_int:

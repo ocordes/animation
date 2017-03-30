@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-03-30
 
 
    $Id$
@@ -41,6 +41,7 @@
 
 #include <errno.h>
 
+#include "configfile.h"
 #include "emoji.h"
 #include "execute.h"
 #include "filldef.h"
@@ -56,6 +57,7 @@
 
 
 static struct option longopts[] = {
+  { "config" ,        required_argument, NULL, 'c' },
   { "outfile",        required_argument, NULL, 'o' },
   { "infile",         required_argument, NULL, 'i' },
   { "debug",          required_argument, NULL, 'd' },
@@ -63,11 +65,12 @@ static struct option longopts[] = {
   { "output-formats", 0,                 NULL, 'l' },
   { NULL,             0,                 NULL, 0   }
 };
-#define options "o:d:n"
+#define options "c:i:o:d:nl"
 
 
-char *srcfile = NULL;
-int   dry_run = 0;
+char         *srcfile = NULL;
+int           dry_run = 0;
+config_table *conftab = NULL;
 
 
 /* prototype declarations */
@@ -79,60 +82,70 @@ int yyparse (void);
 
 void parse_options( int argc, char *argv[] )
 {
-  int ch;
-
-  int dl;
+  int   ch;
+  int   dl;
+  char *dummy;
 
   while ( ( ch =getopt_long( argc, argv,
 			     options,  longopts, NULL  ) ) != -1 )
-    {
-      switch( ch )
-	{
-	case 'i':
-	  srcfile = strdup( optarg );
-	  break;
-	case 'o':
-	  printf( "outfile=%s\n", optarg );
-	  project_set_output_filename_string( optarg );
-	  break;
-	case 'd':
-	  dl = atoi( optarg );
-	  if ( dl < 1 )
-	    {
-	      fprintf( stderr, "Ingnoring debug parameter '%s'!\n", optarg );
-	    }
-	  else
-	    debug_init( dl );
-	  break;
-	case 'n':
-	  dry_run = 1;
-	  break;
-  case 'l':
-    image_list_output_formats();
-    exit( 0 );
-	case '?':
-	default:
-	  printf( "unknown option\n" );
-	  break;
-	}
-    }
+  {
+    switch( ch )
+	  {
+      case 'c':
+        conftab = config_read( optarg, 0 );
+        break;
+	    case 'i':
+	      srcfile = strdup( optarg );
+	      break;
+	    case 'o':
+	      printf( "outfile=%s\n", optarg );
+	      project_set_output_filename_string( optarg );
+	      break;
+	    case 'd':
+	      dl = atoi( optarg );
+	      if ( dl < 1 )
+	      {
+	         fprintf( stderr, "Ingnoring debug parameter '%s'!\n", optarg );
+	      }
+	      else
+	        debug_init( dl );
+	      break;
+	   case 'n':
+	     dry_run = 1;
+	     break;
+     case 'l':
+       image_list_output_formats();
+       exit( 0 );
+	   case '?':
+	   default:
+	     printf( "unknown option\n" );
+	     break;
+	   }
+  }
 
   argc -= optind;
   argv += optind;
 
   if ( argc > 0 )
-    {
-      if ( srcfile != NULL ) free( srcfile );
-      srcfile = strdup( argv[0] );
-    }
+  {
+    if ( srcfile != NULL ) free( srcfile );
+    srcfile = strdup( argv[0] );
+  }
 
   if ( srcfile == NULL )
-    {
-      printf( "Error: %sNo source input file specified!%s\n", _em[_em_red], _em[_em_col_full_reset] );
-      exit( -1 );
-    }
+  {
+    printf( "Error: %sNo source input file specified!%s\n", _em[_em_red], _em[_em_col_full_reset] );
+    exit( -1 );
+  }
   else
     printf( "Source input = '%s'\n", srcfile );
+
+
+  if ( conftab == NULL )
+  {
+    dummy = search_file( ".animation" , ".:$HOME:");
+    conftab = config_read( dummy, 0 );
+  }
 }
 
 
@@ -145,7 +158,7 @@ int main( int argc, char* argv[] )
 
   emoji_init();
 
-  printf( "ANIMATION v%s (build %s) %s 2010-2016 Oliver Cordes\n",
+  printf( "ANIMATION v%s (build %s) %s 2010-2017 Oliver Cordes\n",
 	  VERSION, BUILD, _em[_em_copyright] );
 
   s = get_amx_lang_version();
@@ -153,14 +166,16 @@ int main( int argc, char* argv[] )
   free( s );
 
   image_init( argv[0] );
+
+
+  parse_options( argc, argv );
+
   project_init();
+  project_set_outputdir_string( "." );
   font_init();
-  imagedef_init();
+  imagedef_init( conftab );
   filldef_init();
   random_init();
-
-  project_set_outputdir_string( "." );
-  parse_options( argc, argv );
 
   open_parser_source( srcfile );
 

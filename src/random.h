@@ -22,7 +22,7 @@
 /* random.h
 
    written by: Oliver Cordes 2017-03-12
-   changed by: Oliver Cordes 2017-03-13
+   changed by: Oliver Cordes 2017-03-30
 
    $Id$
 
@@ -38,12 +38,6 @@
 #include "config.h"
 #include "project.h"
 
-
-#if MAGICK_VERSION >= 7
-#include <MagickWand/MagickWand.h>
-#else
-#include <wand/magick_wand.h>
-#endif
 
 
 void random_init( void );

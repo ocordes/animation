@@ -66,4 +66,8 @@ void yyerror(const char *str);
 
 char *get_amx_lang_version( void );
 
+
+/* search file */
+char *search_file( char*, char*);
+
 #endif

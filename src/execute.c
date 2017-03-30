@@ -94,6 +94,7 @@ int execute_cmd_assign( parsenode *variable, parsenode *rvalue )
 
   con = math_execute_node( rvalue );
 
+
   /* lookup only in block scope variables */
   switch( variable->type )
   {
@@ -107,7 +108,13 @@ int execute_cmd_assign( parsenode *variable, parsenode *rvalue )
           el = math_execute_node( variable->left->left );
           erg = set_constant_variable_element( local_vars[0], variable->var, con, el );
           break;
+        case node_property_definition:
+          output( 1, "Hallo\n");
+          break;
       }
+      break;
+    case node_property_definition:
+      output( 1, "Berta\n");
       break;
   }
 

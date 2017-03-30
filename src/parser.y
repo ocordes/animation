@@ -337,22 +337,23 @@ empty_command    : TRETURN
                  ;
 
 l_value          : TLVARIABLE                           { $$ = $1; }
-                 | TLVARIABLE TL_ARRAY array_element TR_ARRAY
-                                                        { $$ = add_node_opt_variable( $1, $3); }
-                 | TLVARIABLE TPOINT stringf            { $$ = $1; }
-                 | TSTRING TPOINT stringf
+                 | TLVARIABLE lvariable_ext             { $$ = add_node_opt_variable( $1, $2); }
+                 | TSTRING TPOINT stringf               { $$ = add_node_property_element_definition( $1, $3 ); }
                  ;
+
+lvariable_ext    : TL_ARRAY expr TR_ARRAY               { $$ = add_node_array_element( $2 ); }
+                 | TPOINT stringf                       { $$ = $1; }
 
 r_value          : expr                                 { $$ = $1; }
 		             | bool_expr                            { $$ = $1; }
                  ;
 
 variable         : TVARIABLE                            { $$ = $1; }
-                 | TVARIABLE variable_ext               { $$ = add_node_opt_variable( $1, $2 ); }
+                 | TVARIABLE rvariable_ext              { $$ = add_node_opt_variable( $1, $2 ); }
                  | TSTRING TPOINT stringf               { $$ = add_node_property_element_definition( $1, $3 ); }
                  ;
 
-variable_ext     : TL_ARRAY array_elements TR_ARRAY     { $$ = $2; }
+rvariable_ext    : TL_ARRAY array_elements TR_ARRAY     { $$ = $2; }
                  | TPOINT stringf                       { $$ = add_node_property_element_variable( $2 ); }
                  ;
 
@@ -360,9 +361,6 @@ array_elements   : expr                                 { $$ = add_node_array_el
                  | expr TCOLON expr                     { $$ = add_node_array_elements( $1, $3 ); }
                  | expr TCOLON                          { $$ = add_node_array_elements( $1, NULL ); }
                  | TCOLON expr                          { $$ = add_node_array_elements( NULL, $2 ); }
-                 ;
-
-array_element    : expr                                 { $$ = add_node_array_element( $1 ); }
                  ;
 
 if_command       : TIF if_cond commands TENDIF          { $$ = add_node_if( $2, $3, NULL ); }

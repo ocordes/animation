@@ -22,7 +22,7 @@
 /* imagedef.h
 
    written by: Oliver Cordes 2012-12-12
-   changed by: Oliver Cordes 2017-03-29
+   changed by: Oliver Cordes 2017-03-30
 
    $Id$
 
@@ -35,6 +35,7 @@
 
 
 #include "config.h"
+#include "configfile.h"
 
 #if MAGICK_VERSION >= 7
 #include <MagickWand/MagickWand.h>
@@ -63,7 +64,7 @@ typedef struct{
 
 
 
-void imagedef_init( void );
+void imagedef_init( config_table * );
 void imagedef_done( void );
 
 void imagedef_print_imagedefs( void );

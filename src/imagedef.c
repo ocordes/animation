@@ -22,7 +22,7 @@
 /* imagedef.c
 
    written by: Oliver Cordes 2012-12-12
-   changed by: Oliver Cordes 2017-01-31
+   changed by: Oliver Cordes 2017-03-30
 
    $Id$
 
@@ -97,6 +97,8 @@ static _overlay_mode_option overlay_mode_options[] = {
   { NULL, 0 } };
 
 
+char *image_library = NULL;
+
 /* module funtions */
 
 int  imagedef_operator_from_name( char *smode )
@@ -113,6 +115,22 @@ int  imagedef_operator_from_name( char *smode )
     }
 
   return -1;
+}
+
+
+char *imagedef_operator_from_code( int code )
+{
+  int i;
+
+  for (i=0;;++i)
+  {
+    if ( overlay_mode_options[i].name == NULL )
+      break;
+    if ( overlay_mode_options[i].operator == code )
+      return overlay_mode_options[i].name;
+  }
+
+  return NULL;
 }
 
 
@@ -283,25 +301,31 @@ void imagedef_set_resize_factor( parsenode *fac )
 }
 
 
+void imagedef_set_imagedef_mode( imagedef_descr *def, char *smode )
+{
+  int nr;
+
+  nr = imagedef_operator_from_name( smode );
+
+  if ( nr != -1 )
+  {
+    def->composite_operator = overlay_mode_options[nr].operator;
+    output( 1, "Set new composite mode '%s'!\n", smode );
+  }
+  else
+    output( 1, "Warning: Opertator '%s' not found! Using defaults!\n", smode );
+}
+
+
 void imagedef_set_mode( parsenode *mode )
 {
   char *smode = NULL;
-
-  int   nr;
 
   assert( current_imagedef != NULL );
 
   smode = get_string_from_node( mode );
 
-  nr = imagedef_operator_from_name( smode );
-
-  if ( nr != -1 )
-    {
-      current_imagedef->composite_operator = overlay_mode_options[nr].operator;
-      output( 1, "Set new composite mode '%s'!\n", smode );
-    }
-  else
-    output( 1, "Warning: Opertator '%s' not found! Using defaults!\n", smode );
+  imagedef_set_imagedef_mode( current_imagedef, smode );
 
   nfree( smode );
   free_node( mode );
@@ -312,6 +336,7 @@ constant *get_imagedef_property( char* name, char* element )
 {
   imagedef_descr *imagedef;
   constant       *con = NULL;
+  char           *mode;
 
   imagedef = imagedef_get_imagedef( name );
   if ( imagedef != NULL )
@@ -319,11 +344,17 @@ constant *get_imagedef_property( char* name, char* element )
     if ( strcmp( element, "file_name" ) == 0 )
       con = add_constant_string( imagedef->file_name );
     if ( strcmp( element, "mode" ) == 0 )
-      con = add_constant_int( imagedef->composite_operator );
+    {
+        mode = imagedef_operator_from_code( imagedef->composite_operator );
+        if ( mode == NULL )
+          con = add_constant_string( "UnknownOp" );
+        else
+          con = add_constant_string( mode );
+    }
 
     if ( con == NULL )
     {
-      output( 1, "pendef description has no element '%s'\n", element );
+      output( 1, "imagedef description has no element '%s'\n", element );
       con = add_constant_string( element );
     }
   }
@@ -336,14 +367,22 @@ constant *get_imagedef_property( char* name, char* element )
 
 /* module funtions */
 
-void imagedef_init( void )
+void imagedef_init( config_table *conftab )
 {
+  int err;
+
   max_imagedefs = new_increment_imagedefs;
 
   imagedefs = malloc( sizeof( imagedef_descr* ) * max_imagedefs );
 
   if ( imagedefs == NULL ) aabort( abort_msg_malloc, "imagedef_init(new_imagedefs_array)" );
   nr_imagedefs = 0;
+
+  /* read some config file variables */
+
+  image_library = config_get( conftab, "animation", "image_lib", &err );
+  output( 2, "image_library=%s\n", image_library );
+  output( 2, "error=%s\n", config_error( err ));
 }
 
 

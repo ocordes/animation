@@ -22,7 +22,7 @@
 /* parsecmd.c
 
    written by: Oliver Cordes 2014-08-30
-   changed by: Oliver Cordes 2017-03-10
+   changed by: Oliver Cordes 2017-03-30
 
 
 */
@@ -52,7 +52,9 @@ parsenode *add_node_cmd_assign( parsenode *variable, parsenode *rvalue )
     }
 
 
-  register_node_variable( variable );
+  if ( variable->type != node_property_definition )
+    /* register only normal variables */
+    register_node_variable( variable );
 
   newnode = new_node();
 

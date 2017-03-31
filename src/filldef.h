@@ -23,7 +23,7 @@
 /* filldef.h
 
   written by: Oliver Cordes 2017-03-04
-  changed by: Oliver Cordes 2017-03-29
+  changed by: Oliver Cordes 2017-03-31
 
   $Id$
 
@@ -50,8 +50,11 @@
 typedef struct {
   char *name;
   char *color;
+  char *_color;
   int   size;
+  int   _size;
   char *fillcolor;
+  char *_fillcolor;
 } pendef_descr;
 
 
@@ -70,6 +73,8 @@ void pendef_set_fillcolor( parsenode * );
 pendef_descr *get_pendef_from_node( parsenode * );
 
 constant *get_pendef_property( char*, char* );
+int       set_pendef_property( char*, char*, constant* );
+void      reset_pendef_property( void );
 
 
 #endif

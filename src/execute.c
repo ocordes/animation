@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-03-28
+   changed by: Oliver Cordes 2017-03-31
 
    $Id$
 
@@ -36,13 +36,17 @@
 #include "amath.h"
 #include "emoji.h"
 #include "execute.h"
+#include "filldef.h"
+#include "font.h"
 #include "image.h"
+#include "imagedef.h"
 #include "magick.h"
 #include "magick_pixel.h"
 #include "mprintf.h"
 #include "output.h"
 #include "parsetree.h"
 #include "project.h"
+#include "properties.h"
 #include "random.h"
 #include "variable.h"
 #include "type_array.h"
@@ -61,6 +65,13 @@ int execute_image_script( parsenode *commands );
 
 /* end of Prototypes */
 
+
+
+/* reset all user changes of the image/pen/font definitions */
+void reset_definitions( void )
+{
+  reset_pendef_property();
+}
 
 
 /* command procedures */
@@ -114,7 +125,7 @@ int execute_cmd_assign( parsenode *variable, parsenode *rvalue )
       }
       break;
     case node_property_definition:
-      output( 1, "Berta\n");
+      erg = set_property_definition( variable->left, variable->right, con );
       break;
   }
 
@@ -480,6 +491,9 @@ int execute_image( int imagenr )
   /* execute block script */
   erg = execute_image_script( current_block->commands );
 
+  /* reset all user changes of the image/pen/font definitions */
+  reset_definitions();
+
   /* resize the image */
   magick_resize( 1 );   /* keep the aspect ratio */
 
@@ -488,6 +502,9 @@ int execute_image( int imagenr )
     {
       local_vars[0] = main_project->postproc_block->vars;
       erg = execute_image_script( main_project->postproc_block->commands );
+
+      /* reset all user changes of the image/pen/font definitions */
+      reset_definitions();
     }
 
 

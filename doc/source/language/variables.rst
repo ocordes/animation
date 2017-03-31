@@ -43,8 +43,8 @@ Afterwards *$FOO* can be used as a referenz to this variable, e.g. ::
 Some examples for good and wrong variable names: ::
 
   ...
-  Foo = 1           # lower case characters
-  0FOO = 1          # variable name starts with a number
+  Foo = 1           # wrong, lower case characters
+  0FOO = 1          # wrong, variable name starts with a number
   FOO0 = 1          # ok
   ...
 

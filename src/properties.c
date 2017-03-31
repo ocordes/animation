@@ -23,7 +23,7 @@
 /* properties.c
 
 written by: Oliver Cordes 2017-03-28
-changed by: Oliver Cordes 2017-03-29
+changed by: Oliver Cordes 2017-03-31
 
 $Id$
 
@@ -116,13 +116,11 @@ constant* execute_property_definition( parsenode* definition, parsenode* element
   constant *def;
 
   def = math_execute_node( definition );
-
-
   el = math_execute_node( element );
 
   if ( el->type == constant_string )
   {
-    output( 2, "element request: %s\n", el->s );
+    output( 2, "get element request: %s\n", el->s );
   }
 
   /* try different defintions */
@@ -132,4 +130,26 @@ constant* execute_property_definition( parsenode* definition, parsenode* element
     con = add_constant_string( "defintion" );
 
   return con;
+}
+
+
+int set_property_definition( parsenode* definition, parsenode* element, constant* val )
+{
+  constant *el;
+  constant *def;
+
+  int       erg;
+
+  def = math_execute_node( definition );
+  el = math_execute_node( element );
+
+  if ( el->type == constant_string )
+  {
+    output( 2, "set element request: %s\n", el->s );
+  }
+
+
+  erg = set_pendef_property( def->s, el->s, val );
+
+  return erg;
 }

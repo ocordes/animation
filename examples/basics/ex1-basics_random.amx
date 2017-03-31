@@ -65,7 +65,7 @@ endmacro
 
 block "intro"
       #loop empty 250 1024 576 3 # 10 seconds black
-      loop empty 1 1024 576 # 10 seconds black
+      loop empty 2 1024 576 # 10 seconds black
       ##print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
 
 
@@ -94,6 +94,8 @@ block "intro"
 
       print $C."type"
       print $D."type"
+
+      line (110,100), (310,300) ,"redpen"
 
       "redpen"."color" = "white"
 

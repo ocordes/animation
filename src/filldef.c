@@ -23,7 +23,7 @@
 /* filldef.c
 
   written by: Oliver Cordes 2017-03-04
-  changed by: Oliver Cordes 2017-03-29
+  changed by: Oliver Cordes 2017-03-31
 
   $Id$
 
@@ -83,10 +83,13 @@ pendef_descr *filldef_new_pendef( void )
   new_pendef = malloc( sizeof( pendef_descr ) );
   if ( new_pendef == NULL ) aabort( abort_msg_malloc, "new_pendef" );
 
-  new_pendef->name      = NULL;
-  new_pendef->color     = NULL;
-  new_pendef->size      = 0;
-  new_pendef->fillcolor = NULL;
+  new_pendef->name       = NULL;
+  new_pendef->color      = NULL;
+  new_pendef->_color     = NULL;
+  new_pendef->size       = 0;
+  new_pendef->_size      = 0;
+  new_pendef->fillcolor  = NULL;
+  new_pendef->_fillcolor = NULL;
 
   pendefs[nr_pendefs] = new_pendef;
   nr_pendefs++;
@@ -103,7 +106,9 @@ void filldef_free_pendef( void )
   {
     nfree( pendefs[i]->name );
     nfree( pendefs[i]->color );
+    nfree( pendefs[i]->_color );
     nfree( pendefs[i]->fillcolor );
+    nfree( pendefs[i]->_fillcolor );
     nfree( pendefs[i] );
   }
   nfree( pendefs );
@@ -168,7 +173,8 @@ void pendef_set_color( parsenode *color  )
 {
   assert( current_pendef != NULL );
 
-  current_pendef->color = get_string_from_node( color );
+  current_pendef->color  = get_string_from_node( color );
+  current_pendef->_color = strdup( current_pendef->color );
   free_node( color );
 }
 
@@ -177,7 +183,8 @@ void pendef_set_size( parsenode *size )
 {
   assert( current_pendef != NULL );
 
-  current_pendef->size = get_int_from_node( size );
+  current_pendef->size  = get_int_from_node( size );
+  current_pendef->_size = current_pendef->size;
   free_node( size );
 }
 
@@ -186,7 +193,8 @@ void pendef_set_fillcolor( parsenode *fillcolor )
 {
   assert( current_pendef != NULL );
 
-  current_pendef->fillcolor = get_string_from_node( fillcolor );
+  current_pendef->fillcolor  = get_string_from_node( fillcolor );
+  current_pendef->_fillcolor = strdup( current_pendef->fillcolor );
   free_node( fillcolor );
 }
 
@@ -256,4 +264,57 @@ constant *get_pendef_property( char* pen_name, char* element )
   }
 
   return con;
+}
+
+
+int set_pendef_property( char *pen_name, char *element, constant *con )
+{
+  int           erg = -1;
+  pendef_descr *pendef;
+
+  pendef = get_pendef_from_string( pen_name );
+  if ( pendef != NULL )
+  {
+    if ( strcmp( element, "color") == 0 )
+    {
+      nfree( pendef->color );
+      pendef->color = get_string_from_constant( con );
+      erg = 0;
+    }
+    if ( strcmp( element, "size") == 0 )
+    {
+      pendef->size = get_int_from_constant( con );
+      erg = 0;
+    }
+    if ( strcmp( element, "fillcolor" ) == 0 )
+    {
+      nfree( pendef->fillcolor );
+      pendef->fillcolor = get_string_from_constant( con );
+      erg = 0;
+    }
+
+    if ( erg != 0 )
+      output( 1, "pendef description has no element '%s'\n", element );
+
+  }
+
+  return erg;
+}
+
+
+void reset_pendef_property( void )
+{
+  int           i;
+
+  if ( nr_pendefs > 0 )
+  {
+    for (i=0;i<nr_pendefs;++i)
+    {
+      nfree( pendefs[i]->color );
+      pendefs[i]->color = strdup( pendefs[i]->_color );
+      nfree( pendefs[i]->fillcolor );
+      pendefs[i]->size = pendefs[i]->_size;
+      pendefs[i]->fillcolor = strdup( pendefs[i]->_fillcolor );
+    }
+  }
 }

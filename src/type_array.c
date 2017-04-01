@@ -23,7 +23,7 @@
 /* type_array.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-03-28
+changed by: Oliver Cordes 2017-04-ß1
 
 $Id$
 
@@ -334,6 +334,15 @@ constant *math_execute_array_elements( parsenode *node, constant *val )
 {
   constant *con;
 
+  constant *start;
+  constant *end;
+
+  int      istart;
+  int      iend;
+
+  int      i;
+
+  output( 1, "Hallo\n" );
   if ( val->type != constant_array )
   {
     output( 1, "Array constant expected! (type of constant= %i)!\n", val->type );
@@ -342,7 +351,47 @@ constant *math_execute_array_elements( parsenode *node, constant *val )
     return val;
   }
 
-  con = val;
+  if ( node->left != NULL )
+  {
+    start = math_execute_node( node->left );
+    istart = get_int_from_constant( start );
+    output( 1, "start=%i\n", istart );
+    free_constant( start );
+    if ( istart < 0 )
+    {
+      output( 1, "Negative array indices are not allowed!\n");
+      istart = 0;
+    }
+  }
+  else
+    istart = 0;
+
+  if ( node->right != NULL )
+  {
+    end   = math_execute_node( node->right );
+    iend  = get_int_from_constant( end );
+    free_constant( end );
+    if ( iend > val->a.nr )
+    {
+      output( 1, "Array index too high (%i > %i )!\n", iend, val->a.nr );
+      iend = val->a.nr;;
+    }
+  }
+  else
+    iend = val->a.nr;
+
+  output( 1, "%i %i\n", istart, iend );
+  con = new_array_constant();
+  if ( istart <= iend )
+  {
+    /* for (i=istart;i<iend;++i)
+      add_array_element( con, val->a.cons[i] ); */
+  }
+  else
+  {
+    output( 1, "Array ranges are wrong (start=%i. end=%i)! Returning Zero Array!\n", istart, iend );
+  }
+
 
   return con;
 }

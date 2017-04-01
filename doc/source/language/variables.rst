@@ -56,7 +56,7 @@ internal Variables
 .. index:: Variables (internal)
 .. index:: FRAMENR
 .. index:: MTIME.FRAME, MTIME.SEC, MTIME.MIN, MTIME.HOUR
-.. index:: BACKGROUND, GEOMETRY.X, GEOMETRY.Y, FILE, IMAGENR, MAGE.X, MAGE.Y, MAXFRAMES
+.. index:: BACKGROUND, GEOMETRY.X, GEOMETRY.Y, FILE, IMAGENR, IMAGE.X, IMAGE.Y, MAXFRAMES
 
 .. list-table::
    :widths: 15 10 50

@@ -94,3 +94,33 @@ Individual elements can also be changed : ::
 
 Automatic type conversion
 -------------------------------
+
+.. index:: float()
+.. index:: int()
+
+animation does an internal type conversion whenever it is necessary. The best
+exmaple is some math operation which mixes integers and floats. The result is
+then stored as float: ::
+
+   ...
+   A = 1 + 2 * 3.0    # A = 7.0
+   ...
+
+Sometimes it is necessary to control the type conversion, e.g. ::
+
+  ...
+  A = 7 / 5   # A = 1
+  ...
+
+gives not the result you want to have. The following conversion fixes this problem: ::
+
+  ...
+  A = float( 7) / 5    # correct: A = 1.4
+  ...
+
+On the other hand if you want to round a float to integer, you can use the function int(): ::
+
+  ...
+  A = int( 1.2 )      # A = 1
+  B = int( 4.7 )      # B = 5
+  ...

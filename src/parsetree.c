@@ -23,7 +23,7 @@
 /* parsetree.c
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-03-19
+   changed by: Oliver Cordes 2017-04-02
 
    $Id$
 
@@ -518,10 +518,13 @@ parsenode *add_node_math( parsenode *left, parsenode *right, int mathop )
 	assert( left != NULL );
 	assert( right != NULL );
 
+  /* fast evaluation if only constants are involved! */
 	if ( ( left->type == node_constant ) && ( right->type == node_constant ) )
 	{
 		left->con = math_evaluate_node( left->con, right->con, mathop );
 
+    right->con = NULL;   /* necessary, since free_constant cannot NULL a
+                            reference */
 		newnode = left;
 		free_node( right );
 	}

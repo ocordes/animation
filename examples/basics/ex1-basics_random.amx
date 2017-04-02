@@ -93,6 +93,9 @@ block "intro"
       print int( 1.6 )
       print float( 2 )
 
+      print 7 / 5
+      print float(7) / 5
+
       print "redpen"."color"
 
       print $C."type"

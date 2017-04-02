@@ -628,13 +628,14 @@ constant *math_execute_node_opt_variable( parsenode *node, constant *val )
 {
 	constant *con;
 
+	output( 10, "math_execute_node_opt_variable: type=%i\n", node->type );
 	switch( node->type )
 	{
 		case node_array_element:
 			con = math_execute_array_element( node->left, val );
 			break;
 		case node_array_elements:
-			con = math_execute_array_element( node, val );
+			con = math_execute_array_elements( node, val );
 			break;
 		case node_property_variable:
 			con =	math_execute_property_variable( node->left, val );

@@ -23,7 +23,7 @@
 /* type_array.c
 
 written by: Oliver Cordes 2017-02-25
-changed by: Oliver Cordes 2017-04-ß1
+changed by: Oliver Cordes 2017-04-02
 
 $Id$
 
@@ -306,7 +306,7 @@ constant *math_execute_array_element( parsenode *node, constant *val )
     output( 1, "Array constant expected! (type of constant= %i)!\n", val->type );
     output( 1, "Returning original variable!\n" );
 
-    return val;
+    return clone_constant( val );
   }
 
   element = math_execute_node( node );
@@ -320,7 +320,7 @@ constant *math_execute_array_element( parsenode *node, constant *val )
       output( 1, "Element nr=%i is not in array!\n", i );
       output( 1, "Returning original variable!\n" );
 
-      return val;
+      return clone_constant( val );
     }
 
     con = clone_constant( val->a.cons[i] );
@@ -342,25 +342,38 @@ constant *math_execute_array_elements( parsenode *node, constant *val )
 
   int      i;
 
-  output( 1, "Hallo\n" );
   if ( val->type != constant_array )
   {
     output( 1, "Array constant expected! (type of constant= %i)!\n", val->type );
     output( 1, "Reurning original variable!\n" );
 
-    return val;
+    return clone_constant( val );
+  }
+
+  if ( val->a.nr == 0 )
+  {
+    output( 1, "Array is empty! Returning zero variable!\n" );
+    return clone_constant( val );
   }
 
   if ( node->left != NULL )
   {
     start = math_execute_node( node->left );
     istart = get_int_from_constant( start );
-    output( 1, "start=%i\n", istart );
     free_constant( start );
     if ( istart < 0 )
     {
       output( 1, "Negative array indices are not allowed!\n");
       istart = 0;
+    }
+    else
+    {
+      if ( istart >= val->a.nr )
+      {
+        output( 1, "Start index is higher than number of elements! (start=%i last_index=%i)\n",
+          istart, val->a.nr-1 );
+        istart = val->a.nr - 1;
+      }
     }
   }
   else
@@ -371,21 +384,21 @@ constant *math_execute_array_elements( parsenode *node, constant *val )
     end   = math_execute_node( node->right );
     iend  = get_int_from_constant( end );
     free_constant( end );
-    if ( iend > val->a.nr )
+    if ( iend >= val->a.nr )
     {
-      output( 1, "Array index too high (%i > %i )!\n", iend, val->a.nr );
-      iend = val->a.nr;;
+      output( 1, "Array index too high (%i >= %i )!\n", iend, val->a.nr-1 );
+      iend = val->a.nr-1;    /* C notation number of elements -1 is the last index ;-) */
     }
   }
   else
-    iend = val->a.nr;
+    iend = val->a.nr-1;
 
-  output( 1, "%i %i\n", istart, iend );
+  output( 10, "array get elements: start=%i end=%i\n", istart, iend );
   con = new_array_constant();
   if ( istart <= iend )
   {
-    /* for (i=istart;i<iend;++i)
-      add_array_element( con, val->a.cons[i] ); */
+    for (i=istart;i<=iend;++i)
+      add_array_element( con, val->a.cons[i] );
   }
   else
   {

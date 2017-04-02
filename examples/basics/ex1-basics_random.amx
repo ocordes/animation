@@ -65,7 +65,7 @@ endmacro
 
 block "intro"
       #loop empty 250 1024 576 3 # 10 seconds black
-      loop empty 2 1024 576 # 10 seconds black
+      loop empty 1 1024 576 # 10 seconds black
       ##print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
 
 
@@ -81,12 +81,13 @@ block "intro"
 
       print $B
 
-      C = [ 1, 2, 3, 4]
+      C = [ 1 ]
 
       print $C[2]
 
-      D = $C[1:2]
+      D = $C[1:4]
 
+      print $C
       print $D
 
       print "redpen"."color"

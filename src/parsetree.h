@@ -22,7 +22,7 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-03-28
+   changed by: Oliver Cordes 2017-04-02
 
    $Id$
 
@@ -67,8 +67,10 @@
 #define node_math_log10          33
 #define node_math_ln             34
 #define node_math_exp            35
-#define node_math_minus          36
-#define node_math_plus           37
+#define node_math_int            36
+#define node_math_float          37
+#define node_math_minus          38
+#define node_math_plus           39
 
 #define node_math_eq             40
 #define node_math_greater        41

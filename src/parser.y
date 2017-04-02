@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-03-29
+   changed by: Oliver Cordes 2017-04-02
 
    $Id$
 
@@ -88,7 +88,7 @@ char *get_amx_lang_version( void )
 %token TIF TELSE TENDIF
 %token TEQ TNEQ TGREATER TLOWER TGREQ TLOEQ TAND TOR TNOT
 %token TPLUS TMINUS TMULTIPLY TDIVIDE TMOD TSTRING_FMT
-%token TSIN TCOS TTAN TASIN TACOS TATAN TLOG10 TLN TEXP
+%token TSIN TCOS TTAN TASIN TACOS TATAN TLOG10 TLN TEXP TINT TFLOAT
 %token TRANDOM TRANDOM_SEED TRANDOM_POINT
 %token TBLOCK TENDBLOCK
 %token TCONTROL TENDCONTROL
@@ -425,6 +425,8 @@ function          : TSIN                                { $$ = add_node_math_op(
                   | TLOG10			                        { $$ = add_node_math_op( node_math_log10 ); }
                   | TLN			     	                      { $$ = add_node_math_op( node_math_ln ); }
                   | TEXP			                          { $$ = add_node_math_op( node_math_exp ); }
+                  | TINT                                { $$ = add_node_math_op( node_math_int ); }
+                  | TFLOAT                              { $$ = add_node_math_op( node_math_float ); }
                   ;
 
 macro_func        : TMACRONAME TL_BRACKET TR_BRACKET    { $$ = add_node_cmd_macro( $1, NULL ); }

@@ -81,14 +81,17 @@ block "intro"
 
       print $B
 
-      C = [ 1 ]
+      C = [ 1 , 2, 3, 4]
 
       print $C[2]
 
-      D = $C[1:4]
+      D = $C[1:]
 
       print $C
       print $D
+
+      print int( 1.6 )
+      print float( 2 )
 
       print "redpen"."color"
 

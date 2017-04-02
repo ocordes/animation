@@ -249,6 +249,8 @@ atan                    return TATAN;
 log10                   return TLOG10;
 ln                      return TLN;
 exp                     return TEXP;
+int                     return TINT;
+float                   return TFLOAT;
 \n                      return TRETURN;
 [ \r\t]+                /* ignore whitespace */;
 .                       return TUNKNOWN;

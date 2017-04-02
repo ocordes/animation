@@ -588,6 +588,12 @@ constant *math_evaluate_node_func( constant *left, int mathop )
 		case constant_int:
 			switch( mathop )
 			{
+				case node_math_int:
+					break;
+				case node_math_float:
+					left->type = constant_double;
+					left->d    = left->i;
+					break;
 				case node_math_minus:
 				case node_math_plus:
 					left = math_evaluate_int_func( left, mathop );
@@ -598,7 +604,17 @@ constant *math_evaluate_node_func( constant *left, int mathop )
 			}
 			break;
 		case constant_double:
-			left = math_evaluate_double_func( left, mathop );
+			switch( mathop )
+			{
+				case node_math_float:
+					break;
+				case node_math_int:
+					left->type = constant_int;
+					left->i    = round( left->d );
+					break;
+				default:
+					left = math_evaluate_double_func( left, mathop );
+			}
 			break;
 		case constant_string:
 			output( 1, "Can't use functions on strings!\n" );

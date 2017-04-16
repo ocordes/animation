@@ -84,8 +84,12 @@ DrawingWand * magick_draw_setup_Wand( parsenode *node, int flags )
   {
     if ( pendef->color != NULL )
     {
-      output( 2, "No color set for a pen definition!\n" );
       erg = PixelSetColor( pwand, pendef->color);
+    }
+    else
+    {
+      output( 2, "No color set for a pen definition!\n" );
+      erg = PixelSetColor( pwand, "white" );
     }
 
     DrawSetStrokeWidth( dwand, pendef->size );
@@ -167,7 +171,7 @@ void magick_draw_line( parsenode *nstart,
   DrawLine( dwand,
             xy->p.x, xy->p.y,
             xy->p.x + dir->p.x, xy->p.y + dir->p.y );
-  MagickDrawImage( current_image->im, dwand);
+  MagickDrawImage( current_image->im, dwand); 
 
   free_constant( xy );
   free_constant( dir );

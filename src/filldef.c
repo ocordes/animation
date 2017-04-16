@@ -23,7 +23,7 @@
 /* filldef.c
 
   written by: Oliver Cordes 2017-03-04
-  changed by: Oliver Cordes 2017-03-31
+  changed by: Oliver Cordes 2017-04-16
 
   $Id$
 
@@ -311,10 +311,16 @@ void reset_pendef_property( void )
     for (i=0;i<nr_pendefs;++i)
     {
       nfree( pendefs[i]->color );
-      pendefs[i]->color = strdup( pendefs[i]->_color );
+      if ( pendefs[i]->_color != NULL )
+        pendefs[i]->color = strdup( pendefs[i]->_color );
+      else
+        pendefs[i]->color = NULL;
       nfree( pendefs[i]->fillcolor );
       pendefs[i]->size = pendefs[i]->_size;
-      pendefs[i]->fillcolor = strdup( pendefs[i]->_fillcolor );
+      if ( pendefs[i]->_fillcolor != NULL )
+        pendefs[i]->fillcolor = strdup( pendefs[i]->_fillcolor );
+      else
+        pendefs[i]->fillcolor  = NULL;
     }
   }
 }

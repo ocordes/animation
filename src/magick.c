@@ -22,7 +22,7 @@
 /* magick.c
 
    written by: Oliver Cordes 2012-10-26
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-04-16
 
    $Id$
 
@@ -411,7 +411,7 @@ void magick_image_rectangle( int x1, int y1, int x2, int y2, int width, int fill
 
 void magick_load_imagedef( imagedef_descr *imagedef )
 {
-  unsigned int result;
+  MagickBooleanType result;
 
   if ( imagedef->file_name == NULL )
     {
@@ -425,7 +425,7 @@ void magick_load_imagedef( imagedef_descr *imagedef )
   /* Read the input image */
   result = MagickReadImage( imagedef->im, imagedef->file_name );
 
-  if ( result != 0 )
+  if ( result == MagickFalse )
     {
       output( 1, "Warning: Can't read image '%s'! Skip Image!\n", imagedef->file_name );
       DestroyMagickWand( imagedef->im );
@@ -875,6 +875,12 @@ void magick_drawimage( parsenode *nposx,
     {
       output( 1, "Reusing image '%s'!\n", imagedef->file_name );
     }
+
+  if ( imagedef->im == NULL )
+  {
+    output( 2, "No image available! Skip image drawing!\n" );
+    return;
+  }
 
   /* calculate the positions */
   posx = image_position_x( nposx, current_image->width, imagedef->width );

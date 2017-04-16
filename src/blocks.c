@@ -22,7 +22,7 @@
 /* blocks.c
 
    written by: Oliver Cordes 2013-03-29
-   changed by: Oliver Cordes 2017-02-06
+   changed by: Oliver Cordes 2017-04-14
 
    $Id$
 

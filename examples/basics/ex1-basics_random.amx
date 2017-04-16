@@ -65,11 +65,14 @@ endmacro
 
 block "intro"
       #loop empty 250 1024 576 3 # 10 seconds black
-      loop empty 1 1024 576 # 10 seconds black
+      #loop empty 1 1024 576 # 10 seconds black
+      loop empty 1 $GEOMETRY.X $GEOMETRY.Y # 10 seconds black
       ##print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
-
-
       load $FILE
+
+      print "%i %i" % ( $GEOMETRY.X, $GEOMETRY.Y )
+      print "%i %i" % ( $IMAGE.X, $IMAGE.Y )
+
 
       # random gives a number between [0,1]
       A = random()

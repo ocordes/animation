@@ -715,36 +715,37 @@ int   get_bool_from_constant( constant *con )
 
 char *get_string_from_node( parsenode *node )
 {
-	int erg = 0;
+  constant *con;
+  char     *s;
 
 	if ( node == NULL )
-		erg = 1;
-	else
-		if ( node->type != node_constant )
-			erg = 1;
+  {
+    output( 1, "get_string_from_node: node=NULL\n" );
+    return "foo";
+  }
 
-	if ( erg == 0 )
-		return get_string_from_constant( node->con );
-	else
-		return "foo";
+  con = math_execute_node( node );
+  s = get_string_from_constant( con );
+  free_constant( con );
+
+	return s;
 }
 
 
 int     get_int_from_node( parsenode *node )
 {
-	int erg = 0;
-	int i   = 0;
+  constant *con;
+	int       i;
 
 	if ( node == NULL )
-		erg = 1;
-	else
-		if ( node->type != node_constant )
-			erg = 1;
+  {
+    output( 1, "get_int_from_node: node=NULL\n" );
+		return 0;
+  }
 
-	if ( erg == 0 )
-		return get_int_from_constant( node->con );
-	else
-		i = 0;
+	con = math_execute_node( node );
+  i = get_int_from_constant( con );
+  free_constant( con );
 
 	return i;
 }
@@ -752,39 +753,37 @@ int     get_int_from_node( parsenode *node )
 
 double  get_double_from_node( parsenode *node )
 {
-	int    erg = 0;
-	double d   = 0.0;
+	constant *con;
+	double    d;
 
 	if ( node == NULL )
-		erg = 1;
-	else
-		if ( node->type != node_constant )
-			erg = 1;
+  {
+    output( 1, "get_double_from_node: node=NULL\n" );
+		return 0.0;
+  }
 
-	if ( erg == 0 )
-		return get_double_from_constant( node->con );
-	else
-		d = 0.0;
+  con = math_execute_node( node );
+  d = get_double_from_constant( con );
+  free_constant( con );
 
-	return d;
+  return d;
 }
 
 
 int  get_bool_from_node( parsenode *node )
 {
-  int    erg = 0;
-  int    i = 0;
+  constant *con;
+  int       i;
 
   if ( node == NULL )
-    erg = 1;
-  else
-    if ( node->type != node_constant )
-      erg = 1;
+  {
+    output( 1, "get_bool_from_node: node=NULL\n" );
+		return 1;
+  }
 
-  if ( erg == 0 )
-    return get_bool_from_constant( node->con );
-  else
-    i = 0;
+  con = math_execute_node( node );
+  i = get_bool_from_constant( con );
+  free_constant( con );
 
   return i;
 }

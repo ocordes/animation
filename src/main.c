@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-03-30
+   changed by: Oliver Cordes 2017-04-18
 
 
    $Id$
@@ -63,8 +63,10 @@ static struct option longopts[] = {
   { "debug",          required_argument, NULL, 'd' },
   { "dry-run",        0,                 NULL, 'n' },
   { "output-formats", 0,                 NULL, 'l' },
+  { "frames",         required_argument, NULL, 'f' },
   { NULL,             0,                 NULL, 0   }
 };
+
 #define options "c:i:o:d:nl"
 
 
@@ -116,6 +118,8 @@ void parse_options( int argc, char *argv[] )
      case 'l':
        image_list_output_formats();
        exit( 0 );
+     case 'f':
+       break;
 	   case '?':
 	   default:
 	     printf( "unknown option\n" );
@@ -139,7 +143,6 @@ void parse_options( int argc, char *argv[] )
   }
   else
     printf( "Source input = '%s'\n", srcfile );
-
 
   if ( conftab == NULL )
   {
@@ -166,7 +169,6 @@ int main( int argc, char* argv[] )
   free( s );
 
   image_init( argv[0] );
-
 
   parse_options( argc, argv );
 

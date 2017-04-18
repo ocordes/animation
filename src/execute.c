@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-03-31
+   changed by: Oliver Cordes 2017-04-18
 
    $Id$
 
@@ -71,6 +71,12 @@ int execute_image_script( parsenode *commands );
 void reset_definitions( void )
 {
   reset_pendef_property();
+}
+
+
+int process_image_allowed( void )
+{
+  return 0;
 }
 
 
@@ -526,22 +532,25 @@ int execute_block( int blocknr )
   output( 1, "Block #%i: '%s' ...\n", blocknr+1, current_block->name );
 
   for (i=0;i<current_block->nrfiles;i++)
+  {
+    if ( process_image_allowed() == 0 )
     {
       erg = execute_image( i );
 
       if ( erg == return_break )
-	{
-	  /* exit of image detected */
-	  erg = return_ok;
-	  continue;
-	}
+	    {
+	      /* exit of image detected */
+	      erg = return_ok;
+	      continue;
+	    }
 
       if ( erg != return_ok )
-	break;
+	      break;
 
       /* for debugging only execute the first image */
       /*break; */
     }
+  }
 
   output( 1, "Done.%s\n", _em[_em_okay] );
 
@@ -560,19 +569,19 @@ int execute_execute( void )
   output( 1, "Executing script ...\n" );
 
   for (block=0;block<main_project->nrblocks;block++)
-    {
-      erg = execute_block( block );
+  {
+    erg = execute_block( block );
 
-      if ( erg == return_exit )
-	{
-	  /* exit of block detected */
-	  erg = return_ok;
-	  continue;
-	}
+    if ( erg == return_exit )
+	  {
+	    /* exit of block detected */
+	     erg = return_ok;
+	     continue;
+	  }
 
-      if ( erg != return_ok )
-	break;
-    }
+    if ( erg != return_ok )
+	     break;
+  }
 
   output( 1, "Execution finished!\n" );
 

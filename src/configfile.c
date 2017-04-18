@@ -1,7 +1,7 @@
 /* config.c
 
    written: Oliver Cordes 2007-05-20
-   updated: Oliver Cordes 2017-03-30
+   updated: Oliver Cordes 2017-04-18
 
 
 */
@@ -476,6 +476,9 @@ config_table *config_read( char *filename, int case_sensitive )
   char         *c, *ci;
 
   _section     *last_section = NULL;
+
+	if ( filename == NULL )     /* open only vaid filenames */
+		return NULL;
 
   tab = init_tab( case_sensitive );
 

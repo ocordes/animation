@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-04-18
+   changed by: Oliver Cordes 2017-04-19
 
 
    $Id$
@@ -119,6 +119,7 @@ void parse_options( int argc, char *argv[] )
        image_list_output_formats();
        exit( 0 );
      case 'f':
+       process_image_setup( optarg );
        break;
 	   case '?':
 	   default:

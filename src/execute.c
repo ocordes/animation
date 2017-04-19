@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 
 #include "amath.h"
@@ -59,6 +60,19 @@ filedef *current_start_image;
 constant  *return_value = NULL;
 
 
+
+/* definitions for image process selections */
+
+typedef struct{
+    int start;
+    int end;
+} image_sel_def;
+
+#define max_image_selections 1000
+image_sel_def  image_selections[max_image_selections];
+int            nr_image_selections;
+
+
 /* Prototypes */
 
 int execute_image_script( parsenode *commands );
@@ -73,11 +87,118 @@ void reset_definitions( void )
   reset_pendef_property();
 }
 
+/* process_image_allowed
+
+  checks if the current frame is allowed to process_image_allowed
+
+  returns: 0 success
+           1 no processing
+
+*/
 
 int process_image_allowed( void )
 {
-  return 0;
+  int i;
+
+  if ( nr_image_selections == 0 )
+    return 0;
+
+  for (i=0;i<nr_image_selections;i++)
+  {
+    /*output( 1, "%i start=%i end=%i\n", main_project->framenr, image_selections[i].start, image_selections[i].end ); */
+    if ( ( image_selections[i].start == -1 )
+        && ( main_project->framenr <= image_selections[i].end ) )
+      return 0;
+    if ( ( image_selections[i].end == -1 )
+        && ( main_project->framenr >= image_selections[i].start ) )
+      return 0;
+    if ( ( main_project->framenr >= image_selections[i].start ) && ( main_project->framenr <= image_selections[i].end ) )
+      return 0;
+  }
+
+  /* frame nr not found */
+  return 1;
 }
+
+
+
+
+void process_image_setup( char *params )
+{
+
+  /* scan through string for defintions which should
+     be comma seperated  */
+  char *brkt, *brkt2;
+  char *word;
+  char *s;
+  int   i;
+
+  char *o, *p;
+
+  /* kil lall white spaces in string */
+  o = p = params;
+  while( (*p) != '\0' )
+  {
+    if ( (*p) != ' ' )
+    {
+      *o = *p;
+      o++;
+    }
+    p++;
+  }
+  *o = '\0';
+
+  for (word = strtok_r( params, ",\0", &brkt); word; word = strtok_r( NULL, ",\0", &brkt) )
+  {
+    /* check if freeentries are available */
+    if ( nr_image_selections == max_image_selections )
+    {
+      output( 1, "Can't add new selections: %s\n", word );
+      return;
+    }
+
+    if ( word == NULL )
+      continue;
+
+    output( 1, "word = %s\n", word );
+    if ( index( word, '-') != NULL )
+    {
+      if ( word[0] == '-' )
+      {
+        image_selections[nr_image_selections].start = -1;
+        image_selections[nr_image_selections].end   = atoi( ++word );
+      }
+      else
+      {
+        s = strtok_r( word, "-\0", &brkt2 );
+        image_selections[nr_image_selections].start = atoi( s );
+        s = strtok_r( NULL, "\0", &brkt2 );
+        if ( s == NULL )
+          image_selections[nr_image_selections].end = -1;
+        else
+          image_selections[nr_image_selections].end = atoi( s );
+      }
+    }
+    else
+    {
+      /* simple frame */
+      i = atoi( word );
+      image_selections[nr_image_selections].start = i;
+      image_selections[nr_image_selections].end = i;
+    }
+    nr_image_selections++;
+  }
+
+  if ( nr_image_selections > 0 )
+  {
+    output( 1, "Frames selected for processing:\n" );
+    for (i=0;i<nr_image_selections;++i)
+    {
+      output( 1, " frames: %i -> %i\n", image_selections[i].start, image_selections[i].end );
+    }
+  }
+}
+
 
 
 /* command procedures */
@@ -483,7 +604,6 @@ int execute_image( int imagenr )
   current_start_image = &current_block->files[imagenr];
 
   /* set global variables */
-  main_project->framenr++;
   set_int_variable( main_project->vars, "FRAMENR", main_project->framenr );
   project_update_variables();
 
@@ -533,6 +653,9 @@ int execute_block( int blocknr )
 
   for (i=0;i<current_block->nrfiles;i++)
   {
+    /* count the images */
+    main_project->framenr++;
+
     if ( process_image_allowed() == 0 )
     {
       erg = execute_image( i );

@@ -15,20 +15,20 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* execute.h
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2014-09-08
+   changed by: Oliver Cordes 2017-04-19
 
-   $Id: execute.h 680 2014-09-08 17:40:21Z ocordes $
+   $Id$
 
 */
 
-#ifndef __execute_h 
+#ifndef __execute_h
 #define __execute_h 1
 
 #include "parsetree.h"
@@ -46,7 +46,8 @@ extern constant  *return_value;
 int execute_check( void );
 int execute_execute( void );
 
-int execute_cmd_macro( parsenode *node );
+int execute_cmd_macro( parsenode* );
 
+void process_image_setup( char* );
 
 #endif

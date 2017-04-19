@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-04-14
+   changed by: Oliver Cordes 2017-04-19
 
    $Id$
 
@@ -102,6 +102,7 @@ char *get_amx_lang_version( void )
 %token TTEXTFILE TTEXTFILEALPHA TTEXT TTEXTALPHA
 %token TLINE TCIRCLE TCIRCLEFILL TRECTANGLE TRECTANGLEFILL TROUNDRECTANGLE TROUNDRECTANGLEFILL
 %token TPOLYGON TPOLYGONFILL TPOLYLINE TPOLYLINEFILL
+%token TIMAGEFADE
 %token TPROPERTY
 %token TSYSTEM
 %token TCROP
@@ -208,6 +209,7 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                                                 { $$ = add_node_cmd_polyline( $2, $4, 0 ); }
                  | TPOLYLINEFILL factor TCOMMA TSTRING
                                                 { $$ = add_node_cmd_polyline( $2, $4, 1 ); }
+                 | TIMAGEFADE factor            { $$ = add_node_cmd_imagefade( $2 ); }
                  | TSYSTEM stringf              { $$ = add_node_cmd_system( $2 );}
 		             | window
                  | if_command                   { $$ = $1; }

@@ -22,7 +22,7 @@
 /* parsecmd.c
 
    written by: Oliver Cordes 2014-08-30
-   changed by: Oliver Cordes 2017-03-30
+   changed by: Oliver Cordes 2017-04-19
 
 
 */
@@ -427,6 +427,19 @@ parsenode *add_node_cmd_polyline( parsenode *array, parsenode *pendef, int filld
   allocate_node_args( newnode, 2);
   newnode->args[0] = array;
   newnode->args[1] = pendef;
+
+  return newnode;
+}
+
+
+parsenode *add_node_cmd_imagefade( parsenode *args )
+{
+  parsenode *newnode;
+
+  newnode = new_node();
+
+  newnode->type = node_cmd_imagefade;
+  newnode->left = args;
 
   return newnode;
 }

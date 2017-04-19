@@ -22,7 +22,7 @@
 /* parsecmd.h
 
    written by: Oliver Cordes 2014-08-30
-   changed by: Oliver Cordes 2017-03-10
+   changed by: Oliver Cordes 2017-04-19
 
 */
 
@@ -58,6 +58,7 @@ parsenode *add_node_cmd_rectangle( parsenode *, parsenode *, parsenode *, int );
 parsenode *add_node_cmd_roundrectangle( parsenode *, parsenode *, parsenode *, parsenode *, int );
 parsenode *add_node_cmd_polygon( parsenode *, parsenode *, int );
 parsenode *add_node_cmd_polyline( parsenode *, parsenode *, int );
+parsenode *add_node_cmd_imagefade( parsenode * );
 
 parsenode *add_node_cmd_macro( parsenode *func, parsenode *args );
 

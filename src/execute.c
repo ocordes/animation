@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-04-18
+   changed by: Oliver Cordes 2017-04-19
 
    $Id$
 
@@ -486,6 +486,12 @@ int execute_cmd_polygon( parsenode *node, int polyline )
 }
 
 
+int execute_cmd_imagefade( parsenode *alpha )
+{
+  return return_ok;
+}
+
+
 /* check  procedures */
 
 int  execute_check( void )
@@ -582,6 +588,9 @@ int execute_image_script( parsenode *commands )
         break;
       case node_cmd_polyline:
         erg = execute_cmd_polygon( start, 1 );
+        break;
+      case node_cmd_imagefade:
+        erg = execute_cmd_imagefade( start->left );
         break;
 	  }
 

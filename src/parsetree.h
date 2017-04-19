@@ -22,7 +22,7 @@
 /* parsetree.h
 
    written by: Oliver Cordes 2010-07-18
-   changed by: Oliver Cordes 2017-04-02
+   changed by: Oliver Cordes 2017-04-19
 
    $Id$
 
@@ -111,7 +111,8 @@
 #define node_cmd_roundrectangle  77
 #define node_cmd_polygon         78
 #define node_cmd_polyline        79
-#define node_cmd_macro           80
+#define node_cmd_imagefade       80
+#define node_cmd_macro           81
 
 #define node_cmd_random          100
 #define node_cmd_random_seed     101

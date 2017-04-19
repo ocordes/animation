@@ -24,7 +24,7 @@
 /* scanner.l
 
    written by: Oliver Cordes 2010-06-20
-   changed by: Oliver Cordes 2017-03-28
+   changed by: Oliver Cordes 2017-04-19
 
    $Id$
 
@@ -174,6 +174,7 @@ polygon                 return TPOLYGON;
 polygonfill             return TPOLYGONFILL;
 polyline                return TPOLYLINE;
 polylinefill            return TPOLYLINEFILL;
+imagefade               return TIMAGEFADE;
 
 
 include                 BEGIN(include);

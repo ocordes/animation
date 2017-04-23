@@ -1,7 +1,7 @@
 AMX Language
 ===============
 
-The actual version of the amx language is 0.9 .
+The actual version of the amx language is 0.9.12 .
 
 
 
@@ -13,6 +13,7 @@ The actual version of the amx language is 0.9 .
    language/types.rst
    language/commands.rst
    language/conditions.rst
+   language/colors.rst
    language/fonts.rst
    language/images.rst
    language/pens.rst

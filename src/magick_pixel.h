@@ -22,7 +22,7 @@
 /* magick_pixel.h
 
    written by: Oliver Cordes 2017-03-07
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-04-22
 
    $Id$
 
@@ -50,5 +50,7 @@ void magick_draw_circle( parsenode *, parsenode *, parsenode *, int );
 void magick_draw_rectangle( parsenode *, parsenode *, parsenode *, int );
 void magick_draw_roundrectangle( parsenode *, parsenode *, parsenode *, parsenode *, int );
 void magick_draw_polygon( parsenode *, parsenode *, int, int  );
+
+void magick_imagefade( parsenode * );
 
 #endif

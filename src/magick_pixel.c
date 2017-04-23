@@ -22,7 +22,7 @@
 /* magick_pixel.c
 
    written by: Oliver Cordes 2017-03-07
-   changed by: Oliver Cordes 2017-03-12
+   changed by: Oliver Cordes 2017-04-23
 
    $Id$
 
@@ -171,7 +171,7 @@ void magick_draw_line( parsenode *nstart,
   DrawLine( dwand,
             xy->p.x, xy->p.y,
             xy->p.x + dir->p.x, xy->p.y + dir->p.y );
-  MagickDrawImage( current_image->im, dwand); 
+  MagickDrawImage( current_image->im, dwand);
 
   free_constant( xy );
   free_constant( dir );
@@ -303,4 +303,60 @@ void magick_draw_polygon( parsenode *narray,
   }
 
   DestroyDrawingWand( dwand );
+}
+
+
+/* direct image manipulation */
+
+void magick_imagefade( parsenode *nalpha )
+{
+  PixelWand *pwand, *awand;
+  double     alpha;
+
+  char      *color;
+
+  MagickBooleanType result;
+
+
+  alpha = get_double_from_node( nalpha );
+
+  if ( alpha > 1.0 )
+  {
+    output( 1, "Limiting alpha value to 1.0 (before %f)!\n", alpha );
+    alpha = 1.0;
+  }
+
+  if ( alpha < 0.0 )
+  {
+    output( 1, "Limiting alpha value to 0.0 (before %f)!\n", alpha );
+    alpha = 0.0;
+  }
+
+  alpha = 1.0 - alpha;
+
+  output( 2, "magick_imagefade: alpha=%f\n", alpha );
+
+  pwand = NewPixelWand();
+  awand = NewPixelWand();
+
+
+  asprintf( &color, "device-rgb(%f,%f,%f)", alpha, alpha, alpha );
+
+  PixelSetColor( pwand, main_project->background );
+  /*PixelSetColor( pwand, "red" ); */
+  PixelSetColor( awand, color );
+
+  free( color );
+
+
+  /*  MagickSetImageAlphaChannel( current_image->im, DeactivateAlphaChannel ); */
+  result = MagickColorizeImage( current_image->im, pwand, awand );
+
+
+  if ( result == MagickFalse )
+    output( 1, "magick_imagefade: Error during MagickColorizeImage\n");
+
+
+  DestroyPixelWand( awand );
+  DestroyPixelWand( pwand );
 }

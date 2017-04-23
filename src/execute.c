@@ -22,7 +22,7 @@
 /* execute.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-04-19
+   changed by: Oliver Cordes 2017-04-22
 
    $Id$
 
@@ -488,6 +488,7 @@ int execute_cmd_polygon( parsenode *node, int polyline )
 
 int execute_cmd_imagefade( parsenode *alpha )
 {
+  magick_imagefade( alpha );
   return return_ok;
 }
 
@@ -514,6 +515,7 @@ int execute_image_script( parsenode *commands )
   start = commands;
   while ( start != NULL )
   {
+    output( 3, "execute_image_script: type=%i\n", start->type );
     switch( start->type )
 	  {
 	    case node_quit:

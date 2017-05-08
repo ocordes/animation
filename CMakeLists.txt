@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 2.6)
-project( animation )
+project( animation C )
 
 # written by: Oliver Cordes 2016-08-09
-# changed by: Oliver Cordes 2017-02-03
+# changed by: Oliver Cordes 2017-04-28
 
 set(VERSION 0.5.0)
 
@@ -60,11 +60,6 @@ target_compile_options( animation PUBLIC ${PC_MagickWand_CFLAGS})
 
 string( FIND ${PC_MagickWand_VERSION} "." POSITION)
 string( SUBSTRING ${PC_MagickWand_VERSION} 0 ${POSITION} MAGICK_VERSION)
-
-
-#find_package(CCFITS REQUIRED)
-#include_directories(${CCFITS_INCLUDE_DIR})
-#target_link_libraries( arctic ${CCFITS_LIBRARIES})
 
 find_package( ffmpeg REQUIRED )
 target_include_directories( animation PUBLIC ${FFMPEG_INCLUDE_DIRS} )

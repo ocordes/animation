@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-04-19
+   changed by: Oliver Cordes 2017-07-20
 
 
    $Id$
@@ -218,5 +218,12 @@ int main( int argc, char* argv[] )
   project_done();
 
   image_done();
+
+  /* release the config file entries */
+  if ( conftab != NULL )
+  {
+    config_done( conftab );
+  }
+
   return 0;
 }

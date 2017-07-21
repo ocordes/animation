@@ -65,7 +65,7 @@ endmacro
 
 block "intro"
       #loop empty 250 1024 576 3 # 10 seconds black
-      loop empty 1 1024 576 # 10 seconds black
+      loop empty 1, 1024, 576 # 10 seconds black
       ##print "Image number=%i FILE=%s" % ( $IMAGENR, $FILE )
 
       ##SPLIT_FRAME1 = $MAXFRAMES / 3
@@ -100,11 +100,11 @@ block "intro"
 
       load $FILE
 
-      circle (100,100) 45 "redpen"
-      circlefill (100,100) 30 "redpen"
+      circle (100,100), 45, "redpen"
+      circlefill (100,100), 30, "redpen"
 
 
-      text "left" "top" "Copyright_font" "i=%i" % ( $FRAMENR )
+      text "left", "top", "Copyright_font", "i=%i" % ( $FRAMENR )
 endblock
 
 
@@ -114,10 +114,10 @@ postproc
   ALPHA = 0.0
  endif
  #print "Postproc"
- text "left" 100 "Copyright_font" "(C) 2016 by <b>Rinaldo Lonley</b>"
- textalpha $ALPHA  "left" "bottom" "Copyright_font" "(C) by Rinaldo Lonley Animation V%s" % $AVERSION
+ text "left", 100, "Copyright_font", "(C) 2016 by <b>Rinaldo Lonley</b>"
+ textalpha $ALPHA, "left", "bottom", "Copyright_font", "(C) by Rinaldo Lonley Animation V%s" % $AVERSION
  #if ( $FRAMENR > 2000 ) & ( $FRAMENR < 1000 )
- text "right" "bottom" "Copyright_font" "%i %02i:%02i:%02i.%02i" % ($FRAMENR, $MTIME.HOUR, $MTIME.MIN, $MTIME.SEC, $MTIME.FRAME )
+ text "right", "bottom", "Copyright_font", "%i %02i:%02i:%02i.%02i" % ($FRAMENR, $MTIME.HOUR, $MTIME.MIN, $MTIME.SEC, $MTIME.FRAME )
  #endif
 endpostproc
 

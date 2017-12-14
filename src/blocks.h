@@ -22,7 +22,7 @@
 /* blocks.h
 
    written by: Oliver Cordes 2013-03-29
-   changed by: Oliver Cordes 2017-02-01
+   changed by: Oliver Cordes 2017-12-13
 
    $Id$
 
@@ -68,7 +68,7 @@ extern blockdef    *current_block;
 /* file creation reoutines */
 
 int file_create_empty_files( blockdef *block, int nrfiles, int dimx, int dimy, int fps );
-int file_create_dir_files( blockdef *block, char *filedescr, int fps );
+int file_create_dir_files( blockdef *block, char *filedescr, int fps, int maxfiles );
 int file_create_static_files( blockdef *block, char *filename, int nrfiles );
 
 
@@ -79,7 +79,7 @@ void       block_new_block_name( char *name );
 void       block_free_block( blockdef *block );
 void       block_add_commands( parsenode *commands );
 parsenode* block_add_files_empty( parsenode *nrfiles, parsenode *ndimx, parsenode *ndimy, parsenode *nfps );
-parsenode* block_add_files_string( parsenode *s, parsenode *nfps );
+parsenode* block_add_files_string( parsenode *s, parsenode *maxfiles, parsenode *nfps );
 parsenode* block_add_files_static( parsenode *s, parsenode *nrfiles );
 
 

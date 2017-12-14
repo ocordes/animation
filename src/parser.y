@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-04-22
+   changed by: Oliver Cordes 2017-12-13
 
    $Id$
 
@@ -174,8 +174,9 @@ command          : TLOAD TVARIABLE              { $$ = add_node_cmd_load( $2 ); 
                                                 { $$ = block_add_files_empty( $3, $5, $7, NULL ); }
                  | TLOOP TEMPTY TCONSTANT TCOMMA r_value TCOMMA r_value  TCOMMA TCONSTANT
                                                 { $$ = block_add_files_empty( $3, $5, $7, $9 ); }
-                 | TLOOP TFILES TSTRING         { $$ = block_add_files_string( $3, NULL ); }
-                 | TLOOP TFILES TSTRING TCONSTANT { $$ = block_add_files_string( $3, $4 ); }
+                 | TLOOP TFILES TSTRING         { $$ = block_add_files_string( $3, NULL, NULL ); }
+                 | TLOOP TFILES TSTRING TCONSTANT { $$ = block_add_files_string( $3, $4, NULL ); }
+                 | TLOOP TFILES TSTRING TCONSTANT TCONSTANT { $$ = block_add_files_string( $3, $4, $5 ); }
                  | TLOOP TSTATIC TSTRING factor { $$ = block_add_files_static( $3, $4 ); }
                  | l_value TASSIGN r_value      { $$ = add_node_cmd_assign( $1, $3 ); }
                  | TTEXTFILE factor TCOMMA factor TCOMMA fontname TCOMMA stringf

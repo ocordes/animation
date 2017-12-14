@@ -100,7 +100,7 @@ int file_create_empty_files( blockdef *block,
 }
 
 
-int file_create_dir_files( blockdef *block, char *filedescr, int fps )
+int file_create_dir_files( blockdef *block, char *filedescr, int fps, int maxfiles )
 {
   filedef *files;
   filedef *temp;
@@ -132,6 +132,8 @@ int file_create_dir_files( blockdef *block, char *filedescr, int fps )
 
   while ( fgets( line, len, pipe) != NULL )
     {
+      if ( ( maxfiles != -1 ) && ( nrfiles >= maxfiles ) )
+        continue;
       /* strip filenames */
       line[strlen(line)-1] = '\0';
       temp[nrfiles].type = file_type_file;
@@ -378,10 +380,12 @@ parsenode*  block_add_files_empty( parsenode *nrfiles,
 
 
 parsenode *block_add_files_string( parsenode *s,
+                                   parsenode *nmaxfiles,
                                    parsenode *nfps )
 {
   char *str;
   int   fps;
+  int   maxfiles = -1;
 
   assert( current_block != NULL );
   assert( s != NULL );
@@ -389,6 +393,12 @@ parsenode *block_add_files_string( parsenode *s,
   str = get_string_from_node( s );
   free_node( s );
 
+  if ( nmaxfiles != NULL )
+  {
+    maxfiles = get_int_from_node( nmaxfiles );
+    free_node( nmaxfiles );
+  }
+  
   if ( nfps != NULL )
   {
     fps = get_int_from_node( nfps );
@@ -399,7 +409,7 @@ parsenode *block_add_files_string( parsenode *s,
     fps = main_project->fps;
   }
 
-  file_create_dir_files( current_block, str, fps );
+  file_create_dir_files( current_block, str, fps, maxfiles );
 
   nfree( str );
 

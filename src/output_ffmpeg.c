@@ -24,7 +24,7 @@
    written by: Oliver Cordes 2013-01-11
    changed by: Oliver Cordes 2017-02-23
 
-   $Id$ 
+   $Id$
 
 */
 
@@ -113,7 +113,8 @@ int ffmpeg_start( int blockmovies )
 
   snprintf( cmdline,
             1000,
-            "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i %s 2> ffmpeg.log &",
+            //"ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i %s 2> ffmpeg.log &",
+            "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i  -f avi -vcodec mpeg4 -b:v 800k %s 2> ffmpeg.log &",
 	    main_project->geometry[0],
 	    main_project->geometry[1],
 	    tempfile,

@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 
 #include <math.h>
 
@@ -122,6 +123,8 @@ int file_create_dir_files( blockdef *block, char *filedescr, int fps, int maxfil
   cmd = (char*) malloc( len );
   line = (char*) malloc( len );
   sprintf( cmd, "ls %s | sort -n", filedescr );
+  output( 2, "file_create_dir_files: cmd=%s\n", cmd );
+  output( 2, "file_create_dir_files: maxfiles=%i\n", maxfiles );
 
   /* copy all files into a temporary array */
   temp = (filedef*) malloc( sizeof( filedef) * max_files_per_loop );
@@ -129,19 +132,24 @@ int file_create_dir_files( blockdef *block, char *filedescr, int fps, int maxfil
   if ( temp == NULL ) aabort( abort_msg_malloc, "temporary file description" );
 
   pipe = popen( cmd, "r" );
+  if ( pipe == NULL )
+    output( 1, "ls command failed! errno=%s\n", strerror( errno ) );
 
   while ( fgets( line, len, pipe) != NULL )
-    {
-      if ( ( maxfiles != -1 ) && ( nrfiles >= maxfiles ) )
-        continue;
-      /* strip filenames */
-      line[strlen(line)-1] = '\0';
-      temp[nrfiles].type = file_type_file;
-      temp[nrfiles].name = strdup( line );
+  {
+    output( 3, line );
+    if ( ( maxfiles != -1 ) && ( nrfiles >= maxfiles ) )
+      continue;
+    /* strip filenames */
+    line[strlen(line)-1] = '\0';
+    temp[nrfiles].type = file_type_file;
+    temp[nrfiles].name = strdup( line );
 
-      nrfiles++;
-    }
+    nrfiles++;
+    output( 3, "file_create_dir_files: nr=%i name=%s\n", nrfiles, line );
+  }
   fclose( pipe );
+  output( 2, "file_create_dir_files: nrfiles=%i\n", nrfiles );
 
   free( cmd );
   free( line );
@@ -159,20 +167,20 @@ int file_create_dir_files( blockdef *block, char *filedescr, int fps, int maxfil
   if ( nroff == 0 )
     block->files = files;
   else
-    {
-      for (i=0;i<nroff;i++)
-	files[i] = block->files[i];
-      free( block->files );
-      block->files = files;
-    }
+  {
+    for (i=0;i<nroff;++i)
+	     files[i] = block->files[i];
+    free( block->files );
+    block->files = files;
+  }
 
-  for (i=0;i<nrfiles;i++)
-    {
-      files[nroff+i].type = file_type_file;
-      files[nroff+i].name = temp[i].name;
-      files[nroff+i].dimx = -1;
-      files[nroff+i].dimy = -1;
-    }
+  for (i=0;i<nrfiles;++i)
+  {
+    files[nroff+i].type = file_type_file;
+    files[nroff+i].name = temp[i].name;
+    files[nroff+i].dimx = -1;
+    files[nroff+i].dimy = -1;
+  }
 
   free( temp );
 
@@ -398,7 +406,7 @@ parsenode *block_add_files_string( parsenode *s,
     maxfiles = get_int_from_node( nmaxfiles );
     free_node( nmaxfiles );
   }
-  
+
   if ( nfps != NULL )
   {
     fps = get_int_from_node( nfps );

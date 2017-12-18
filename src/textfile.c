@@ -519,6 +519,7 @@ textfiledef *create_textfile_data( char *filename )
 
   FILE        *file;
   char         line[1000];
+  int          nr = 0;
 
   output( 1, "Reading textfile '%s' ...\n", filename );
 
@@ -533,12 +534,14 @@ textfiledef *create_textfile_data( char *filename )
       line[strlen(line)-1] = '\0';
       textline = create_textfile_line( line );
       textfile_add_line( textfile, textline );
+      ++nr;
     }
 
     fclose( file );
 
     textfile_cache_add_textfile( filename, textfile );
 
+    output( 1, " %i lines read\n", nr );
     output( 1, "Done.\n" );
   }
   else

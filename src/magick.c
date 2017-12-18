@@ -257,7 +257,7 @@ void magick_textline_metrics( textfilelinedef *textline, font_descr *font )
   if ( font->font_separator != -1 )
     sep = font->font_separator;
 
-  output( 2, "line netrics: w=%i pix  h=%i pix\n", width, height );
+  output( 2, "line netrics: w=%i pix  h=%i pix sep=%i pix\n", width, height, sep );
   textline->fm_width = width;
   textline->fm_height = height + sep;
   textline->fm_asc_height = asc_height;
@@ -273,16 +273,17 @@ void magick_textfile_metrics( textfiledef *textfile, font_descr *font )
   int height = 0;
 
   if ( ( textfile->fm_width == -1 ) && ( textfile->fm_height == -1 ) )
-    {
+  {
       output( 1, "Calculating font metrics for textfile ..." );
-      for (i=0;i<textfile->nrlines;i++)
-	{
-	  magick_textline_metrics( textfile->lines[i], font );
+      for (i=0;i<textfile->nrlines;++i)
+	    {
+	       magick_textline_metrics( textfile->lines[i], font );
 
-	  height += textfile->lines[i]->fm_height;
-	  if ( textfile->lines[i]->fm_width > width )
-	    width = textfile->lines[i]->fm_width;
-	}
+         output( 2, "h=%i nh=%i\n" , height, textfile->lines[i]->fm_height );
+	       height += textfile->lines[i]->fm_height;
+	       if ( textfile->lines[i]->fm_width > width )
+	          width = textfile->lines[i]->fm_width;
+	    }
       output( 1, "Done.\n" );
       output( 1, "textfile metrics: w=%i h=%i\n", width, height );
       textfile->fm_width = width;

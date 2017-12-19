@@ -148,7 +148,7 @@ int file_create_dir_files( blockdef *block, char *filedescr, int fps, int maxfil
     nrfiles++;
     output( 3, "file_create_dir_files: nr=%i name=%s\n", nrfiles, line );
   }
-  fclose( pipe );
+  pclose( pipe );
   output( 2, "file_create_dir_files: nrfiles=%i\n", nrfiles );
 
   free( cmd );

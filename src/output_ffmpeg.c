@@ -22,7 +22,7 @@
 /* output_ffmpeg.c
 
    written by: Oliver Cordes 2013-01-11
-   changed by: Oliver Cordes 2017-02-23
+   changed by: Oliver Cordes 2017-12-22
 
    $Id$
 
@@ -419,6 +419,7 @@ void ffmpeg_done( void )
 
 void ffmpeg_set_extra_params( char *params )
 {
+  output( 2, "ffmpeg_extra_params=%s\n", params );
   nfree( ffmpeg_extra_params );
   ffmpeg_extra_params = strdup( params );
 }

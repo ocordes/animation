@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-12-21
+   changed by: Oliver Cordes 2017-12-22
 
 
    $Id$
@@ -166,6 +166,7 @@ int main( int argc, char* argv[] )
   char  *s;
 
   emoji_init();
+  ffmpeg_module_init();
 
   printf( "ANIMATION v%s (build %s) %s 2010-2017 Oliver Cordes\n",
 	  VERSION, BUILD, _em[_em_copyright] );
@@ -184,8 +185,6 @@ int main( int argc, char* argv[] )
   imagedef_init( conftab );
   filldef_init();
   random_init();
-
-  ffmpeg_module_init();
 
   open_parser_source( srcfile );
 
@@ -219,7 +218,6 @@ int main( int argc, char* argv[] )
   else
     printf( "Dry run requested!\n" );
 
-  ffmpeg_module_done();
   filldef_done();
   imagedef_done();
   font_done();
@@ -232,6 +230,8 @@ int main( int argc, char* argv[] )
   {
     config_done( conftab );
   }
+
+  ffmpeg_module_done();
 
   return 0;
 }

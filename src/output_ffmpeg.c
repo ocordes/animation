@@ -45,6 +45,7 @@
 #include <wand/magick_wand.h>
 #endif
 
+#include "helpers.h"
 #include "image.h"
 #include "magick.h"
 #include "output.h"
@@ -59,6 +60,9 @@ char *tempfile = NULL;
 
 /* ffmpeg stream */
 FILE *ffmpeg = NULL;
+
+
+char *ffmpeg_extra_params = NULL;
 
 /* start a new ffmpeg stream */
 
@@ -114,12 +118,14 @@ int ffmpeg_start( int blockmovies )
   snprintf( cmdline,
             1000,
             //"ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i %s 2> ffmpeg.log &",
-            "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i  -f avi -vcodec mpeg4 -b:v 800k %s 2> ffmpeg.log &",
+            "ffmpeg -y -f rawvideo -s %ix%i -pix_fmt yuv420p -i %s -r %i -framerate %i  -f avi -vcodec mpeg4 -b:v %s %s %s 2> ffmpeg.log &",
 	    main_project->geometry[0],
 	    main_project->geometry[1],
 	    tempfile,
 	    main_project->fps,
       main_project->fps,
+      main_project->bitrate,
+      ffmpeg_extra_params,
 	    filename
 	    );
 
@@ -186,19 +192,19 @@ void compress_rgb( unsigned char *rgb, int width, int x, int y, int *r, int *g, 
   (*r) = 0;
   (*g) = 0;
   (*b) = 0;
-  pos = (y*width+x)*3;
+  pos = (y*width+x)*4;
   (*r) += rgb[pos];
   (*g) += rgb[pos+1];
   (*b) += rgb[pos+2];
-  pos = (y*width+x+1)*3;
+  pos = (y*width+x+1)*4;
   (*r) += rgb[pos];
   (*g) += rgb[pos+1];
   (*b) += rgb[pos+2];
-  pos = ((y+1)*width+x)*3;
+  pos = ((y+1)*width+x)*4;
   (*r) += rgb[pos];
   (*g) += rgb[pos+1];
   (*b) += rgb[pos+2];
-  pos = ((y+1)*width+x+1)*3;
+  pos = ((y+1)*width+x+1)*4;
   (*r) += rgb[pos];
   (*g) += rgb[pos+1];
   (*b) += rgb[pos+2];
@@ -229,10 +235,10 @@ void ffmpeg_convert_rgb_yuv420p( unsigned char *rgb, unsigned char *yuv420p, int
  for (x=0;x<i;x++)
    yuv420p[x] = 128;
 
- for (y=0;y<height;y++)
-   for (x=0;x<width;x++)
+ for (y=0;y<height;++y)
+   for (x=0;x<width;++x)
      {
-       i = (y*width+x)*3;
+       i = (y*width+x)*4;
 
        r = rgb[i];
        g = rgb[i+1];
@@ -253,8 +259,8 @@ void ffmpeg_convert_rgb_yuv420p( unsigned char *rgb, unsigned char *yuv420p, int
 
      }
 
- for(y=0;y<height/2;y++)
-   for(x=0;x<width/2;x++)
+ for(y=0;y<height/2;++y)
+   for(x=0;x<width/2;++x)
      {
        /*i = ( y*2*width+(x*2))*3;
 
@@ -297,7 +303,7 @@ void ffmpeg_create_yuv( unsigned char **yuv_pixels, int *yuv_size)
 
   magick_check_current_image();
 
-  rgb_size = 3 * current_image->width * current_image->height;
+  rgb_size = 4 * current_image->width * current_image->height;
   rgb_pixels = malloc( rgb_size );
 
   i = current_image->width * current_image->height;
@@ -307,7 +313,7 @@ void ffmpeg_create_yuv( unsigned char **yuv_pixels, int *yuv_size)
   result = MagickExportImagePixels( current_image->im,
 				    0, 0,
 				    current_image->width, current_image->height,
-				    "RGB",
+				    "RGBA",
 				    CharPixel,
 				    rgb_pixels );
 
@@ -407,5 +413,24 @@ void ffmpeg_done( void )
   /*if ( erg != 0 )
     output( 1, "Can't delete tempory directory '%s' (%s)!\n",
     tempdir, strerror( errno ) ); */
+}
 
+
+
+void ffmpeg_set_extra_params( char *params )
+{
+  nfree( ffmpeg_extra_params );
+  ffmpeg_extra_params = strdup( params );
+}
+
+
+void ffmpeg_module_init( void )
+{
+  ffmpeg_extra_params = strdup( "" );
+}
+
+
+void ffmpeg_module_done( void )
+{
+  nfree( ffmpeg_extra_params );
 }

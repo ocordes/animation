@@ -24,7 +24,7 @@
    main.c
 
    written by: Oliver Cordes 2010-06-30
-   changed by: Oliver Cordes 2017-07-20
+   changed by: Oliver Cordes 2017-12-21
 
 
    $Id$
@@ -50,6 +50,7 @@
 #include "image.h"
 #include "imagedef.h"
 #include "output.h"
+#include "output_ffmpeg.h"
 #include "project.h"
 #include "random.h"
 #include "scanner.h"
@@ -64,6 +65,7 @@ static struct option longopts[] = {
   { "dry-run",        0,                 NULL, 'n' },
   { "output-formats", 0,                 NULL, 'l' },
   { "frames",         required_argument, NULL, 'f' },
+  { "ffmpeg",         required_argument, NULL, 'm' },
   { NULL,             0,                 NULL, 0   }
 };
 
@@ -120,6 +122,9 @@ void parse_options( int argc, char *argv[] )
        exit( 0 );
      case 'f':
        process_image_setup( optarg );
+       break;
+     case 'm':
+       ffmpeg_set_extra_params( optarg );
        break;
 	   case '?':
 	   default:
@@ -180,6 +185,8 @@ int main( int argc, char* argv[] )
   filldef_init();
   random_init();
 
+  ffmpeg_module_init();
+
   open_parser_source( srcfile );
 
   output( 0, "Parsing file ...\n" );
@@ -212,6 +219,7 @@ int main( int argc, char* argv[] )
   else
     printf( "Dry run requested!\n" );
 
+  ffmpeg_module_done();
   filldef_done();
   imagedef_done();
   font_done();

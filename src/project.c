@@ -22,7 +22,7 @@
 /* project.c
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2017-03-05
+   changed by: Oliver Cordes 2017-12-21
    $Id$
 
 */
@@ -195,6 +195,7 @@ void project_init( void )
   main_project->blockmovies     = 0;     /* default False */
   main_project->overwrite       = 1;     /* default True */
   main_project->framenr         = 0;
+  main_project->bitrate         = strdup( "800k" );
 
   /* create some variables */
   add_variable( main_project->vars, "FRAMENR", constant_int );
@@ -242,6 +243,7 @@ void project_done( void )
   nfree( main_project->outputdir );
   nfree( main_project->geometry_name );
   nfree( main_project->background );
+  nfree( main_project->bitrate );
 
   for (i=0;i<main_project->nrblocks;i++)
     block_free_block( main_project->blocks[i] );
@@ -543,10 +545,15 @@ void project_set_background( parsenode* newbackground)
 
 void project_set_bitrate( parsenode* newbitrate)
 {
+  char *newb;
+
   assert( main_project != NULL );
 
-  main_project->bitrate = get_int_from_node( newbitrate );
+  newb = get_string_from_node( newbitrate );
+  nfree( main_project->bitrate );
+  main_project->bitrate = strdup( newb );
 
+  free( newb );
   free_node( newbitrate );
 }
 

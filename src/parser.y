@@ -24,7 +24,7 @@
 /* parser.y
 
    written by; Oliver Cordes 2010-06-28
-   changed by: Oliver Cordes 2017-12-13
+   changed by: Oliver Cordes 2017-12-21
 
    $Id$
 
@@ -55,9 +55,11 @@ int yywrap()
         return 1;
 }
 
-#define amx_lang_version "0.9.12"
+#define amx_lang_version "0.9.13"
 
 /*  history:
+0.9.13:  2017-12-21
+  - change the bitrate syntax
 0.9.12:  2017-04-22
   - add imagedef command
   - add possible variables into the loop enpty commands
@@ -133,7 +135,7 @@ instruction      : empty_command
                  | TOUTPUTDIR TSTRING           { project_set_outputdir( $2 ); }
                  | TGEOMETRY TSTRING            { project_set_geometry( $2 ); }
                  | TFPS TCONSTANT               { project_set_fps( $2 ); }
-                 | TBITRATE TCONSTANT           { project_set_bitrate( $2 ); }
+                 | TBITRATE TSTRING             { project_set_bitrate( $2 ); }
                  | TBACKGROUND TSTRING          { project_set_background( $2 ); }
                  | TBLOCKMOVIES TCONSTANT       { project_set_blockmovies( $2 ); }
                  | TOVERWRITE TCONSTANT         { project_set_overwrite( $2 ); }

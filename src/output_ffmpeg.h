@@ -22,9 +22,9 @@
 /* output_ffmpeg.h
 
    written by: Oliver Cordes 2013-01-11
-   changed by: Oliver Cordes 2016-08-14
+   changed by: Oliver Cordes 2017-12-21
 
-   $Id: ffmpeg.h 352 2013-01-11 20:19:33Z ocordes $
+   $Id$
 
 */
 
@@ -37,5 +37,11 @@ int  ffmpeg_start( int );
 int  ffmpeg_out_func( void );
 
 void ffmpeg_done( void );
+
+
+void ffmpeg_set_extra_params( char * );
+
+void ffmpeg_module_init( void );
+void ffmpeg_module_done( void );
 
 #endif

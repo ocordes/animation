@@ -15,20 +15,20 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with animation.  If not, see <http://www.gnu.org/licenses/>. 
+    along with animation.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
 /* project.h
 
    written by: Oliver Cordes 2010-07-02
-   changed by: Oliver Cordes 2014-09-07
+   changed by: Oliver Cordes 2017-12-21
 
    $Id: project.h 679 2014-09-07 17:32:05Z ocordes $
 
 */
 
-#ifndef __project_h 
+#ifndef __project_h
 #define __project_h 1
 
 
@@ -67,7 +67,7 @@ typedef struct{
   int          geometry[2];
   char        *geometry_name;
   int          fps;
-  int          bitrate;
+  char        *bitrate;
   char        *background;
   /* block definitions */
   int          nrblocks;
